@@ -1,0 +1,12 @@
+此目录为scrapy中专为item抓取的模块
+
+基类czaBaseItem，包含以下属性
+spiderName、
+author、
+url、
+releaseTime、
+more
+
+子类，为你appName + Item，拓展你需要的属性
+并将抓取item的逻辑也写在下面
+

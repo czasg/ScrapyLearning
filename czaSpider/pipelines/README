@@ -1,0 +1,9 @@
+此目录为scrapy处理item的模块
+
+在目录中定义好应用处理item的逻辑，然后在init文件中定义
+appName + Pipeline_setting
+
+在爬虫中指定好对应pipeline模块
+custom_settings = get_custom_settings(name)
+其中name样式如：name = "test-housePrice"
+表示-后面即应用的名称
