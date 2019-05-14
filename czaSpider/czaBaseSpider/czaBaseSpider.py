@@ -17,7 +17,7 @@ class czaSpider(scrapy.Spider):
 
     def __init__(self):
         super(czaSpider, self).__init__()
-        # self.init_db_setting()
+        self.init_db_setting()
         # self.mongoClient = get_mongo_client()
         # self.collection = self.get_collection(self.mongoClient)
         # self.sqlite3Conn = get_sqlite3_connection()
