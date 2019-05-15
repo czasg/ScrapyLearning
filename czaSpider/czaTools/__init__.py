@@ -6,8 +6,8 @@ __all__ = ["re", "os", "sys", "time", "np", "pd", "shutil", "datetime", "import_
            "get_custom_settings", "img2num", "img2num_from_url", "traverse_urls",
            "strJoin", "arrayJoin", "xpather", "file_download", "file_remove",
            "data_from_xpath", "get_next_page",
-           "get_collection_name", "get_database_name", "constant", "execute_sql",
-           "get_mongo_client", "get_sqlite3_connection", "get_redis_client",
+           "get_collection_name", "get_database_name", "constant",
+           "get_mongo_client", "get_redis_client",
            "get_current_path", "to_path", "timed_task", "get_now_time",
            "TableParser", "array_strip", "dict_strip", "encoder",
            "cover_dict", "merge_dict"]
@@ -27,7 +27,7 @@ from .data_manipulation import strJoin, arrayJoin, array_strip, dict_strip
 from .decorator_manager import encoder
 from .get_custom_settings import get_custom_settings
 from .get_db_name import get_collection_name, get_database_name
-from .get_db import get_mongo_client, get_sqlite3_connection, get_redis_client, execute_sql
+from .get_db import get_mongo_client, get_redis_client
 from .img2num import img2num, img2num_from_url, file_download, file_remove
 from .path_func import get_current_path, to_path
 from .scraper import traverse_urls, data_from_xpath
