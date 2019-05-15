@@ -6,6 +6,9 @@ from czaSpider import items
 log = logging.getLogger(__name__)
 log.setLevel(logging.DEBUG)
 
+
+
+
 class czaSpider(scrapy.Spider):
     name = "czaSpider"
     author = "czaOrz"
@@ -44,7 +47,7 @@ class czaSpider(scrapy.Spider):
 
     @classmethod
     def process_item(cls, **kwargs):
-        kwargs.setdefault("spiderName",cls.name)
+        kwargs.setdefault("spiderName", cls.name)
         kwargs.setdefault("author", cls.author)
         if cls.ITEM_SOURCE:
             return getattr(items, constant.SAVED_SOURCE_NAME)(**kwargs)
@@ -80,9 +83,6 @@ class czaSpider(scrapy.Spider):
         cls.collection = cls.get_collection(cls.mongoClient)
         cls.dbName = get_database_name(cls.name)
 
-
     @classmethod
     def processDataFromDatabase(cls):
         pass
-
-

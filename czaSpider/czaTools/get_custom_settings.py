@@ -21,9 +21,13 @@ def setting_plus(*settings):
 
 
 def get_custom_settings(name, saveSource=False):
-    if saveSource:
-        return getattr(pipelines, "sourcePipeline_setting")
-    return getattr(pipelines, name[name.rfind('-') + 1:] + "Pipeline_setting")
+    pipelineName = name[name.rfind('-') + 1:] + "Pipeline_setting"
+    if hasattr(pipelines, pipelineName):
+        if saveSource:
+            return getattr(pipelines, "sourcePipeline_setting")
+        return getattr(pipelines, pipelineName)
+    else:
+        return {}
 
 
 if __name__ == "__main__":

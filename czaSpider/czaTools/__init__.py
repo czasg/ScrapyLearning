@@ -9,7 +9,8 @@ __all__ = ["re", "os", "sys", "time", "np", "pd", "shutil", "datetime", "import_
            "get_collection_name", "get_database_name", "constant", "execute_sql",
            "get_mongo_client", "get_sqlite3_connection", "get_redis_client",
            "get_current_path", "to_path", "timed_task", "get_now_time",
-           "TableParser", "array_strip", "dict_strip", "encoder"]
+           "TableParser", "array_strip", "dict_strip", "encoder",
+           "cover_dict", "merge_dict"]
 
 import re, os, sys, time, datetime
 import numpy as np
@@ -34,3 +35,4 @@ from .timer_task import timed_task, get_now_time
 from .url_func import get_next_page
 from .webTable import TableParser
 from .xpather import Xpather as xpather
+from .merge import cover_dict, merge_dict
