@@ -1,0 +1,13 @@
+*.pyc
+*.log
+.idea*
+*.xml
+
+scrapyProj/*
+!scrapyProj/cleanup
+!scrapyProj/creditBaseSpider
+!scrapyProj/items
+!scrapyProj/middlewares
+!scrapyProj/pipelines
+!scrapyProj/tools
+!scrapyProj/*.py
