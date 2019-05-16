@@ -5,8 +5,7 @@ test the basic function of the framework
 """
 
 class MySpider(IOCO):
-    # name = "test"
-    name = "test-testDB"
+    name = "test-housePrice"
 
     url = "http://sz.ziroom.com/z/nl/z3-d23008679-b612400051.html?p=1"
 

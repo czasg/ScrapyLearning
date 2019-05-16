@@ -6,13 +6,17 @@ def create_mark(num):
     return ', '.join(['?' for _ in range(num)])
 
 
-def create_sql_connection():
+def get_mysql_connection():
     global conn
-    conn = pymysql.connect(host='localhost',
-                           user='root',
-                           password='cza19950917',
-                           db='scrapy',
-                           charset='utf8')
+    try:
+        conn = pymysql.connect(host='localhost',  # todo, get those data from settings
+                               user='root',
+                               password='cza19950917',
+                               db='scrapy',
+                               charset='utf8')
+        return True
+    except:
+        raise Exception('MySQL connect ERROR...')
 
 
 def select(sql, args=None, size=None):

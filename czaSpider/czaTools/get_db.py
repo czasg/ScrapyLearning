@@ -8,7 +8,7 @@ from czaSpider.settings import MONGO_INFO,sqlite3_INFO,REDIS_INFO
 from czaSpider.czaTools.path_func import get_current_path, to_path, get_database_path
 
 
-def get_mongo_client():
+def get_mongo_client():  # todo, wait for abandon
     return pymongo.MongoClient(**MONGO_INFO)
 
 

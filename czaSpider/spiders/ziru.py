@@ -4,12 +4,6 @@ from czaSpider.czaTools import *
 
 class MySpider(czaSpider):
     name = "ziru-housePrice"
-    # author = "czaOrz"
-    # collName = get_collection_name(name, timeStr=True)
-    # dbName = get_database_name(name)
-    custom_settings = get_custom_settings(name, saveSource = True)
-    ITEM_SOURCE = True
-    SQLITE3 = True
 
     url = "http://wh.ziroom.com/z/nl/z3.html"
 

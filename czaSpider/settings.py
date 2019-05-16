@@ -1,13 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Scrapy settings for czaSpider project
-#
-# For simplicity, this file contains only settings considered important or
-# commonly used. You can find more settings consulting the documentation:
-#
-#     https://doc.scrapy.org/en/latest/topics/settings.html
-#     https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-#     https://doc.scrapy.org/en/latest/topics/spider-middleware.html
+
 
 BOT_NAME = 'czaSpider'
 
@@ -100,3 +93,6 @@ REDIS_INFO = {
     "host": "localhost",
     "port": 6379
 }
+# from .czaTools import cover_dict
+# from .dataBase.mongo_database import default_config, cover_default
+# MONGO_INFO = cover_dict(default_config.MONGO_INFO, cover_default.MONGO_INFO)
