@@ -97,12 +97,6 @@ sqlite3_INFO = {
     "host": "sqlite3.db"
 }
 REDIS_INFO = {
-    "host": "192.168.0.99",
-    "port": 6380,
-    "password": "123456"
-}
-
-shubo_mongo = {
-    "host": '192.168.0.91',
-    "port": 27017
+    "host": "localhost",
+    "port": 6379
 }
