@@ -17,3 +17,13 @@ def merge_dict(dictionary1, dictionary2):
             elif isinstance(value, dict):
                 new_dict[key] = merge_dict(dictionary1[key], dictionary2[key])
     return new_dict
+
+# a={"key":"key",}
+# b={"new":"new"}
+# print(merge_dict(a,b))
+
+
+# def func(**kwargs):
+#     print(kwargs)
+#
+# func(test='test', haha="haha")
