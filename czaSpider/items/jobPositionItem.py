@@ -16,8 +16,6 @@ class Item(czaBaseItem):
 
 def jobPositionItem(**kwargs):
     item = Item()
-    item.update(process_base_item(**kwargs))
-
     item["job_name"] = kwargs.pop('job_name', None)
     item["job_salary"] = kwargs.pop('job_salary', None)
     item["job_palce"] = kwargs.pop('job_palce', None)
@@ -27,4 +25,5 @@ def jobPositionItem(**kwargs):
     item["company_name"] = kwargs.pop('company_name', None)
     item["company_nature"] = kwargs.pop('company_nature', None)
     item["company_scale"] = kwargs.pop('company_scale', None)
+    item.update(process_base_item(**kwargs))
     return item

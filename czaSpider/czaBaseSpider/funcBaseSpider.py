@@ -3,6 +3,9 @@ __author__ = 'czaOrz'
 import logging
 
 from czaSpider.czaBaseSpider.propBaseSpider import PropBaseSpider
+from czaSpider.dataBase.mysql_database.orm import get_mysql_connection
+from czaSpider.dataBase.mongo_database.orm import get_mongo_client
+from czaSpider.dataBase.mongo_database.models import Mongodb
 from czaSpider.czaTools import *
 
 logging = logging.getLogger(__name__)
@@ -11,9 +14,9 @@ logging = logging.getLogger(__name__)
 class SpiderMetaClass(type):
     """
     动态加载custom_settings，未定义name则不支持custom_settings
-    默认支持文件服务器，无则添加parse_item=True
-    parse_item: 若定义此参看，则根据name进行动态加载custom_settings
-                否则默认流程：保存、下载(文件服务器)、解析
+    默认支持文件服务器，无服务器则添加parse_item=True参数
+    parse_item: 若定义此参数，则根据name进行动态加载custom_settings
+                否则默认流程为：保存、下载(文件服务器)、解析
     """
 
     def __new__(cls, className, bases, attrs):
@@ -66,18 +69,29 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
             raise ValueError("You Must Point one URL for spider")
 
     # 数据库操作函数 #
+
     def __init__(self):
         super(FuncBaseSpider, self).__init__()
         self.init_mongoDatabase()
+        self.init_mysqlDatabase()
 
     def init_mongoDatabase(self):
-        self.mongoClient = get_mongo_client()
         if hasattr(self, "collName") and hasattr(self, "dbName"):
-            self.sourceColl = self.get_source_collection(self.mongoClient)
-            self.parsingColl = self.get_parsing_collection(self.mongoClient)
+            if get_mongo_client():
+                self.mongo = Mongodb(self.dbName, self.collName)
 
-    def get_source_collection(self, Client):
-        return Client[getattr(self, "dbName") + "-source"][getattr(self, "collName")]
+    def init_mysqlDatabase(self):
+        if hasattr(self, 'allow_mysql') and hasattr(self, 'dbName'):
+            from czaSpider.dataBase.mysql_database import models
+            mysql_dbName = '%sDB' % self.dbName
+            if hasattr(models, mysql_dbName):
+                if get_mysql_connection():
+                    self.mysql = getattr(models, mysql_dbName)
 
-    def get_parsing_collection(self, Client):
-        return Client[getattr(self, "dbName") + "-parsing"][getattr(self, "collName")]
+    # 数据下载部分 #
+
+    @classmethod
+    def file_download(cls, thread=1, delay=0, tolerate=6):
+        downloader = None
+        downloader.start()  # todo，等文件辅助服务写完，这边就可以开始着手对接
+

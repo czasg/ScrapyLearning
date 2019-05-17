@@ -10,8 +10,8 @@ class czaBaseItem(scrapy.Item):
 
 def process_base_item(**kwargs):
     info = {}
-    info["spiderName"] = kwargs.pop('spiderName', "czaSpider")
+    info["spiderName"] = kwargs.pop('spiderName', "IOCO")
     info["author"] = kwargs.pop('author', "czaOrz")
     info["url"] = kwargs.pop('url', None)
-    info["more"] = kwargs.pop('more', None)
+    info["more"] = kwargs
     return info

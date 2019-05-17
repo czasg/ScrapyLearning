@@ -2,7 +2,6 @@ import logging
 import pymongo
 
 from czaSpider.dataBase.config import MONGO_INFO
-from czaSpider.czaTools import merge_dict
 
 
 def get_mongo_client():
@@ -15,6 +14,11 @@ def get_mongo_client():
     else:
         logging.info('Mongodb Client Create Success!')
         return 1
+
+
+def pop_key_from_dict(di):
+    res = [k for k in di.keys()]
+    return res[0] if len(res) == 1 else res
 
 
 def process_commands(all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):
@@ -61,6 +65,9 @@ class BaseMongodb(object):
         self._docs = None
         return res
 
+    def _count(self):
+        self._docs = self.collection.count()
+
     def find(self, all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):
         commands = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
         query = {"$and": commands} if commands else {}
@@ -70,7 +77,7 @@ class BaseMongodb(object):
     def findAll(self, all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, field=None, **kwargs):
         commands = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
         query = {"$and": commands} if commands else {}
-        self._documents = [doc[[i for i in field.keys()][0]] if field and len(field) == 1 else doc for doc in
+        self._documents = [doc[pop_key_from_dict(field)] if field and len(field) == 1 else doc for doc in
                            self.collection.find(query, field)]
         if field and len(field) != 1:
             self._documents = [[d for d in doc.values()] for doc in self._documents]
@@ -80,6 +87,7 @@ class BaseMongodb(object):
         commands = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
         query = {"$and": commands} if commands else {}
         self._documents = self.collection.find_one_and_delete(query)
+        self._count()
         return self
 
     def update(self, set=None, unset=None, upsert=False, **kwargs):  # update one document,
@@ -89,7 +97,7 @@ class BaseMongodb(object):
         elif unset:
             command = {"$unset": set}
         self.collection.update_one(kwargs, command, upsert=upsert)
-        self._docs = self.collection.count()
+        self._count()
         return self
 
     def updateAll(self, set=None, unset=None, upsert=False, **kwargs):
@@ -99,27 +107,22 @@ class BaseMongodb(object):
         elif unset:
             command = {"$unset": set}
         self.collection.update_many(kwargs, command, upsert=upsert)
-        self._docs = self.collection.count()
+        self._count()
         return self
 
     def insert(self, new_document=None, **kwargs):  # insert_one(dict)3
         self.collection.insert_one(new_document or kwargs)
-        self._docs = self.collection.count()
+        self._count()
         return self
 
-    def insertAll(self, new_documents_list):  # insert_many(list)
+    def insertAll(self, new_documents_list: list):  # insert_many(list)
         self.collection.insert_many(new_documents_list)
-        self._docs = self.collection.count()
-        return self
-
-    def remove(self, **kwargs):
-        self.collection.delete_one(kwargs)
-        self._docs = self.collection.count()
+        self._count()
         return self
 
     def removeAll(self, **kwargs):
         self.collection.delete_many(kwargs)
-        self._docs = self.collection.count()
+        self._count()
         return self
 
     def drop(self, name=None):

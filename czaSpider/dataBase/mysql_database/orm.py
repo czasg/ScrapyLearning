@@ -14,9 +14,10 @@ def get_mysql_connection():
                                password='cza19950917',
                                db='scrapy',
                                charset='utf8')
-        return True
+        return 1
     except:
-        raise Exception('MySQL connect ERROR...')
+        logging.warning('MySQL can not connect...')
+        return 0
 
 
 def select(sql, args=None, size=None):

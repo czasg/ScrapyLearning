@@ -10,7 +10,24 @@ class MySpider(czaSpider):
     def parse(self, response):
         print(response.text)
 
+def func(doc=None, **kwargs):
+    print(doc or kwargs)
+
+
 if __name__ == "__main__":
-    MySpider.cza_run_spider()
+    # MySpider.cza_run_spider()
+    from importlib import import_module
+    # from czaSpider.dataBase.mysql_database import get_module_path
+    # import logging
+    # dbName = 'housePrice'
+    # lib_path = get_module_path() + ".%sDB" % dbName
+    # print(lib_path)
+    # try:
+    # import_module(lib_path)
+    # except ImportError:
+    #     logging.warning('import lib failure')
+    # from czaSpider.dataBase.mysql_database import models
+    # print(hasattr(models, 'housePriceDB'))
+    func(test="123")
 
 

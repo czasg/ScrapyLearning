@@ -9,7 +9,6 @@ class Item(czaBaseItem):
 
 def sourceItem(**kwargs):
     item = Item()
-    item.update(process_base_item(**kwargs))
-
     item["source"] = kwargs.pop('source', None)
+    item.update(process_base_item(**kwargs))
     return item
