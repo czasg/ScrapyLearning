@@ -4,7 +4,7 @@ from czaSpider.czaTools import *
 from czaSpider import items
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.DEBUG)
+# log.setLevel(logging.DEBUG)
 
 
 

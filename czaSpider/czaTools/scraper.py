@@ -10,7 +10,7 @@ from czaSpider.czaTools.data_manipulation import arrayJoin
 
 def traverse_urls(response, spider, xpath_rule=None, next_page_format=None, next_page_without_new_urls=False,
                   allow_next_page=True, meta=None, callback=None, extend_callback=None, filter_diplicate=True,
-                  **kwargs):
+                  **kwargs):  # todo. mongodb is error
     """
     遍历url，封装了翻页逻辑
     :param response:

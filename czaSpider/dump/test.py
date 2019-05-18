@@ -28,6 +28,8 @@ if __name__ == "__main__":
     #     logging.warning('import lib failure')
     # from czaSpider.dataBase.mysql_database import models
     # print(hasattr(models, 'housePriceDB'))
-    func(test="123")
+    # func(test="123")
+    from czaSpider.dataBase.config import REDIS_INFO
+    print(REDIS_INFO)
 
 

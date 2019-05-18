@@ -9,3 +9,7 @@ housePricePipeline_setting = \
 jobPositionPipeline_setting = \
     {"ITEM_PIPELINES":
          {'czaSpider.pipelines.jobPositionPipeline.CzaSpiderPipeline': 300,}}
+
+goodsPipeline_setting = \
+    {"ITEM_PIPELINES":
+         {'czaSpider.pipelines.goodsPipeline.CzaSpiderPipeline': 300,}}

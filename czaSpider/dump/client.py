@@ -1,12 +1,12 @@
 import requests
 
 
-url = "http://127.0.0.1:9000"
+url = "http://127.0.0.1:9000/upload/file"
 
 
-files = {"pyFile": open('text.txt', 'rb')}
+files = {"": open('test.py', 'rb')}
 res = requests.post(url, files=files)
 
-print(res)
+print(res.status_code)
 print(res.content)
 print(res.text)

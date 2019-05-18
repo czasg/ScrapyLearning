@@ -10,7 +10,7 @@ __all__ = ["re", "os", "sys", "time", "np", "pd", "shutil", "datetime", "import_
            "get_mongo_client", "get_redis_client",
            "get_current_path", "to_path", "timed_task", "get_now_time",
            "TableParser", "array_strip", "dict_strip", "encoder",
-           "cover_dict", "merge_dict"]
+           "cover_dict", "merge_dict", "mongodb2csv"]
 
 import re, os, sys, time, datetime
 import numpy as np
@@ -36,3 +36,4 @@ from .url_func import get_next_page
 from .webTable import TableParser
 from .xpather import Xpather as xpather
 from .merge import cover_dict, merge_dict
+from .process_mongodb import mongodb2csv

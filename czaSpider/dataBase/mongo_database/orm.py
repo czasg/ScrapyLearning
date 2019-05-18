@@ -1,19 +1,19 @@
 import logging
+
 import pymongo
 
 from czaSpider.dataBase.config import MONGO_INFO
-
+logging = logging.getLogger(__name__)
 
 def get_mongo_client():
     global client
     try:
         client = pymongo.MongoClient(**MONGO_INFO)
     except:
-        logging.warning('create Mongodb Client Error!')
-        return 0
+        raise Exception('create Mongodb Client Error!')
     else:
         logging.info('Mongodb Client Create Success!')
-        return 1
+        return client
 
 
 def pop_key_from_dict(di):
@@ -44,10 +44,12 @@ def process_commands(all=None, size=None, ne=None, gt=None, gte=None, lt=None, l
 
 class BaseMongodb(object):
     def __init__(self, dbName, collName):
+        # get_mongo_client()
         self.dbName = dbName
         self.collName = collName
         global client
-        self.client = client
+        self.client = get_mongo_client()
+        # self.client =  pymongo.MongoClient(**MONGO_INFO)  # todo, what happen???
         self.database = self.client[dbName]
         self.collection = self.database[collName]
         self._docs = self.collection.count()

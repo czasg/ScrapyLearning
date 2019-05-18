@@ -4,8 +4,7 @@ import asyncio
 
 from aiohttp import web
 
-logging.basicConfig(level=logging.INFO)
-
+logging = logging.getLogger(__name__)
 routers = web.RouteTableDef()
 
 
@@ -17,7 +16,7 @@ async def file_store(request):
     size = 0
     with open('testNew', 'wb') as f:
         while True:
-            chunk = await file.read_chunk(size=1024)
+            chunk = await file.read_chunk()
             if not chunk:
                 break
             size += len(chunk)

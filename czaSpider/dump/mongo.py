@@ -2,6 +2,7 @@ from czaSpider.dataBase.mongo_database.models import Mongodb
 from czaSpider.dataBase.mongo_database.orm import get_mongo_client
 
 
+
 if __name__ == '__main__':
     if get_mongo_client():
         cza = Mongodb('test', 'hello-mongo')
