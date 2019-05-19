@@ -15,6 +15,8 @@ def func(doc=None, **kwargs):
 
 
 if __name__ == "__main__":
+    func(**{"URL":"123"})
+    func({"URL":"123"})
     # MySpider.cza_run_spider()
     from importlib import import_module
     # from czaSpider.dataBase.mysql_database import get_module_path
@@ -29,7 +31,7 @@ if __name__ == "__main__":
     # from czaSpider.dataBase.mysql_database import models
     # print(hasattr(models, 'housePriceDB'))
     # func(test="123")
-    from czaSpider.dataBase.config import REDIS_INFO
-    print(REDIS_INFO)
+    # from czaSpider.dataBase.config import REDIS_INFO
+    # print(REDIS_INFO)
 
 

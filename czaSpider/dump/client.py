@@ -1,12 +1,14 @@
 import requests
 
 
-url = "http://127.0.0.1:9000/upload/file"
+# url1 = "http://127.0.0.1:9000/upload/file"
+# files = {"": open('test.py', 'rb')}
+# res = requests.post(url1, files=files)
 
-
-files = {"": open('test.py', 'rb')}
-res = requests.post(url, files=files)
+# 00155818274471048d003c032294d7ba452445c38ebe9e4000
+# 0015582625774337b8fd5529d0b416691787d8362f97738000
+url2 = "http://127.0.0.1:9000/fetch/00155818274471048d003c032294d7ba452445c38ebe9e4000"
+res = requests.get(url2)
 
 print(res.status_code)
-print(res.content)
 print(res.text)

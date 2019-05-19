@@ -108,7 +108,7 @@ class BaseMongodb(object):
             command = {"$set": set}
         elif unset:
             command = {"$unset": set}
-        self.collection.update_many(kwargs, command, upsert=upsert)
+        self.collection.update_many(kwargs or {}, command, upsert=upsert)
         self._count()
         return self
 

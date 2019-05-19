@@ -5,7 +5,11 @@ from czaSpider.dataBase.mongo_database.orm import get_mongo_client
 
 if __name__ == '__main__':
     if get_mongo_client():
-        cza = Mongodb('test', 'hello-mongo')
+        cza = Mongodb('test', 'downloadTest')
+        # print(cza.source.findAll(download_finished=True).documents)
+        # print(cza.source.findAll(parse_time=None).documents)
+
+        # cza = Mongodb('test', 'hello-mongo')
         # print(cza.source.docs)  # todo, docs -- SUCCESS
         # print(cza.source.find(ne={"isok":False}).documents) # todo, find,documents -- SUCCESS
         # print(cza.source.findAll(field={"_id":1}).documents)  # todo, findAll -- SUCCESS

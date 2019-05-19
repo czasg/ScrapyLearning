@@ -5,8 +5,11 @@ import json
 
 from czaSpider.dataBase.config import FID_SERVER
 
-URL = FID_SERVER + 'upload/file'
 logging = logging.getLogger(__name__)
+
+UPLOAD_URL = FID_SERVER + 'upload/file'
+FETCH_URL = FID_SERVER + 'fetch/'
+
 
 # todo, 对外就是一个润色的功能，在downloader里面其主要作用
 class FileManager:
@@ -34,16 +37,18 @@ class FileManager:
     def _upload(self, doc_bytes):
         if doc_bytes:
             try:
-                response = json.loads(requests.post(URL, files={"": doc_bytes}).text)
+                response = json.loads(requests.post(UPLOAD_URL, files={"": doc_bytes}).text)
                 self.fid, self.size = response['fid'], response['size']
             except:
                 logging.warning('Can Not push file to file-server')
         self.polish()
 
     def process(self, download=None, close=False):
-        if isinstance(self.request, str):  # str -> bytes -> _upload -> file-server
+        if isinstance(self.request, str) and not self.fid:  # str -> bytes -> _upload -> file-server
             self._upload(self.request.encode())
-            self.request = 'done'
-        if isinstance(self.request, dict) and not close:
+        if isinstance(self.request, dict) and not close and not self.fid:
             self._upload(download(self.request))
         return self
+
+    def fetch_file(self):
+        return requests.get(FETCH_URL + self.fid).content if self.fid else b''

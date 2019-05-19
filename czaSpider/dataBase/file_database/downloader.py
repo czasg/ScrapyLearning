@@ -1,4 +1,5 @@
 import logging
+
 logging = logging.getLogger(__name__)
 
 import time
@@ -7,21 +8,20 @@ from threading import Thread
 from bson import ObjectId
 
 from czaSpider.dataBase.redis_database.orm import BaseRedis
+from czaSpider.czaTools import *
 from .fileManager import FileManager
 from .baseDownloader import BaseDownloader
 
 
-
-class Record(dict):
-    def __init__(self, **kwargs):
-        super(Record, self).__init__(**kwargs)
-
-    def __getattr__(self, key):
-        return self[key]
-
-    def __setattr__(self, key, value):
-        self[key] = value
-
+# class Record(dict):
+#     def __init__(self, **kwargs):
+#         super(Record, self).__init__(**kwargs)
+#
+#     def __getattr__(self, key):
+#         return self[key]
+#
+#     def __setattr__(self, key, value):
+#         self[key] = value
 
 
 class Downloader(BaseDownloader):
@@ -82,5 +82,5 @@ class Downloader(BaseDownloader):
                 self.record.download_finished = True
         self.record.source = files
         self.spider.mongo.source.update(_id=self.record._id, set=self.record)
-        logging.info('now, having process: %s' % self.redis.inc_memCount().memCount)
+        logging.warning('download: %s' % self.redis.inc_memCount().memCount)
         time.sleep(self.delay)

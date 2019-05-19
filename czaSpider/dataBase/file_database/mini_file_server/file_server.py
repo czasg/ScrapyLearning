@@ -1,4 +1,5 @@
 import logging
+import os
 
 logging = logging.getLogger(__name__)
 import time
@@ -13,6 +14,16 @@ routers = web.RouteTableDef()
 
 def next_id():
     return "%015d%s000" % (int(time.time() * 1000), uuid.uuid4().hex)
+
+
+@routers.get('/fetch/{fileName}')
+async def file_fetch(request):
+    fileName = toPath(request.match_info["fileName"])
+    if not os.path.exists(fileName):
+        raise Exception()
+    with open(fileName, 'rb') as f:
+        content = f.read()
+    return web.Response(body=content)
 
 
 @routers.post('/upload/file')
