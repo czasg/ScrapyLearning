@@ -32,11 +32,11 @@ class BaseRedis:
 
     @property
     def memCount(self):
-        return self._memCounts
+        return int(self._memCounts)
 
     @property
     def memNum(self):
-        return self._menNums
+        return int(self._menNums)
 
     @property
     def doc(self):
@@ -45,10 +45,7 @@ class BaseRedis:
         return docs
 
     def _init_memory_count(self):
-        if self.client.exists(self._memoryCount):
-            self._memCounts = self.client.get(self._memoryCount)
-        else:
-            self.client.set(self._memoryCount, 0)
+        self.client.set(self._memoryCount, 0)
         if self.client.exists(self._memoryName):
             self._menNums = self.client.scard(self._memoryName)
 

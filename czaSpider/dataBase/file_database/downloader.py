@@ -1,9 +1,5 @@
 import logging
 
-logging = logging.getLogger(__name__)
-
-import time
-
 from threading import Thread
 from bson import ObjectId
 
@@ -12,16 +8,7 @@ from czaSpider.czaTools import *
 from .fileManager import FileManager
 from .baseDownloader import BaseDownloader
 
-
-# class Record(dict):
-#     def __init__(self, **kwargs):
-#         super(Record, self).__init__(**kwargs)
-#
-#     def __getattr__(self, key):
-#         return self[key]
-#
-#     def __setattr__(self, key, value):
-#         self[key] = value
+logging = logging.getLogger(__name__)
 
 
 class Downloader(BaseDownloader):
@@ -43,6 +30,7 @@ class Downloader(BaseDownloader):
         if self.redis and self.spider.mongo:
             if self.redis.exist():
                 logging.warning('redis: %s had existed, using it' % self.redis.name)
+                self.buffer = self.redis.memNum
             else:
                 docs = self.spider.mongo.source.findAll(download_finished=False, field={'_id': 1}).documents
                 if not docs:
@@ -76,11 +64,15 @@ class Downloader(BaseDownloader):
     def _downloader(self):
         requests = self.record.source  # list
         fm = [FileManager(**r).process(download=self.download) for r in requests]
-        files = [f.requests for f in fm]
         for f in fm:
             if f.fid or self.allow_download_fail:
                 self.record.download_finished = True
-        self.record.source = files
-        self.spider.mongo.source.update(_id=self.record._id, set=self.record)
-        logging.warning('download: %s' % self.redis.inc_memCount().memCount)
+        self.record.source = [f.requests for f in fm]
+        self._dynamic_download_rate_log(self.spider.mongo.source.update(_id=self.record._id, set=self.record))
         time.sleep(self.delay)
+
+    def _dynamic_download_rate_log(self, _):
+        count = self.redis.inc_memCount().memCount
+        percentage = count * 100 // self.buffer
+        print('\r' + 'download rate: %d/%d %d%% ' % (count, self.buffer, percentage) + '#' * (percentage // 2), end='',
+              flush=True)
