@@ -56,7 +56,7 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
     # 执行指令 #
 
     @classmethod
-    def cza_run_spider(cls):
+    def cza_run_spider(cls):  # todo, subprocess packages?
         os.system("scrapy crawl {}".format(cls.name))
 
     @classmethod
