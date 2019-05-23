@@ -50,18 +50,18 @@ import requests
 
 
 
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36",
-    "Cookie":"wzws_cid=d30a93477e10eb812c6622e0b870aecc525c4a96de4274eebea128bd39a2bb0ed09e6bd4c737332697df128831d7770b0f2957907cd403b88fb9b2fe106c17709cce28bf3189c97faed94083566078babe3acaa6777c0dcb7b8f972457fc5771"
-}
-# url = "http://wenshu.court.gov.cn/WZWSREL0luZGV4?wzwschallenge=V1pXU19DT05GSVJNX1BSRUZJWF9MQUJFTDIwMDkyMTE="
-url = "http://wenshu.court.gov.cn/WZWSREL0xpc3QvTGlzdD9zb3J0dHlwZT0xJmNvbmRpdGlvbnM9c2VhcmNoV29yZCsxKyslRTUlODglOTElRTQlQkElOEIlRTYlQTElODglRTQlQkIlQjYrJUU2JUExJTg4JUU0JUJCJUI2JUU3JUIxJUJCJUU1JTlFJThCOiVFNSU4OCU5MSVFNCVCQSU4QiVFNiVBMSU4OCVFNCVCQiVCNg==?wzwschallenge=V1pXU19DT05GSVJNX1BSRUZJWF9MQUJFTDEwODQ2Nzc2"
-res = requests.get(url, headers=headers)
-print(res.headers)
-print(res.text)
-print(res.url)
-print(res.request)
-print(res.cookies)
+# headers = {
+#     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36",
+#     "Cookie":"wzws_cid=d30a93477e10eb812c6622e0b870aecc525c4a96de4274eebea128bd39a2bb0ed09e6bd4c737332697df128831d7770b0f2957907cd403b88fb9b2fe106c17709cce28bf3189c97faed94083566078babe3acaa6777c0dcb7b8f972457fc5771"
+# }
+# # url = "http://wenshu.court.gov.cn/WZWSREL0luZGV4?wzwschallenge=V1pXU19DT05GSVJNX1BSRUZJWF9MQUJFTDIwMDkyMTE="
+# url = "http://wenshu.court.gov.cn/WZWSREL0xpc3QvTGlzdD9zb3J0dHlwZT0xJmNvbmRpdGlvbnM9c2VhcmNoV29yZCsxKyslRTUlODglOTElRTQlQkElOEIlRTYlQTElODglRTQlQkIlQjYrJUU2JUExJTg4JUU0JUJCJUI2JUU3JUIxJUJCJUU1JTlFJThCOiVFNSU4OCU5MSVFNCVCQSU4QiVFNiVBMSU4OCVFNCVCQiVCNg==?wzwschallenge=V1pXU19DT05GSVJNX1BSRUZJWF9MQUJFTDEwODQ2Nzc2"
+# res = requests.get(url, headers=headers)
+# print(res.headers)
+# print(res.text)
+# print(res.url)
+# print(res.request)
+# print(res.cookies)
 
 # ccd1728de5e7b5aeb345f29510505ed202c2a92657622e5c8fc36cbdfb1dd4b68033b5fea1da4bafae20c6dfa7836a595b8e901e42a39deadee8d377708842c1ed4fecc21d096b3e1ed52b9f39225dffc37273e4571a78bab92b2c4716535657
 
