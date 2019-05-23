@@ -1,5 +1,5 @@
 __all__ = ["re", "os", "sys", "time", "np", "pd", "shutil", "datetime", "import_module",
-           "StringIO", "BytesIO",
+           "StringIO", "BytesIO", "json",
 
            "scrapy", "Request", "FormRequest",
 
@@ -16,6 +16,7 @@ import re, os, sys, time, datetime
 import numpy as np
 import pandas as pd
 import shutil
+import json
 from importlib import import_module
 from io import StringIO, BytesIO
 
