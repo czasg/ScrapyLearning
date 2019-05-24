@@ -10,8 +10,8 @@ but just the first to key and other to value
 
 class MySpider(czaSpider):
     name = "test-web-table"
-    # url = "http://sthjj.taian.gov.cn/art/2016/10/13/art_46686_5015303.html"
-    url = "http://www.runoob.com/python/python-func-all.html"
+
+    url = "http://sthjj.taian.gov.cn/art/2016/10/13/art_46686_5015303.html"
 
     def parse(self, response):
         table = data_from_xpath(response, '//div[@class="m-newscontent"]//table')

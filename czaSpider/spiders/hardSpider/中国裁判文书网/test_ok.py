@@ -3,17 +3,17 @@ import execjs
 from czaSpider.czaBaseSpider import IOCO
 from czaSpider.czaTools import *
 
-with open('zgcpwsw1.js', encoding='utf-8') as f:
-    js = f.read()
-    anti_first = execjs.compile(js)
-
-with open('zgcpwsw2.js', encoding='utf-8') as f:
-    js = f.read()
-    anti_second = execjs.compile(js)
-
-with open('zgcpwsw3.js', encoding='utf-8') as f:
-    js = f.read()
-    anti_third = execjs.compile(js)
+# with open('zgcpwsw1.js', encoding='utf-8') as f:
+#     js = f.read()
+#     anti_first = execjs.compile(js)
+#
+# with open('zgcpwsw2.js', encoding='utf-8') as f:
+#     js = f.read()
+#     anti_second = execjs.compile(js)
+#
+# with open('zgcpwsw3.js', encoding='utf-8') as f:
+#     js = f.read()
+#     anti_third = execjs.compile(js)
 
 
 class MySpider(IOCO):
