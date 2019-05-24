@@ -154,8 +154,8 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
 
     @classmethod
     def _parse_detail(cls, response, document, info):
-        documents = [item for item in cls.process_detail(response, document, info)]
-        cls.mongo.resolver.insertAll(cls._polish_outputs(documents))
+        documents = [item.copy() for item in cls.process_detail(response, document, info)]
+        cls.mongo.resolver.insertAll(cls._polish_outputs(documents)) if documents else None
         cls.mongo.source.update(_id=document['_id'], set={'parse_time': datetime.datetime.now()})
 
     @classmethod

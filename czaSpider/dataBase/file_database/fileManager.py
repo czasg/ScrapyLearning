@@ -51,7 +51,9 @@ class FileManager:
 
     def process(self, download=None, close=False):
         if isinstance(self.request, str) and not self.fid:  # str -> bytes -> _upload -> file-server
-            self._upload(self.request.encode(), drop_request=False)
+            _request = self.request
+            self.request = "Bytes! save Done!"
+            self._upload(_request.encode(), drop_request=False)
         if isinstance(self.request, dict) and not close and not self.fid:  # dict -> download -> bytes -> _upload -> file-server
             self._upload(download(self.request))
         return self
