@@ -101,14 +101,14 @@ class MySpider(IOCO):
                 print('No 文书ID')
                 yield Request(self.entrance, self.parse, headers=self.headers, dont_filter=True)
                 return
-            DocID = anti_third.call('anti_third', RunEval, docId)
+            DocID = self.anti_third.call('anti_third', RunEval, docId)
             save_url = self.detail_url + "?DocID=" + DocID
             detail_urls.append(save_url)
-        yield from traverse_urls(response, self,
-                                 detail_urls=detail_urls,
-                                 allow_next_page=False,
-                                 extend_callback=lambda url: Request(url, self.parse3, headers=self.headers),
-                                 request_delay=2)
+        # yield from traverse_urls(response, self,
+        #                          detail_urls=detail_urls,
+        #                          allow_next_page=False,
+        #                          extend_callback=lambda url: Request(url, self.parse3, headers=self.headers),
+        #                          request_delay=2)
         self.PAGE += 1
         print(self.PAGE)
         yield Request(self.entrance, self.parse, headers=self.headers, dont_filter=True)
@@ -124,6 +124,6 @@ class MySpider(IOCO):
 
 
 if __name__ == "__main__":
-    # MySpider.cza_run_spider()
+    MySpider.cza_run_spider()
     # MySpider.file_download(thread=5)
-    MySpider.file_reParse()
+    # MySpider.file_reParse()
