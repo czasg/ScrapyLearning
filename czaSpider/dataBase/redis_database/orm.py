@@ -1,8 +1,10 @@
 import logging
-logging = logging.getLogger(__name__)
+
 from redis import StrictRedis
 
 from czaSpider.dataBase.config import REDIS_INFO
+
+logging = logging.getLogger(__name__)
 
 
 def get_redis_client():
@@ -19,8 +21,8 @@ def get_redis_client():
 class BaseRedis:
     def __init__(self, dbName, collName):
         self.client = get_redis_client()
-        self._memoryName = dbName+collName
-        self._memoryCount = dbName+collName+"-count:"
+        self._memoryName = dbName + collName
+        self._memoryCount = dbName + collName + "-count:"
         self._menNums = 0  # _memoryName
         self._memCounts = 0  # _memoryCount
         self._docs = None

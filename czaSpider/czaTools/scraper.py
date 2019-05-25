@@ -1,5 +1,6 @@
 import re
 import html
+import time
 
 from scrapy import Request
 
@@ -10,6 +11,7 @@ from czaSpider.czaTools.data_manipulation import arrayJoin
 
 def traverse_urls(response, spider, xpath_rule=None, next_page_format=None, next_page_without_new_urls=False,
                   allow_next_page=True, meta=None, callback=None, extend_callback=None, filter_diplicate=True,
+                  request_delay=0,
                   **kwargs):  # todo. mongodb is error
     """
     遍历url，封装了翻页逻辑
@@ -35,7 +37,8 @@ def traverse_urls(response, spider, xpath_rule=None, next_page_format=None, next
 
     # 去重
     if filter_diplicate:
-        new_urls = [url for url in urls if not spider.collection.count({"url": url})]
+        # new_urls = [url for url in urls if not spider.collection.count({"url": url})]
+        new_urls = [url for url in urls if not spider.mongo.source.filter(url=url)]
         _urls = new_urls
         print("共%d条其中%d条未爬" % (len(urls), len(new_urls)))
     else:
@@ -47,8 +50,10 @@ def traverse_urls(response, spider, xpath_rule=None, next_page_format=None, next
             continue
         if extend_callback:
             yield extend_callback(url)
+            time.sleep(request_delay)
         elif callback:
             yield Request(url, callback, meta=meta)
+            time.sleep(request_delay)
         else:
             item = kwargs.get("items", {})
             if item:
@@ -65,7 +70,7 @@ def traverse_urls(response, spider, xpath_rule=None, next_page_format=None, next
         else:
             yield Request(response.url, response.request.callback,
                           body=get_next_page(response.request.body.decode(), next_page_format, **kwargs).encode(),
-                          **post_dict)
+                          **dict(headers=kwargs.get("headers", None), method="POST"))
 
 
 def data_from_xpath(response, xpath_rule, first=False, join=False, returnList=False,

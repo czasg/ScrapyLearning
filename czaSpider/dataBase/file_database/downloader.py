@@ -16,7 +16,6 @@ class Downloader(BaseDownloader):
         super(Downloader, self).__init__(**kwargs)
         self.spider = spider
         self.buffer = 0
-        self.record = None
 
         self.thread = kwargs.get('thread', 1)
         self.delay = kwargs.get('delay', 0)
@@ -48,27 +47,23 @@ class Downloader(BaseDownloader):
 
     def worker(self):
         while True:
-            if not self._next():  # new record -> Record
+            record = self._next()
+            if not record:  # new record -> Record
                 break
-            self._downloader()  # download and update record to mongodb
+            self._downloader(record)  # download and update record to mongodb
 
     def _next(self):
         _id = self.redis.pop().doc
-        if not _id:
-            return 0
-        self.record = Record(**self.spider.mongo.source.find(_id=ObjectId(_id)).documents)
-        if not self.record or self.record.download_finished:
-            return self._next()
-        return 1
+        return Record(**self.spider.mongo.source.find(_id=ObjectId(_id)).documents) if _id else None
 
-    def _downloader(self):
-        requests = self.record.source  # list
-        fm = [FileManager(**r).process(download=self.download) for r in requests]
+    def _downloader(self, record):
+        record.download_finished = True
+        fm = [FileManager(**rs).process(download=self.download) for rs in record.source]
         for f in fm:
-            if f.fid or self.allow_download_fail:
-                self.record.download_finished = True
-        self.record.source = [f.requests for f in fm]
-        self._dynamic_download_rate_log(self.spider.mongo.source.update(_id=self.record._id, set=self.record))
+            if not f.fid and not self.allow_download_fail:
+                record.download_finished = False
+        record.source = [f.requests for f in fm]
+        self._dynamic_download_rate_log(self.spider.mongo.source.update(_id=record._id, set=record))
         time.sleep(self.delay)
 
     def _dynamic_download_rate_log(self, _):

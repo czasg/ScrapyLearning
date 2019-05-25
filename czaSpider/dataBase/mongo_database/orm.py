@@ -3,7 +3,9 @@ import logging
 import pymongo
 
 from czaSpider.dataBase.config import MONGO_INFO
+
 logging = logging.getLogger(__name__)
+
 
 def get_mongo_client():
     global client
@@ -39,7 +41,8 @@ def process_commands(all=None, size=None, ne=None, gt=None, gte=None, lt=None, l
         commands.append({key: {"$lt": value} for key, value in lt.items()})
     if lte:
         commands.append({key: {"$lte": value} for key, value in lte.items()})
-    return commands
+    query = {"$and": commands} if commands else {}
+    return query
 
 
 class BaseMongodb(object):
@@ -47,9 +50,7 @@ class BaseMongodb(object):
         # get_mongo_client()
         self.dbName = dbName
         self.collName = collName
-        global client
         self.client = get_mongo_client()
-        # self.client =  pymongo.MongoClient(**MONGO_INFO)  # todo, what happen???
         self.database = self.client[dbName]
         self.collection = self.database[collName]
         self._docs = self.collection.count()
@@ -70,15 +71,21 @@ class BaseMongodb(object):
     def _count(self):
         self._docs = self.collection.count()
 
+    def count(self, all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):
+        query = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
+        self._docs = self.collection.count(query)
+        return self
+
+    def filter(self, all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):
+        return self.count(all, size, ne, gt, gte, lt, lte, **kwargs).docs != 0
+
     def find(self, all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):
-        commands = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
-        query = {"$and": commands} if commands else {}
+        query = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
         self._documents = self.collection.find_one(query)
         return self
 
     def findAll(self, all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, field=None, **kwargs):
-        commands = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
-        query = {"$and": commands} if commands else {}
+        query = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
         self._documents = [doc[pop_key_from_dict(field)] if field and len(field) == 1 else doc for doc in
                            self.collection.find(query, field)]
         if field and len(field) != 1:
@@ -86,8 +93,7 @@ class BaseMongodb(object):
         return self
 
     def pop(self, all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):
-        commands = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
-        query = {"$and": commands} if commands else {}
+        query = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
         self._documents = self.collection.find_one_and_delete(query)
         self._count()
         return self
