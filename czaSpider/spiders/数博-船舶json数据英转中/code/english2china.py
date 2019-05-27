@@ -1,8 +1,3 @@
-
-
-
-
-
 MAP_KEY = {
     "biz_result": "返回业务报文内容",
     "method": "业务类型",
@@ -64,28 +59,6 @@ def dict2china(json_dict: dict) -> dict:
     return translation
 
 
+# 对外接口
 def list2china(json_list: list) -> list:
     return [dict2china(json) for json in json_list]
-
-
-def get_data(name, PartyFunctionCode):
-    data = {
-        "method": "logink.track.vessel",
-        "result_format": "1",
-        "charset": "utf-8",
-        "biz_version": "",
-        "sec": {"userid": "901001",
-                "token": "NmRkOTdjODQtMjMyYy00NzM4LWI2NmMtOGUxNTcwZTNiNDAwVF9UXzBBU19JRF9sb2dpbmtfMA"},
-        "biz_content": {
-            "SearchTypeCode":"13",
-            "vesselEnglishName": name,
-            "VesselCallNumber": "",
-            "IMONumber": "",
-            "VoyageNumber": "",
-            "PortCode": "",
-            "StartTime": "2019-01-01 00:00:00",
-            "EndTime": "2019-5-24 23:59:59",
-            "PartyFunctionCode": PartyFunctionCode,
-            "CarrierName": ""},
-    }
-    return {k: str(v) for k, v in data.items()}

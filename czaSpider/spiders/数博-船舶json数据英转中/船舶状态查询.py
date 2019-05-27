@@ -2071,7 +2071,7 @@ JISHUN
     # aims = ['CNNGB', 'CNZOS', 'CNWNZ', 'CNDAL', 'COSCO', 'CARGOSMART', 'NBEPORT', 'ZJEPORT', 'CNZUH', 'AEKHL', 'BBGP',
     #         'COLINS', 'SPIDC']
     # 异常：'CNWNZ', 'CNDAL', 'COSCO', 'NBEPORT', 'ZJEPORT', 'AEKHL', 'COLINS', 'SPIDC'
-    aims = ['COSCO']
+    aims = ['COSCO'] # todo, 服务商入口
 
     # ret = []
     for aim in aims:
@@ -2094,7 +2094,6 @@ JISHUN
                         test_f.write(json.dumps(info, ensure_ascii=False))
             except requests.exceptions.ReadTimeout:
                 print('time-out')
-                # print(traceback.format_exc())
                 pass
         with open("%s-船舶状态查询.json" % aim, "w", encoding="utf8") as f:
             f.write(json.dumps(temp, ensure_ascii=False))
