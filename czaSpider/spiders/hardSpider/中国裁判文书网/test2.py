@@ -69,6 +69,7 @@ class AntiJS:
             if re.search('eval\(function\(p,a,c,k,e,r', response.text):
                 anti = cls(response)
                 yield from anti.anti_first()
+                print("Finished AntiJS...")
                 return
             yield from func(spider, response)
 
