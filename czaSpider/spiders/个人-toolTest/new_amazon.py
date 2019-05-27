@@ -33,5 +33,5 @@ class MySpider(IOCO):
 
 
 if __name__ == "__main__":
-    # MySpider.cza_run_spider()
-    MySpider.mongodb2csv(source=True)
+    MySpider.cza_run_spider()
+    # MySpider.mongodb2csv(source=True)
