@@ -5,14 +5,25 @@ from czaSpider.czaTools import *
 class MySpider(IOCO):
     name = "world-test"
 
-    url = "https://etax.xinjiang.chinatax.gov.cn/yhs-web/api/zdwfaj/ajlbcx"
+    # http://www.zzcredit.gov.cn/xzcf/
+    url1 = "http://www.zzcredit.gov.cn/xzcf/"
+    url2 = "http://www.zzcredit.gov.cn/selectSgsInfo.jspx"
+    data = {
+        "type":"frcf",
+        "keyword":"",
+        "belongsArea": "",
+        "bm": "",
+        "pageSize": "12",
+        "pageNo": "1",
+        "_":"1559037829564"
+    }
+    header = {
+        "Referer":"http://www.zzcredit.gov.cn/xzcf/",
+        "User-Agent":""
+    }
 
     def start_requests(self):
-        headers = {
-            "Content-Type": "application/json;charset=UTF-8",
-        }
-        data = {"nsrsbh": "", "nsrmc": "", "fddbrxm": "", "pageSize": 10, "sswfrlx": "00", "pageIndex": 1}
-        yield Request(self.url, body=json.dumps(data), method="POST", headers=headers)
+        yield FormRequest(self.url2, formdata=self.data, method="GET")
 
     def parse(self, response):
         print(response.text)

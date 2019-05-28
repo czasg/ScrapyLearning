@@ -39,7 +39,7 @@ tt = switch_to_alert()  # 捕捉弹框
 print(tt.text)  # 打印弹框中的文本
 tt.accept()  # 点击弹框中的ok
 """
-driver = webdriver.Chrome("chromedriver.exe")  # 创建一个chorme实例
+driver = webdriver.Chrome("chromedriver123.exe")  # 创建一个chorme实例
 driver.get("http://www.python.org")  # 打开目标url，等待加载完毕
 assert "Python" in driver.title  # 检查打开页面的标题属性
 elem = driver.find_element_by_name("q")  # 找到输入框
