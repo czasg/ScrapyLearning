@@ -5,25 +5,16 @@ from czaSpider.czaTools import *
 class MySpider(IOCO):
     name = "world-test"
 
-    # http://www.zzcredit.gov.cn/xzcf/
-    url1 = "http://www.zzcredit.gov.cn/xzcf/"
-    url2 = "http://www.zzcredit.gov.cn/selectSgsInfo.jspx"
+    page = 1
+    url = 'http://www.sxcredit.gov.cn/queryPermitPublishPage.jspx'
     data = {
-        "type":"frcf",
-        "keyword":"",
-        "belongsArea": "",
-        "bm": "",
-        "pageSize": "12",
-        "pageNo": "1",
-        "_":"1559037829564"
-    }
-    header = {
-        "Referer":"http://www.zzcredit.gov.cn/xzcf/",
-        "User-Agent":""
+        "lb": "xzcf",
+        "pageNo": str(page),
+        "pageSize": "10",
     }
 
     def start_requests(self):
-        yield FormRequest(self.url2, formdata=self.data, method="GET")
+        yield FormRequest(self.url, formdata=self.data)
 
     def parse(self, response):
         print(response.text)

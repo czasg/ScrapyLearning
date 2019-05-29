@@ -3,8 +3,10 @@ import json
 
 from scrapy import Selector
 
-from english2china import list2china
-from SHIPS_NAME import names
+from importlib import import_module
+
+list2china = getattr(import_module("english2china"), "list2china")
+names = getattr(import_module("SHIPS_NAME"), "names")
 
 url = "http://track.logink.org:9082/OceanTracking/VesselTracking"
 
