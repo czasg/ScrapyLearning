@@ -6,6 +6,7 @@ __FILE__ = "NOTE BOOK"
 scrapy中response.request就是代表一个Request对象，且是上一级的请求对象。而response.request.callback则是指接受此response对象的函数
 或者使用yield response.request.replace(url=new_page, dont_filter=True)
 response.request.body.decode()这个好像是代表访问的url
+yield Request(url).replace(meta={"url":url})可以使用这种方式传递meta，很强页很骚
 
 request payload请求方式，传送数据是json，需要使用Request(self.url, body=json.dumps(data), method="POST", headers=headers)，头为"application/json;charset=UTF-8"
 
