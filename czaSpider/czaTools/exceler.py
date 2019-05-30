@@ -6,7 +6,7 @@ from xlutils.copy import copy
 from lxml.html import etree, open_in_browser
 
 from czaSpider.czaTools.path_func import to_path
-from czaSpider.czaTools.data_manipulation import arrayJoin
+from czaSpider.czaTools.process_dict import arrayJoin
 
 
 def array2excel(array, fileName, sheetName):
