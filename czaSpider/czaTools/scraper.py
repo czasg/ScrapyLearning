@@ -5,8 +5,7 @@ import time
 from scrapy import Request
 
 from czaSpider.czaTools.url_func import get_next_page
-from czaSpider.czaTools.constant import post_dict
-from czaSpider.czaTools.data_manipulation import arrayJoin
+from czaSpider.czaTools.process_dict import arrayJoin
 
 
 def traverse_urls(response, spider, xpath_rule=None, next_page_format=None, next_page_without_new_urls=False,

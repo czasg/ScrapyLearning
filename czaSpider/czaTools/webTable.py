@@ -5,7 +5,7 @@ import numpy as np
 from scrapy import Selector
 
 from czaSpider.czaTools.scraper import data_from_xpath
-from czaSpider.czaTools.data_manipulation import strJoin
+from czaSpider.czaTools.process_dict import strJoin
 
 
 class _Td(object):
