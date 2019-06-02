@@ -4,8 +4,6 @@ from czaSpider.czaBaseSpider import IOCO
 from czaSpider.czaTools import *
 
 
-
-
 class MySpider(IOCO):
     name = "chinaReferee-government"
 
@@ -53,7 +51,7 @@ class MySpider(IOCO):
             cookie = response.headers['Set-Cookie'].decode()
             vjkl5 = re.search('vjkl5=(.*?);', cookie).group(1)
             vl5x, number, guid = self.anti_second.call('anti_second', vjkl5)
-            print("vl5x: ",vl5x)
+            print("vl5x: ", vl5x)
             formData = {
                 "Param": "全文检索:合同",
                 "Index": str(self.PAGE),
@@ -66,7 +64,6 @@ class MySpider(IOCO):
             }
             print("formdata: ", formData)
             yield FormRequest(self.url, self.parse2, headers=self.headers, formdata=formData, dont_filter=True)
-
 
     def parse1(self, response):
         print('????????????????')
@@ -118,12 +115,17 @@ class MySpider(IOCO):
 
     @classmethod
     def process_detail(cls, response, document, info):
-        print(response.text)
-        return
-        yield
+        for i in range(5000):
+            info["test"] = "test"
+            yield info
 
 
 if __name__ == "__main__":
-    MySpider.cza_run_spider()
+    # MySpider.cza_run_spider()
     # MySpider.file_download(thread=5)
+    import time
+
+    start = time.time()
     # MySpider.file_reParse()
+    MySpider.test()
+    print("Done!, using: %s" % str(time.time() - start))

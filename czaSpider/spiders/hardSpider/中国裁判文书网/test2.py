@@ -7,9 +7,9 @@ list_url = "http://wenshu.court.gov.cn/List/ListContent"
 
 detail_url = "http://wenshu.court.gov.cn/CreateContentJS/CreateContentJS.aspx"
 
-entrance = "http://wenshu.court.gov.cn/list/list/?sorttype=1&number=3YHLPLNF" \
-           "&guid=5ef7e9dc-73c0-b781cc87-3397a46b1b03&conditions=searchWord+QWJS+++%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2:%E5%A4%84%E7%BD%9A"
-
+# entrance = "http://wenshu.court.gov.cn/list/list/?sorttype=1&number=3YHLPLNF" \
+#            "&guid=5ef7e9dc-73c0-b781cc87-3397a46b1b03&conditions=searchWord+QWJS+++%E5%85%A8%E6%96%87%E6%A3%80%E7%B4%A2:%E5%A4%84%E7%BD%9A"
+entrance = "http://wenshu.court.gov.cn/list/list/?sorttype=1"
 anti_headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36",
 }
@@ -93,6 +93,8 @@ class MySpider(IOCO):
         yield FormRequest(list_url, self.parse2, headers=anti_headers, formdata=formData, dont_filter=True)
 
     def parse2(self, response):
+        print(response.text)
+        # return
         content = json.loads(json.loads(response.text))
         RunEval = content[0]['RunEval']
         detail_urls = []

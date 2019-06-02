@@ -14,7 +14,7 @@ from czaSpider.dataBase.file_database.fileManager import FileManager
 from czaSpider.czaTools import *
 from czaSpider import items
 
-logging = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 class SpiderMetaClass(type):
@@ -117,13 +117,13 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
 
     @classmethod
     def _file_parse(cls, thread=1):
-        logging.warning('start parsing...')
+        logger.warning('start parsing...')
         threads = [Thread(target=cls.__file_parse) for _ in range(thread)]
         for t in threads:
             t.start()
         for t in threads:
             t.join()
-        logging.warning('parsing done!')
+        logger.warning('parsing done!')
 
     @classmethod
     def __file_parse(cls, callback=None):
@@ -134,8 +134,8 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
                 info = document.pop("more", {})
                 callback(response, document, info) if callback else cls._parse_detail(response, document, info)
             except:
-                logging.error(traceback.format_exc())
-                logging.error(str(document))
+                logger.error(traceback.format_exc())
+                logger.error(str(document))
 
     @classmethod
     def _process_document(cls, document):
@@ -155,8 +155,11 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
     @classmethod
     def _parse_detail(cls, response, document, info):
         documents = [item.copy() for item in cls.process_detail(response, document, info)]
+        import time
+        start = time.time()
         cls.mongo.resolver.insertAll(cls._polish_outputs(documents)) if documents else None
         cls.mongo.source.update(_id=document['_id'], set={'parse_time': datetime.datetime.now()})
+        print("using: %s" % str(time.time() - start))
 
     @classmethod
     def process_detail(cls, response, document, info):
@@ -171,3 +174,41 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
         cls.mongo.source.updateAll(set={"parse_time": None})
         cls.mongo.resolver.drop()
         cls.file_parse(thread)
+
+    # test #
+    @classmethod
+    def test(cls):
+        cls.mongo.source.updateAll(set={"parse_time": None})
+        cls.mongo.resolver.drop()
+        import asyncio
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(cls.__test1(loop))
+        loop.stop()
+
+    @classmethod
+    async def __test1(cls, loop):
+        documents = cls.mongo.source.findAll(download_finished=True, parse_time=None, **cls.parse_filter).documents
+        for document in documents:
+            try:
+                response = cls._process_document(document)
+                info = document.pop("more", {})
+                cls.__test3(response, document, info, loop)
+            except:
+                logger.error(traceback.format_exc())
+                logger.error(str(document))
+
+    @classmethod
+    def __test3(cls, response, document, info, loop):
+        documents = [item.copy() for item in cls.process_detail(response, document, info)]
+        from concurrent.futures import ThreadPoolExecutor
+        import time
+        start = time.time()
+        # with ThreadPoolExecutor() as pool:
+        #     loop.run_in_executor(pool, cls.future, documents, document)
+        loop.run_in_executor(None, cls.future, documents, document)
+        print("using: %s" % str(time.time() - start))
+
+    @classmethod
+    def future(cls, documents, document):
+        cls.mongo.resolver.insertAll(cls._polish_outputs(documents)) if documents else None
+        cls.mongo.source.update(_id=document['_id'], set={'parse_time': datetime.datetime.now()})

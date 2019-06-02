@@ -1,7 +1,5 @@
 import logging
 import os
-
-logging = logging.getLogger(__name__)
 import time
 import uuid
 
@@ -9,6 +7,7 @@ from aiohttp import web
 
 from czaSpider.dataBase.file_database.mini_file_server.config import toPath
 
+logger = logging.getLogger(__name__)
 routers = web.RouteTableDef()
 
 
@@ -44,5 +43,5 @@ async def file_store(request):
 
 app = web.Application()
 app.add_routes(routers)
-logging.info('http://127.0.0.1:9000 server start...')
+logger.info('http://127.0.0.1:9000 server start...')
 web.run_app(app, host='127.0.0.1', port=9000)
