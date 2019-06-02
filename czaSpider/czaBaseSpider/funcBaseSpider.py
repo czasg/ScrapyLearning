@@ -119,7 +119,7 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
     def _file_parse(cls, thread=1):
         logger.warning('start parsing...')
         threads = [Thread(target=cls.__file_parse) for _ in range(thread)]
-        for t in threads:
+        for t in threads:  # todo，There multiple threads are BUG， it will run repeat
             t.start()
         for t in threads:
             t.join()
@@ -155,11 +155,8 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
     @classmethod
     def _parse_detail(cls, response, document, info):
         documents = [item.copy() for item in cls.process_detail(response, document, info)]
-        import time
-        start = time.time()
         cls.mongo.resolver.insertAll(cls._polish_outputs(documents)) if documents else None
         cls.mongo.source.update(_id=document['_id'], set={'parse_time': datetime.datetime.now()})
-        print("using: %s" % str(time.time() - start))
 
     @classmethod
     def process_detail(cls, response, document, info):
@@ -175,7 +172,8 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
         cls.mongo.resolver.drop()
         cls.file_parse(thread)
 
-    # test #
+    # test for asynchronous parsing - Failure #
+
     @classmethod
     def test(cls):
         cls.mongo.source.updateAll(set={"parse_time": None})
@@ -200,13 +198,7 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
     @classmethod
     def __test3(cls, response, document, info, loop):
         documents = [item.copy() for item in cls.process_detail(response, document, info)]
-        from concurrent.futures import ThreadPoolExecutor
-        import time
-        start = time.time()
-        # with ThreadPoolExecutor() as pool:
-        #     loop.run_in_executor(pool, cls.future, documents, document)
         loop.run_in_executor(None, cls.future, documents, document)
-        print("using: %s" % str(time.time() - start))
 
     @classmethod
     def future(cls, documents, document):
