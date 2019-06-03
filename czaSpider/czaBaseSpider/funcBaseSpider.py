@@ -118,17 +118,23 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
     @classmethod
     def _file_parse(cls, thread=1):
         logger.warning('start parsing...')
-        threads = [Thread(target=cls.__file_parse) for _ in range(thread)]
-        for t in threads:  # todo，There multiple threads are BUG， it will run repeat
+        threads = [Thread(target=cls._file_parse_further, args=(thread, index, None)) for index in range(thread)]
+        for t in threads:
             t.start()
         for t in threads:
             t.join()
         logger.warning('parsing done!')
 
+    @staticmethod
+    def _thread_filter(thread, index, document):
+        return thread > 1 and not ord(str(document["_id"])[-1]) % thread == index
+
     @classmethod
-    def __file_parse(cls, callback=None):
+    def _file_parse_further(cls, thread=1, index=None, callback=None):
         documents = cls.mongo.source.findAll(download_finished=True, parse_time=None, **cls.parse_filter).documents
         for document in documents:
+            if cls._thread_filter(thread, index, document):
+                continue
             try:
                 response = cls._process_document(document)
                 info = document.pop("more", {})
@@ -180,23 +186,23 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
         cls.mongo.resolver.drop()
         import asyncio
         loop = asyncio.get_event_loop()
-        loop.run_until_complete(cls.__test1(loop))
+        loop.run_until_complete(cls._test1(loop))
         loop.stop()
 
     @classmethod
-    async def __test1(cls, loop):
+    async def _test1(cls, loop):
         documents = cls.mongo.source.findAll(download_finished=True, parse_time=None, **cls.parse_filter).documents
         for document in documents:
             try:
                 response = cls._process_document(document)
                 info = document.pop("more", {})
-                cls.__test3(response, document, info, loop)
+                cls._test3(response, document, info, loop)
             except:
                 logger.error(traceback.format_exc())
                 logger.error(str(document))
 
     @classmethod
-    def __test3(cls, response, document, info, loop):
+    def _test3(cls, response, document, info, loop):
         documents = [item.copy() for item in cls.process_detail(response, document, info)]
         loop.run_in_executor(None, cls.future, documents, document)
 

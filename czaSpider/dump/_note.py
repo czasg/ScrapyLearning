@@ -25,4 +25,6 @@ unquote
 unquote_plus
 unquote_to_bytes
 urlencode 拼接元素使称为url后缀参数
+
+对于多线程会重复解析的问题，可以通过手动分配线程任务来避免任务被重复解析。以id最后一位计算，除以线程数就可以分配线程任务了
 """

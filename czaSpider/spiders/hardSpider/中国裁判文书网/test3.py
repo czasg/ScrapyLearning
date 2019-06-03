@@ -107,8 +107,8 @@ class MySpider(IOCO):
             "number": str(number),
             "guid": str(guid),
         }
-        yield FormRequest(key_url, self.key_parse, headers=anti_headers, formdata=key_params,
-                          dont_filter=True)
+        # yield FormRequest(key_url, self.key_parse, headers=anti_headers, formdata=key_params,
+        #                   dont_filter=True)
 
     @AntiJS.auto
     def parse2(self, response):
@@ -146,12 +146,13 @@ class MySpider(IOCO):
 
     @classmethod
     def process_detail(cls, response, document, info):
-        print(response.text)
-        return
-        yield
+        info["text"] = xpather(response, '.').article
+        info["url"] = response.url
+        yield info
 
 
 if __name__ == "__main__":
-    MySpider.cza_run_spider()
-    # MySpider.file_download(thread=5)
-    # MySpider.file_reParse()
+    # MySpider.cza_run_spider()
+    # MySpider.file_download()
+    MySpider.file_reParse(thread=3)
+    # MySpider.file_parse(thread=3)
