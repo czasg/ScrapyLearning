@@ -1,85 +1,78 @@
-__purpose__ = "Note For Html"
-
+__goal__ = "Note for 前端组件"
 """
-布局容器
-需要为【页面内容】和【栅格系统】使用.container容器，这二者不能相互嵌套
-<div class="container"> 类似固定宽度并支持响应式布局的容器
-<div class="container-fluid"> 类似于100%宽度，占据全部视口（viewport）的容器
+span中可以通过添加class展示各种图标，当需要增加文本时，务必在图标和文本之间添加一个空格
+<span class="glyphicon"> Star  就像这里一样，前面需要加空格
 
-【栅格系统】
-栅格系统就是通过一系类行row和一系列column的组合来创建页面布局。 说白点就是行列组成的嘛
-row必须在.container（固定宽度）或者.container-fluid（100%宽度）中，方便排列aligment和内补padding
-column置于row中，每一个column用于放置内容，且只有column可以作为row的直接子元素
-可以通过对列设置padding内补属性，从而创建列与列之间的间隔
-通过为row设置负值margin，从而抵消为container元素设置的padding
-.col-xs-4表示三个等宽列
+弹窗里面可以加图标
 
-标签：
-<mark>表示标记文本
-<del>表示删除文本
-<u>表示有下划线的文本
+【下拉菜单】
+下拉菜单触发器和下拉菜单都包裹早dropdown里面
+按钮那一块使用class="dropdown"，而具体的下拉内容我们应该使用class="dropdown-menu"属性
+整个模块都可以扔到<div>里面去，整个下拉就是一个div模块
+菜单的内容默认是左对齐的，通过<ul class="dropdown-menu dropdown-menu-right">可以让菜单那右对齐
+这里的右对齐就是整个框都到右边去了的意思，不是字体在右边
 
-class="text-left", "text-center", "text-right", "text-justify", "text-nowrap"
-分别表示左对齐、中间对齐、右对齐、
-class="text-lowercase", "text-uppercase", "text-capitalize"
-分别表示字体的大小
+可以在这个div的首行加入标题来表达这个菜单栏的意思，首行就是在ul的意思，不是在整个div
+<li class="dropdown-header">DropDown</li>
+还可以添加分割线：<li role="separator" class="divider"></li>这就是一条分割线
 
-<abbr title="allow">al</abbr>表示略缩语，鼠标过去会显示所有的
-<blockquote>表示引用
-<dl><dt><dd>这三个表示带有描述的短语列表
-<code>表示代码片段
-<kbd>表示用户输入字段，参考linux终端输入
 
-class="table" 
-class="table table-striped" 添加斑马状表格
-class="table table-bordered" 为每一个表格添加边框
-class="table table-hover" 让每一行对鼠标悬停做出响应
-class="table table-condensed" 让表格更加紧凑
-<div class="table-responsive"> 创建响应式表格，即允许其在屏幕上水平滚动，需要将table放到这里面
+【按钮组】
+是一个div模块，这个模块为class="btn-group"，当有唐初框是，必须指定container：'body'属性
+还需要确保设置正确的role属性并提供一个label标签，按钮组就是role="group", 对于工具栏就是class="toolbar"
+<div class="btn-group" role="group"></div>
+<div class="btn-toolbar" role="toolbar"><div class="btn-group" role="group"></div></div>在里面组合进group，同样也是可以的，这样就是分开了而已，感觉没和在一起的好看
+class="btn-group btn-group-lg"可以设置按钮组的大小
 
-【表单】
-单独的表单有一些全局样式，所有设置了form-control类的标签（input，textarea，select）都会成为宽度100%
-将这些空间放置到<div class="form-group">类中，可以自动获得最好的排列
-一定要设置label，就算不想要也要设置，可以使用sr-only隐藏
-class="form-inline"表示内联表单，即内容做对齐，此时lable与input是上下关系
-class="form-horizontal"表示水平表单
-<div class="input-group"><div class="input-group-addon">@</div></div>可以预填文章
+可以组合按钮组和下拉菜单组，就是把group里面且套一个group，然后把下拉菜单的属性扔进去
+通过btn-group得到的按钮组大小是随着字体的多少变化的，想要获得一个固定的不变的样式，我们可以使用justified
+<div class="btn-group btn-group-justified" role="group"><div class="btn-group" role="group"> 通过这种外面是justified，里面嵌套btn-group来实现同一按钮组的大小
 
-对多行的表单文本控件，可以更改rows属性来实现，也就是我想要一个大一点的输入框，可以使用rows属性
-如<textarea class="form-control" rows="3"></textarea>
+所谓的分裂是按钮，就是一个普通的下拉式按钮组，在前面再加一个无关紧要的按钮咯
 
-单选多选框，<div class="checkbox"><label><input type="checkbox">hello world  都是向这种样式的编写方法
-对lable设置type="checkbox-inline"可以使控件排成一行
+【输入框组】
+只支持input，不支持select，也不支持textarea，使用的class="input-group"
+不要将表单或column直接和输入框混合使用，而是将输入框组嵌套入表单组或者栅格相关的元素
+<div class="input-group"><span class="input-group-addon">@</span><input class="form-control" type="text" placeholder="Username"></div>
+可以直接通过对<div class="input-group input-group-lg">调整整体的大小而不是单独的去调整每一个
 
-下拉框
-<select class="form-control"><option>1</option></select>通过添加多个option可以实现
-当你使用了multiple时，默认会显示多选项<select multiple class="">
+作为额外元素的按钮，即使用input-group-btn而不是input-group-addon
+这种其实就是在一个div为row的模板里面，对col记性响应的设计，里面嵌套input-group
+按钮的大小可以使用class="form-control"来进行控制，默认的大小就那样啊
+<div class="row"><div class="col-lg-6"><div class="input-group"><input><span class="input-group-btn"><button>
+我去，怎么感觉都有点大同小异了
 
-为输入框设置disable可以禁用此输入框
-class="input-lg input-sm" 可以控制输入框的大小
+【导航】
+，如果在导航组件实现导航条功能，务必在ul的最外围的逻辑上加上role="navigation"
+普通标签页，使用<ul class"nav nav-tabs"><li role="presentation"></li>
+胶囊式标签，使用<ul class="nav nav-pills">，区分不同的状态，可以使用class="avtive"，这个估计得使用js了
+垂直式标签，使用<ul class="nav nav-pills nav-stacked">
+当你需要等宽的时候，可以使用nav-justified
+ul里面接li，而li里面则接a，所以当你需要使用下拉菜单的时候记得用a而不是button，type=button
 
-水平排列输入框<form class="form-horizontal"><div class="form-group"><label class="col-sm-2"><div class="col-sm-10"><input class="form-control">
-即首先是一个form表示表单，再一个div包含form-group，通过设置label和div的col属性，可以达到多个标签在同一列的表现
-还可以通过row来实现排列在同一行，即row一下，对然后只对div设置col-xs属性等，每个属性里面可以方label和input属性
+【导航条】
+一般导航条都使用nav标签，如果使用的div的化，我们应该使用role="navigation"
+对于导航条，使用<nav class="navbar navbar-default">
+里面就是一些乱七八糟的东西，感觉和以前额都不太一样了
 
-【按钮】
-<button class="btn btn-default" type="submit">
-<input class="btn btn-default" type=button>
-如果要用a标签，则需要将其设置为role="button"
-btn-sm，btn-lg，btn-xs可以设置按钮的大小，外形上的大小
-btn-block我可以让按钮填充整个父级元素，即100%
+你想要创建一个header，需要先创建一个container-fluid，在这里面进行一些配置
+如<div class="container-fluid"><div class="navbar-header"><a class="navbar-brand"><img src="#"></a></div></div>这个可是一路嵌套到最里层啊
+navbar-header是服务于收个标签或者图片的，这个模块在container-fluid里面
 
-【图片】
-响应式图片<img src="" class="img-responsive">
-若要使图片居中，可以使用center-block，而不是text-center
-class="img-rounded", "img-circle", "img-thumbnail"分别代表圆角正方形，圆形，正方形
+<div class="collapse navbar-collapse"> 这个模块是用来手机超链接，表单还有一些下拉菜单等属性的，是一个与navbar-header同级的意思把
 
-对于文本p标签，我们可以让他有不同的颜色class="text-warning"这是是仅仅针对文字的
-如果是想要修改文本的背景颜色，我们可以使用"bg-primary bg-warning"
+这里的导航都变了<ul class="nav navbar-nav">都变成这个样子了，醉了，以前的是<div class="nav nav-pills">
 
-左右浮动
-<div class="pull-left pull-right">可以将任意元素向左或向右浮动，居中则是<class="center-block">
-当时上述不能用于导航条中，在导航条中可以使用class="navbar-left navbar-right"
+表单也变了<form class="navbar-form navbar-left">，里面还是使用form-group，基本都还好
+
+
+
+
+
+
+
+
+
 
 
 
@@ -87,3 +80,25 @@ class="img-rounded", "img-circle", "img-thumbnail"分别代表圆角正方形，
 
 
 """
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -40,6 +40,7 @@ class Engine:
         if Q.qsize() == 0 and len(self.crawing) == 0:
             print("如果是空就走这里是吧")
             self._close.callback(None)
+            return
         if len(self.crawing) >= self.max:
             print("如果达到上限了就走这里是吧")
             return
@@ -65,9 +66,9 @@ class Engine:
                 Q.put(request)
             except StopIteration:
                 break
-        reactor.callLater(0, self._next_request)  # 然后立即执行一次，与scrapy中的简直一模一样，任务全推进去后就开始执行，且不会  # 这里是run开启后第一个执行的
+        reactor.callLater(0, self._next_request)  # 这里只是一个注册，并不直接执行 然后立即执行一次，与scrapy中的简直一模一样，任务全推进去后就开始执行，且不会  # 这里是run开启后第一个执行的
         print('111')
-        self._close = defer.Deferred()
+        self._close = defer.Deferred()  # 需要返回一个defer对象
         print('原来如此，会把这个流程走完，因为是生成器，会走到第一个yield来')
         yield self._close
         print('111-111')
