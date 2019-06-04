@@ -17,10 +17,24 @@ class="modal fade" role="dialog"
             class="modal-footer"
 如果要添加栅格栏，或者表单，我们可以在body里面进行定义
 
+【dropdown】
+$('#myDropdown').on('show.bs.dropdown', function(){
+    //do something
+})
+
+实现动态切换，可以使用
+$('#myTabs a').click(function(e){
+    e.preventDefault()
+    $(this).tab('show')
+})
+$('#myTabs a[href="#profile"]').tab('show')
+$('#myTabs a:first').tab('show')
+
+可以对按钮添加动态信息
+<button type="button" class="btn" data-toggle="tooltip" data-placement="left" title="Hello World">
 
 
-
-
+nav nav-sidebar
 
 
 
