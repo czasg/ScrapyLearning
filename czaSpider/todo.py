@@ -8,14 +8,16 @@ __FILE__ = "Unfinished Todo"
 2019.06.02 - 爬虫框架中还有raise Exception模块需要写，对各种异常的定义，要个性化一点
 2019.06.03 - Scrapy框架signal模块是个什么原理，怎么实际开发中还能用的到，怎么用，参考巨潮年报
 2019.06.03 - 现在的框架不支持post请求下载，这个显然不太合理，可以研究研究怎么下载post请求的数据
-2019.06.03 - scrapy如何增加日志模块，可以在下载中执行指令-s LOG_FILE= --loglevel=INFO来启动吗
 2016.06.03 - md说明文件的编写规范与格式
 2016.06.03 - redis集群，这个怎么玩啊
-2016.06.03 - 附加转化，doc转docx，pdf转html，还有pdf的相关操作，这些我是不是写过啊，再整理一下吧
-2016.06.03 - 如何使用logging模块兵输出具体的文件 from logging.handlers import TimedRotatingFileHandler 模块
+2016.06.03 - 附件转化，doc转docx，pdf转html，还有pdf的相关操作，这些我是不是写过啊，再整理一下吧
+2016.06.04 - 百度那位小哥的代码，看看是不是可以加入Item组件，感觉很牛
 """
 
 """DONE!
+2019.06.03 - scrapy如何增加日志模块，可以在下载中执行指令-s LOG_FILE= --loglevel=INFO来启动吗
+2016.06.04 - 廖老师的git和sql还是要再看看啊，这玩意有用的很
+2016.06.03 - 如何使用logging模块兵输出具体的文件 from logging.handlers import TimedRotatingFileHandler 模块
 2019.06.02 - BoopStrap组件
 2016.06.03 - window下如何开启定时任务
 2019.06.03 - 百度那位小哥的模拟Scrapy框架，可以学习学习精髓，有点小经典
