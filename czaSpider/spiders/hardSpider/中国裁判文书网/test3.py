@@ -99,16 +99,16 @@ class MySpider(IOCO):
         vjkl5 = re.search('vjkl5=(.*?);', cookie).group(1)
         vl5x, number, guid = anti_second.call('anti_second', vjkl5)
         self.formData = refresh_formData(self.key, vl5x, number, guid)
-        yield FormRequest(list_url, self.parse2, headers=anti_headers, formdata=self.formData,
-                          dont_filter=True)
+        # yield FormRequest(list_url, self.parse2, headers=anti_headers, formdata=self.formData,
+        #                   dont_filter=True)
         key_params = {
             "Param": self.key,
             "vl5x": str(vl5x),
             "number": str(number),
             "guid": str(guid),
         }
-        # yield FormRequest(key_url, self.key_parse, headers=anti_headers, formdata=key_params,
-        #                   dont_filter=True)
+        yield FormRequest(key_url, self.key_parse, headers=anti_headers, formdata=key_params,
+                          dont_filter=True)
 
     @AntiJS.auto
     def parse2(self, response):
@@ -139,9 +139,12 @@ class MySpider(IOCO):
 
     @AntiJS.auto
     def key_parse(self, response):
-        key_data = json.loads(json.loads(response.text))
-        Keys = [{data["Key"]: [child["Key"] for child in data["Child"] if child["Key"]]} for data in key_data]
-        print(Keys)  # todo, maybe push those keys to redis database
+        if response.text:
+            key_data = json.loads(json.loads(response.text))
+            Keys = [{data["Key"]: [child["Key"] for child in data["Child"] if child["Key"]]} for data in key_data]
+            print(Keys)  # todo, maybe push those keys to redis database
+        else:
+            print("Get No Key: %s" % response.text)
         yield
 
     @classmethod
@@ -152,7 +155,7 @@ class MySpider(IOCO):
 
 
 if __name__ == "__main__":
-    # MySpider.cza_run_spider()
+    MySpider.cza_run_spider()
     # MySpider.file_download()
-    MySpider.file_reParse(thread=3)
+    # MySpider.file_reParse(thread=3)
     # MySpider.file_parse(thread=3)
