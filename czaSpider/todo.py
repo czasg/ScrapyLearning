@@ -16,6 +16,7 @@ __FILE__ = "Unfinished Todo"
 2016.06.05 - 关于各高校高考分数的信息，可以做一个数据分析，这个就没必要做持续，因为每年就一次高考，或许可以提供某些服务。爬985高校，211高校
 2016.06.05 - 前端那种折线图，动态展示是怎么做的啊，折线，柱状图，饼状图等等
 2016.06.05 - 正则学习，零宽断言
+2016.06.06 - 各高校的分数等情况，是时候提上日程了
 """
 
 """DONE!
@@ -39,4 +40,5 @@ __FILE__ = "Unfinished Todo"
 
 """
 You Are An Apple In My Eyes
+Courage is not the absence of fear, but rather the judgment that something else is more important than fear.
 """
