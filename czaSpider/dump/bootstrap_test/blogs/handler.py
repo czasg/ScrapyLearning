@@ -3,7 +3,7 @@ import inspect
 import asyncio
 import functools
 
-from urllib.parse import *
+from urllib.parse import parse_qs
 from importlib import import_module
 from aiohttp import web
 
