@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<link href="/static/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/static/css/bootstrap-theme.css" rel="stylesheet">
+	<link rel="stylesheet" href="style.css" />
+	<!-- jquery must be ahead of bootstrap -->
+	<script src="/static/js/jquery.min.js"></script>
+	<script src="/static/js/bootstrap.min.js"></script>
+	<script src="/static/js/vue.js"></script>
+	<script src="/huadong.js"></script>
+	<title>Test For BootStrap</title>
+</head>
+<body style="padding-top: 70px;padding-bottom: 70px;">
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#NAVBAR-HEADER" aria-expanded="false">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#" type="button" data-toggle="modal" data-target="#IOCO">IOCO</a>
+        </div>
+        <div class="collapse navbar-collapse" id="NAVBAR-HEADER">
+            <form class="navbar-form navbar-left">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search">
+                </div>
+                <button type="submit" class="btn">Submit</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="NAV-TOP-MENU" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" type="button" data-toggle="modal" data-target="#LOGIN-IN">登录</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 col-sm-2 col-xs-2">
+            <ul class="nav nav-stacked" data-spy="affix" style="width:200px;">
+                <li role="presentation" ><a href="#">作者</a></li>
+                <li role="presentation"><a href="#">博客</a></li>
+                <li role="presentation"><a href="#">爬虫</a></li>
+            </ul>
+            <!--<ul class="list-group">-->
+                <!--<a class="list-group-item" href="#">作者</a>-->
+                <!--<a class="list-group-item" href="#">博客</a>-->
+                <!--<a class="list-group-item" href="#">爬虫</a>-->
+            <!--</ul>-->
+        </div>
+        <div class="col-md-8 col-sm-8 col-xs-8">
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>
+                        <a href="#">This Is Blog Header</a>
+                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
+                    </h4>
+                    <small>发表于2019.07.05</small>
+                </div>
+                <div class="panel-body">
+                    <dt>This Is Blog Body</dt>
+                    <a><small>继续阅读</small></a>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>
+                        <a href="#">This Is Blog Header</a>
+                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
+                    </h4>
+                    <small>发表于2019.07.05</small>
+                </div>
+                <div class="panel-body">
+                    <dt>This Is Blog Body</dt>
+                    <a><small>继续阅读</small></a>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>
+                        <a href="#">This Is Blog Header</a>
+                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
+                    </h4>
+                    <small>发表于2019.07.05</small>
+                </div>
+                <div class="panel-body">
+                    <dt>This Is Blog Body</dt>
+                    <a><small>继续阅读</small></a>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>
+                        <a href="#">This Is Blog Header</a>
+                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
+                    </h4>
+                    <small>发表于2019.07.05</small>
+                </div>
+                <div class="panel-body">
+                    <dt>This Is Blog Body</dt>
+                    <a><small>继续阅读</small></a>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>
+                        <a href="#">This Is Blog Header</a>
+                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
+                    </h4>
+                    <small>发表于2019.07.05</small>
+                </div>
+                <div class="panel-body">
+                    <dt>This Is Blog Body</dt>
+                    <a><small>继续阅读</small></a>
+                </div>
+            </div>
+            <div class="panel panel-info">
+                <div class="panel-heading">
+                    <h4>
+                        <a href="#">This Is Blog Header</a>
+                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
+                    </h4>
+                    <small>发表于2019.07.05</small>
+                </div>
+                <div class="panel-body">
+                    <dt>This Is Blog Body</dt>
+                    <a><small>继续阅读</small></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-sm-2 col-xs-2"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="IOCO" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">IOCO</h4>
+                <h6>Institution Of Computer Organization</h6>
+            </div>
+            <div class="modal-body">
+                <div class="jumbotron">
+                    <div class="container">
+                        <p><strong>作者: </strong>czaOrz</p>
+                        <p><strong>邮箱: </strong>chenziangsg@163.com</p>
+                        <p><strong>联系方式: </strong>15607173521</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <ul class="pager" style="margin:-5px;">
+                    <li><a href="#">进入首页</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="LOGIN-IN" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Welcome to IOCO</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input type="email" class="form-control" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="email" class="form-control" placeholder="Password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <ul class="pager" style="margin:-5px;">
+                    <li class="previous"><a href="#"  type="button" data-dismiss="modal">close</a></li>
+                    <li class="next"><a href="#">login</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+        var dynamicNav = $('#NAV-TOP-MENU')
+        dynamicNav.click(function(){
+            $('.dropdown-menu').toggle('slow');
+        })
+    })
+</script>
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <ul class="pager" style="margin:10px;">
+            <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Pre</a></li>
+            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+            <li class="next"><a href="#">Next <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>
