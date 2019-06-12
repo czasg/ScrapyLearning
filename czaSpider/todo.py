@@ -18,11 +18,13 @@ __FILE__ = "Unfinished Todo"
 2016.06.05 - 正则学习，零宽断言
 2016.06.06 - 各高校的分数等情况，是时候提上日程了
 2016.06.11 - 绘图软件SAI，怎么说
-2016.06.11 - inspect模块害的再斟酌斟酌
 2016.06.11 - 百度地图模块
+2016.06.12 - Vue的学习
+2016.06.12 - Jquery学习
 """
 
 """DONE!
+2016.06.11 - inspect模块害的再斟酌斟酌
 2019.06.03 - scrapy如何增加日志模块，可以在下载中执行指令-s LOG_FILE= --loglevel=INFO来启动吗
 2016.06.04 - 廖老师的git和sql还是要再看看啊，这玩意有用的很
 2016.06.03 - 如何使用logging模块兵输出具体的文件 from logging.handlers import TimedRotatingFileHandler 模块
