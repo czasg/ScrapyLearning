@@ -1,15 +1,18 @@
-import inspect
+import requests
+import json
 
+formData = {
+    "access_token": "",
+    "local_province_id": "42",
+    "local_type_id": "1",
+    "page": "2",
+    "school_id": "42",
+    "signsafe": "3afd39c07ce14810eabd8a65944e05fc",
+    "size": "20",
+    "uri": "apidata/api/gk/score/special",
+    "year": "2018",
+}
+header = {
+    'Content-Type':'"application/json;charset=UTF-8"'
+}
 
-EMPTY = inspect.Parameter.empty
-POSITIONAL_OR_KEYWORD = inspect.Parameter.POSITIONAL_OR_KEYWORD
-VAR_POSITIONAL = inspect.Parameter.VAR_POSITIONAL
-KEYWORD_ONLY = inspect.Parameter.KEYWORD_ONLY
-VAR_KEYWORD = inspect.Parameter.VAR_KEYWORD
-
-def test1(a, b, *, c, d, **kwargs):
-    pass
-
-# params = inspect.signature(test1).parameters
-# for name, param in params.items():
-#     print(name, param.kind)

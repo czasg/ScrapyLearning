@@ -1,5 +1,4 @@
-from tools import *
-
+from handler import get
 
 @get('/')
 async def index():

@@ -1,16 +1,8 @@
-import re
-import time
-import json
-import logging
 import hashlib
-import markdown
-
-from aiohttp import web
 
 from models import *
 from error_man import *
 from config import configs
-from handler import get, post
 
 COOKIE_NAME = 'czaOrz'
 _COOKIE_KEY = configs.session.secret

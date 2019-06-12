@@ -1,3 +1,5 @@
+import json
+
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
@@ -105,7 +107,9 @@ def datetime_filter(t):
 
 async def init(loop):
     await init_pool(loop=loop, **configs.db)
-    app = web.Application(loop=loop, middlewares=[auth_factory, response_factory])
+    app = web.Application(loop=loop, middlewares=[
+        auth_factory, response_factory
+    ])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'apis')
     add_static(app)

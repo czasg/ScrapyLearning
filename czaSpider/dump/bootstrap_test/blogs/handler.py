@@ -122,29 +122,29 @@ class RequestHandler:
                     kw = dict(**params)
                 else:
                     return web.HTTPBadRequest(reason='Unsupported Content-Type: %s' % request.content_type)
-            if kw is None:
-                kw = dict(**request.match_info)
-            else:
-                if not self._has_varKeyword and self._keywordOnly:
-                    copy = dict()
-                    for name in self._keywordOnly:
-                        if name in kw:
-                            copy[name] = kw[name]
-                    kw = copy
-                for k, v in request.match_info.items():
-                    if k in kw:
-                        kw[k] = v
-            if self._has_request:
-                kw['request'] = request
-            if self._keywordOnly_empty:
-                for name in self._keywordOnly_empty:
-                    if not name in kw:
-                        return web.HTTPBadRequest(reason='Missing argument: %s' % name)
-            try:
-                res = await self._func(**kw)
-                return res
-            except BaseError as e:
-                return dict(error=e.error, data=e.field, message=e.message)
+        if kw is None:
+            kw = dict(**request.match_info)
+        else:
+            if not self._has_varKeyword and self._keywordOnly:
+                copy = dict()
+                for name in self._keywordOnly:
+                    if name in kw:
+                        copy[name] = kw[name]
+                kw = copy
+            for k, v in request.match_info.items():
+                if k in kw:
+                    kw[k] = v
+        if self._has_request:
+            kw['request'] = request
+        if self._keywordOnly_empty:
+            for name in self._keywordOnly_empty:
+                if not name in kw:
+                    return web.HTTPBadRequest(reason='Missing argument: %s' % name)
+        try:
+            res = await self._func(**kw)
+            return res
+        except BaseError as e:
+            return dict(error=e.error, data=e.field, message=e.message)
 
 
 def add_static(app):
