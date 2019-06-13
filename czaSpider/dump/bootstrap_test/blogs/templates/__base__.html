@@ -37,8 +37,10 @@
                     <a href="#" class="dropdown-toggle" id="NAV-TOP-MENU" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
                     <ul class="dropdown-menu">
                         {% if __user__ %}
-                        <li><a href="#">{{ __user__.name }}</a></li>
-                        <li><a href="/signout">登出</a></li>
+                        <li class="dropdown-header">当前用户: {{ __user__.name }}</li>
+                        <li><a href="#">账号管理</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
                         {% else %}
                         <li><a href="#" type="button" data-toggle="modal" data-target="#LOGIN-IN">登录</a></li>
                         {% endif %}
@@ -116,6 +118,22 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="LOGIN-OUT" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center">是否退出</h4>
+            </div>
+            <div class="modal-footer">
+                <ul class="pager" style="margin:-5px;">
+                    <li class="previous"><a href="#"  type="button" data-dismiss="modal">Cancel</a></li>
+                    <li class="next"><a href="/signout" type="button">Confirm</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
     $(document).ready(function(){
         var dynamicNav = $('#NAV-TOP-MENU')
@@ -151,12 +169,12 @@
                     opt.data = JSON.stringify(data || {});
                     $.ajax(opt).done(function(r){
                         if (r && r.error){
-                            alert(r.message);
+                            alert(r.error);
                         } else {
                             location.assign('/');
                         }
                     }).fail(function(jqXHR, textStatus){
-                        console.log(jqXHR);
+                        alert(textStatus);
                     })
                 }
             }

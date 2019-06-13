@@ -11,82 +11,94 @@
 
 
 {% block content %}
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h4>
-            <a href="#">This Is Blog Header</a>
-            <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-        </h4>
-        <small>发表于2019.07.05</small>
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="blog1">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collblog1" aria-expanded="false" aria-controls="collblog1">
+                    Three
+                </a>
+            </h4>
+        </div>
+        <div id="collblog1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="blog1">
+            <div class="panel-body">
+                作者:czaOrz<br>
+                发表于2019.07.05<br>
+            </div>
+        </div>
+        <div class="panel-footer">
+            This Is Blog Body<br>
+            This Is Blog Body<br>
+            <br>
+            <a href="#"><small>继续阅读</small></a>
+        </div>
     </div>
-    <div class="panel-body">
-        <dt>This Is Blog Body</dt>
-        <a><small>继续阅读</small></a>
+
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="blog2">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collblog2" aria-expanded="false" aria-controls="collblog2">
+                    Three
+                </a>
+            </h4>
+        </div>
+        <div id="collblog2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="blog2">
+            <div class="panel-body">
+                作者:czaOrz<br>
+                发表于2019.07.05<br>
+            </div>
+        </div>
+        <div class="panel-footer">
+            This Is Blog Body<br>
+            This Is Blog Body<br>
+            <br>
+            <a href="#"><small>继续阅读</small></a>
+        </div>
     </div>
-</div>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h4>
-            <a href="#">This Is Blog Header</a>
-            <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-        </h4>
-        <small>发表于2019.07.05</small>
+
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="blog3">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collblog3" aria-expanded="false" aria-controls="collblog3">
+                    Three
+                </a>
+            </h4>
+        </div>
+        <div id="collblog3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="blog3">
+            <div class="panel-body">
+                作者:czaOrz<br>
+                发表于2019.07.05<br>
+            </div>
+        </div>
+        <div class="panel-footer">
+            This Is Blog Body<br>
+            This Is Blog Body<br>
+            <br>
+            <a href="#"><small>继续阅读</small></a>
+        </div>
     </div>
-    <div class="panel-body">
-        <dt>This Is Blog Body</dt>
-        <a><small>继续阅读</small></a>
-    </div>
-</div>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h4>
-            <a href="#">This Is Blog Header</a>
-            <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-        </h4>
-        <small>发表于2019.07.05</small>
-    </div>
-    <div class="panel-body">
-        <dt>This Is Blog Body</dt>
-        <a><small>继续阅读</small></a>
-    </div>
-</div>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h4>
-            <a href="#">This Is Blog Header</a>
-            <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-        </h4>
-        <small>发表于2019.07.05</small>
-    </div>
-    <div class="panel-body">
-        <dt>This Is Blog Body</dt>
-        <a><small>继续阅读</small></a>
-    </div>
-</div>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h4>
-            <a href="#">This Is Blog Header</a>
-            <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-        </h4>
-        <small>发表于2019.07.05</small>
-    </div>
-    <div class="panel-body">
-        <dt>This Is Blog Body</dt>
-        <a><small>继续阅读</small></a>
-    </div>
-</div>
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <h4>
-            <a href="#">This Is Blog Header</a>
-            <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-        </h4>
-        <small>发表于2019.07.05</small>
-    </div>
-    <div class="panel-body">
-        <dt>This Is Blog Body</dt>
-        <a><small>继续阅读</small></a>
+
+        <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="blog4">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collblog4" aria-expanded="false" aria-controls="collblog4">
+                    Three
+                </a>
+            </h4>
+        </div>
+        <div id="collblog4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="blog4">
+            <div class="panel-body">
+                作者:czaOrz<br>
+                发表于2019.07.05<br>
+            </div>
+        </div>
+        <div class="panel-footer">
+            This Is Blog Body<br>
+            This Is Blog Body<br>
+            <br>
+            <br>
+            <a href="#"><small>继续阅读</small></a>
+        </div>
     </div>
 </div>
 {% endblock %}
