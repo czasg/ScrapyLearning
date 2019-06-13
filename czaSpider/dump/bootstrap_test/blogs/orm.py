@@ -27,7 +27,7 @@ async def init_pool(loop, **kwargs):
 async def select(sql, args, size=None):
     global pool
     with (await pool) as conn:
-        cur = await conn.curosr(aiomysql.DictCursor)
+        cur = await conn.cursor(aiomysql.DictCursor)
         await cur.execute(sql.replace('?','%s'), args or ())
         res = await cur.fetchmany(size) if size else await cur.fetchall()
         await cur.close()

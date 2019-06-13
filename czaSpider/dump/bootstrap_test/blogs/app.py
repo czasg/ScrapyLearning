@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 def init_jinja2(app, **kwargs):
-    logging.info('init jinja2...')
+    logger.info('init jinja2...')
     options = dict(
         autoescape=kwargs.get('autoescape', True),
         block_start_string=kwargs.get('block_start_string', '{%'),
@@ -23,7 +23,7 @@ def init_jinja2(app, **kwargs):
     path = kwargs.get('path', None)
     if path is None:
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-    logging.info('set jinja2 template path: %s' % path)
+    logger.info('set jinja2 template path: %s' % path)
     env = Environment(loader=FileSystemLoader(path), **options)
     filters = kwargs.get('filters', None)
     if filters is not None:
@@ -33,19 +33,19 @@ def init_jinja2(app, **kwargs):
 
 async def auth_factory(app, handler):
     async def auth(request):
-        logging.info('check user: %s %s' % (request.method, request.path))
+        logger.info('check user: %s %s' % (request.method, request.path))
         request.__user__ = None
         cookie_str = request.cookies.get(COOKIE_NAME)
         if cookie_str:
-            logging.info('Request with COOKIE')
+            logger.info('Request with COOKIE')
             user = await cookie2user(cookie_str)
             if user:
-                logging.info('Valid user, set current user: %s' % user.email)
+                logger.info('Valid user, set current user: %s' % user.email)
                 request.__user__ = user
         else:
-            logging.info('Request without COOKIE')
+            logger.info('Request without COOKIE')
         if request.path.startswith('/manage/') and request.__user__ is None:
-            logging.info('Invalid __user__: %s, Redirect to sign_in!' % request.__user__)
+            logger.info('Invalid __user__: %s, Redirect to sign_in!' % request.__user__)
             return web.HTTPFound('/signin')  # todo, here is the 302
         return (await handler(request))
 
@@ -53,35 +53,35 @@ async def auth_factory(app, handler):
 
 async def response_factory(app, handler):
     async def response(request):
-        logging.info('Response Handler .....')
+        logger.info('Response Handler .....')
         r = await handler(request)
         if isinstance(r, web.StreamResponse):
-            logging.info('StreamResponse! return directly')
+            logger.info('StreamResponse! return directly')
             return r
         if isinstance(r, bytes):
-            logging.info('Bytes! return directly!')
+            logger.info('Bytes! return directly!')
             return web.Response(body=r, content_type='application/octet-stream')
         if isinstance(r, str):
-            logging.info('Str!')
+            logger.info('Str!')
             if r.startswith('redirect:'):
-                logging.info('startswith redirect, reset to: %s' % str(r[9:]))
+                logger.info('startswith redirect, reset to: %s' % str(r[9:]))
                 return web.HTTPFound(r[9:])
-            logging.info('return TEXT/HTML')
+            logger.info('return TEXT/HTML')
             res = web.Response(body=json.dumps(r, ensure_ascii=False, default=lambda o: o.__dict__)
                                .encode('utf-8'))
             res.content_type = 'text/html;charset=utf-8'
             return res
         if isinstance(r, dict):
-            logging.info('Dict!')
+            logger.info('Dict!')
             template = r.get('__template__', None)
             if template is None:
-                logging.info('dict with out template!, return JSON')
+                logger.info('dict with out template!, return JSON')
                 res = web.Response(body=json.dumps(r, ensure_ascii=False, default=lambda o: o.__dict__)
                                    .encode('utf-8'))
                 res.content_type = 'application/json;charset=utf-8'
                 return res
             else:
-                logging.info('return template: %s' % str(template))
+                logger.info('return template: %s' % str(template))
                 r['__user__'] = request.__user__
                 res = web.Response(body=app['__templating__'].get_template(template).render(**r).encode('utf-8'))
                 res.content_type = 'text/html;charset=utf-8'

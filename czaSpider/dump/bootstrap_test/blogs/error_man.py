@@ -1,24 +1,24 @@
 class BaseError(Exception):
-    def __init__(self, error, field='', message=''):
+    def __init__(self, field, error='', message=''):
         super(BaseError, self).__init__(message)
-        self.error = error
         self.field = field
+        self.error = error
         self.message = message
 
 
 class MySQLExecuteError(BaseError):
-    def __init__(self, field, message=''):
-        super(MySQLExecuteError, self).__init__('database:execute-error', field, message)
+    def __init__(self, error, message=''):
+        super(MySQLExecuteError, self).__init__('database:MySQL', error, message)
 
 class PrimaryKeyDuplicated(BaseError):
-    def __init__(self, field, message=''):
-        super(PrimaryKeyDuplicated, self).__init__('database:primary-duplicated', field, message)
+    def __init__(self, error, message=''):
+        super(PrimaryKeyDuplicated, self).__init__('database:primary-duplicated', error, message)
 
 class PrimaryKeyUndefined(BaseError):
-    def __init__(self, field, message=''):
-        super(PrimaryKeyUndefined, self).__init__('database:primary-undefined', field, message)
+    def __init__(self, error, message=''):
+        super(PrimaryKeyUndefined, self).__init__('database:primary-undefined', error, message)
 
 class APIResourceError(BaseError):
-    def __init__(self, field, message=''):
-        super(APIResourceError, self).__init__('value:not-found', field, message)
+    def __init__(self, error, message=''):
+        super(APIResourceError, self).__init__('value:not-found', error, message)
 
