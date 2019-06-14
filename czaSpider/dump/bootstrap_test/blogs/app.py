@@ -1,14 +1,19 @@
 import json
 
+
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
+
+import orm
 
 from tools import *
 from handler import *
 from config import configs
 
+logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(message)s")
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
 
 def init_jinja2(app, **kwargs):
     logger.info('init jinja2...')
@@ -106,17 +111,16 @@ def datetime_filter(t):
     return u'%s年%s月%s日' % (dt.year, dt.month, dt.day)
 
 async def init(loop):
-    await init_pool(loop=loop, **configs.db)
+    await orm.init_pool(loop=loop, **configs.db)
     app = web.Application(loop=loop, middlewares=[
-        auth_factory, response_factory
-    ])
+        auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'apis')
     add_static(app)
     runner = web.AppRunner(app)
     await runner.setup()
     site = web.TCPSite(runner, '127.0.0.1', 9000)
-    print('server started at http://127.0.0.1:9000...')
+    logger.info('server started at http://127.0.0.1:9000...')
     await site.start()
 
 

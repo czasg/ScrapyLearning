@@ -42,7 +42,10 @@ async def execute(sql, args):
             res = cur.rowcount
             await cur.close()
         except:
-            raise MySQLExecuteError('orm', 'execute sql "%s" error' % sql)
+            import traceback
+            print(sql.replace('?', '%s'), args)
+            print(traceback.format_exc())
+            raise MySQLExecuteError('500', 'execute sql "%s" error' % sql)
     return res
 
 class Field:
@@ -88,12 +91,12 @@ class ModelMetaClass(type):
                 mappings.setdefault(k, v)
                 if v.primary_key:
                     if primaryKey:
-                        raise PrimaryKeyDuplicated('orm', 'primary key is duplicated')
+                        raise PrimaryKeyDuplicated('500', 'primary key is duplicated')
                     primaryKey = k
                 else:
                     fields.append(k)
         if not primaryKey:
-            raise PrimaryKeyUndefined('orm', 'primary key is not defined')
+            raise PrimaryKeyUndefined('500', 'primary key is not defined')
         for k in mappings.keys():
             attrs.pop(k)
         secFields = list(map(lambda f: '`%s`' % f, fields))
@@ -102,7 +105,7 @@ class ModelMetaClass(type):
         attrs['__primary_key__'] = primaryKey
         attrs['__fields__'] = fields
         attrs['__select__'] = 'select `%s`, %s from `%s`' % (primaryKey, ', '.join(secFields), tableName)
-        attrs['__insert__'] = 'insert into `%s` (%s, `%s`) values (%s)' % (tableName, '. '.join(secFields), primaryKey, get_args(len(mappings)))
+        attrs['__insert__'] = 'insert into `%s` (%s, `%s`) values (%s)' % (tableName, ', '.join(secFields), primaryKey, get_args(len(mappings)))
         attrs['__update__'] = 'update `%s` set %s where `%s`=?' % (tableName, ', '.join(map(lambda f: '`%s`=?' % (mappings.get(f).name or f), fields)), primaryKey)
         attrs['__remove__'] = 'delete from `%s` where `%s`=?' % (tableName, primaryKey)
         return super(ModelMetaClass, cls).__new__(cls, name, bases, attrs)

@@ -1,3 +1,4 @@
+import re
 import hashlib
 
 from models import *
@@ -6,6 +7,8 @@ from config import configs
 
 COOKIE_NAME = 'czaOrz'
 _COOKIE_KEY = configs.session.secret
+_RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
+_RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
 
 def check_admin(request):
     if request.__user__ is None:

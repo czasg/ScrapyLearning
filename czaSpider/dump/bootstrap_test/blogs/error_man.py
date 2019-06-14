@@ -22,3 +22,6 @@ class APIResourceError(BaseError):
     def __init__(self, error, message=''):
         super(APIResourceError, self).__init__('value:not-found', error, message)
 
+class APIResourceDeplicated(BaseError):
+    def __init__(self, error, message=''):
+        super(APIResourceDeplicated, self).__init__('dataLduplicated', error, message)

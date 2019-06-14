@@ -45,23 +45,42 @@
         </div>
     </div>
 </nav>
+<style>
+.nav-sider-fix {
+  display: none;
+}
+@media (min-width: 768px){
+.nav-sider-fix {
+    position: fixed;
+    top: 50px;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+    display: block;
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    border-right: 1px solid #eee;
+    }
+}
+</style>
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-2 col-sm-2 col-xs-2">
-            <ul class="nav nav-stacked" data-spy="affix" style="width:200px;">
+        <div class="col-sm-3 col-md-2 nav-sider-fix">
+            <ul class="nav nav-stacked">
                 <li role="presentation"><a href="#">作者</a></li>
                 <li role="presentation"><a href="#">博客</a></li>
                 <li role="presentation"><a href="#">爬虫</a></li>
             </ul>
         </div>
-        <div class="col-md-8 col-sm-8 col-xs-8">
+        <div class="col-sm-9 col-sm-offset-3 col-md-8 col-md-offset-2">
             {% block base2_content %}
             {% endblock %}
         </div>
         <div class="col-md-2 col-sm-2 col-xs-2"></div>
     </div>
 </div>
-
 <div class="modal fade" id="IOCO" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -132,6 +151,15 @@
         </div>
     </div>
 </div>
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <ul class="pager" style="margin:10px;">
+            <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Pre</a></li>
+            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+            <li class="next"><a href="#">Next <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
+    </div>
+</nav>
 <script>
     $(document).ready(function(){
         var dynamicNav = $('#NAV-TOP-MENU')
@@ -179,14 +207,4 @@
         });
     });
 </script>
-<nav class="navbar navbar-inverse navbar-fixed-bottom">
-    <div class="container">
-        <ul class="pager" style="margin:10px;">
-            <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Pre</a></li>
-            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-            <li class="next"><a href="#">Next <span aria-hidden="true">&rarr;</span></a></li>
-        </ul>
-    </div>
-</nav>
-
 {% endblock %}
