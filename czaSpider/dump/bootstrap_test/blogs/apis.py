@@ -15,6 +15,11 @@ async def index():
     return {'__template__': 'index.html'}
 
 
+@get('/register')
+async def register():
+    return {'__template__': 'register.html'}
+
+
 # 登陆认证、注册、退出模块 #
 
 @post('/api/authenticate')
