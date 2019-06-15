@@ -11,8 +11,8 @@ _RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$'
 _RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
 
 def check_admin(request):
-    if request.__user__ is None:
-        raise APIResourceError('tools', 'Not Admin')
+    if request.__user__ is None or not request.__user__.admin:
+        raise APIResourceError('非管理员用户，无发执行此类操作', 'Not Admin')
 
 def text2html(text):
     lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n')))
@@ -20,6 +20,7 @@ def text2html(text):
 
 def get_page_index(page_str):
     p = 1
+    page_str = page_str[0] if isinstance(page_str, list) else page_str
     try:
         p = int(page_str)
     except:

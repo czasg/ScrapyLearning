@@ -49,9 +49,9 @@ async def auth_factory(app, handler):
                 request.__user__ = user
         else:
             logger.info('Request without COOKIE')
-        if request.path.startswith('/manage/') and request.__user__ is None:
-            logger.info('Invalid __user__: %s, Redirect to sign_in!' % request.__user__)
-            return web.HTTPFound('/signin')  # todo, here is the 302
+        # if request.path.startswith('/manage/') and request.__user__ is None:
+        #     logger.info('Invalid __user__: %s, Redirect to sign_in!' % request.__user__)
+        #     return web.HTTPFound('/signin')  # todo, here is the 302
         return (await handler(request))
 
     return auth

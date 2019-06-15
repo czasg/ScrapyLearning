@@ -40,7 +40,7 @@
                         data = {
                             name: this.name.trim(),
                             email: email,
-                            passwd: this.passwd==='' ? '' : CryptoJS.SHA1(email + ':' + this.passwd).toString()
+                            passwd: this.passwd==='' ? '' : CryptoJS.SHA1(email + ':' + this.password2).toString()
                         },
                         opt = {
                             type: 'POST',

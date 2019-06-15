@@ -32,10 +32,18 @@
                                                                         aria-hidden="true"></span></a>
                     <ul class="dropdown-menu">
                         {% if __user__ %}
+                        {% if __user__.admin %}
+                        <li class="dropdown-header">超级用户: {{ __user__.name }}</li>
+                        <li><a href="/root/manage/users">账号管理</a></li>
+                        <li><a href="#">博客管理</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
+                        {% else %}
                         <li class="dropdown-header">当前用户: {{ __user__.name }}</li>
                         <li><a href="#">账号管理</a></li>
                         <li role="separator" class="divider"></li>
                         <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
+                        {% endif %}
                         {% else %}
                         <li><a href="#" type="button" data-toggle="modal" data-target="#LOGIN-IN">登录</a></li>
                         {% endif %}
@@ -153,10 +161,10 @@
 </div>
 <nav class="navbar navbar-inverse navbar-fixed-bottom">
     <div class="container">
-        <ul class="pager" style="margin:10px;">
-            <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Pre</a></li>
-            <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-            <li class="next"><a href="#">Next <span aria-hidden="true">&rarr;</span></a></li>
+        <ul class="pager" style="margin:10px;" id="nav-pager-footer">
+            <li class="previous"><a href="#" v-on:click="prePage"><span aria-hidden="true">&larr;</span> Pre</a></li>
+            <li class="active"><a href="#">{{ page_index }} <span class="sr-only">(current)</span></a></li>
+            <li class="next"><a href="#" v-on:click="nextPage">Next <span aria-hidden="true">&rarr;</span></a></li>
         </ul>
     </div>
 </nav>
@@ -206,5 +214,24 @@
             }
         });
     });
+</script>
+<script>
+    $(function() {
+        var nav_pager_footer = new Vue({
+            el: '#nav-pager-footer',
+            methods: {
+                nextPage: function () {
+                    page = {{ page_index }}
+                    page = page + 1;
+                    gotoPage(page);
+                },
+                prePage: function () {
+                    page = {{ page_index }}
+                    page = page - 1;
+                    gotoPage(page);
+                }
+            }
+        })
+    })
 </script>
 {% endblock %}

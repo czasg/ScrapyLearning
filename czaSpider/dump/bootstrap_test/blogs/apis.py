@@ -12,13 +12,25 @@ logger = logging.getLogger(__name__)
 # 模板页面 #
 
 @get('/')
-async def index():
-    return {'__template__': 'index.html'}
+async def index(*, page='1'):  # todo，权宜之计，就是测试用的，首页不需要page参数，后序转到blog里面
+    return {
+        '__template__': 'index.html',
+        'page_index': get_page_index(page)
+    }
 
 
 @get('/register')
 async def register():
     return {'__template__': 'register.html'}
+
+
+@get('/root/manage/users')
+async def root_manage_users(request, *, page='1'):
+    check_admin(request)
+    return {
+        '__template__': 'root_manage_users.html',
+        'page_index': get_page_index(page)
+    }
 
 
 # 登陆认证、注册、退出模块 #
@@ -44,6 +56,55 @@ async def authenticate(*, email, passwd):
     webResponse.body = json.dumps(user, ensure_ascii=False).encode()
     return webResponse
 
+@post('/api/new/user')
+async def api_register_user(*, name, email, passwd):
+    if not name or not name.strip():
+        raise APIResourceError('用户名不能为空', 'error Username')
+    if not email or not _RE_EMAIL.match(email):
+        raise APIResourceError('邮箱格式错误', 'error Email Format')
+    if not passwd or not _RE_SHA1.match(passwd):
+        raise APIResourceError('密码验证异常', 'Check SHA error')
+    user = await User.findAll('email=?', [email])
+    if len(user) > 0:
+        raise APIResourceDeplicated('邮件已被注册', 'Email has been alerdy registered!')
+    uid = next_id()
+    sha1_passwd = '%s:%s' % (uid, passwd)
+    user = User(id=uid, name=name.strip(), email=email, passwd=hashlib.sha1(sha1_passwd.encode()).hexdigest(),
+                image='http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
+    await user.save()
+    webResponse = web.Response()
+    webResponse.set_cookie(COOKIE_NAME, user2cookie(user, 86400), max_age=86400)
+    user.passwd = '******'
+    webResponse.content_type = 'application/json'
+    webResponse.body = json.dumps(user, ensure_ascii=False).encode()
+    return webResponse
+
+@post('/api/new/root/user')
+async def api_register_root_user(*, name, email, passwd):
+    root = await User.findAll('email=?', ['root@ioco.com'])
+    if len(root) > 0:
+        raise APIResourceError('root用户已存在，请勿创建', 'root user has already existed!')
+    if not name or not name.strip():
+        raise APIResourceError('用户名不能为空', 'error Username')
+    if email != 'root@ioco.com':
+        raise APIResourceError('无法识别root邮箱', 'error Email Format')
+    if not passwd or not _RE_SHA1.match(passwd):
+        raise APIResourceError('密码验证异常', 'Check SHA error')
+    user = await User.findAll('email=?', [email])
+    if len(user) > 0:
+        raise APIResourceDeplicated('邮件已被注册', 'Email has been alerdy registered!')
+    uid = next_id()
+    sha1_passwd = '%s:%s' % (uid, passwd)
+    user = User(id=uid, name=name.strip(), email=email, admin=True,
+                passwd=hashlib.sha1(sha1_passwd.encode()).hexdigest(),
+                image='http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
+    await user.save()
+    webResponse = web.Response()
+    webResponse.set_cookie(COOKIE_NAME, user2cookie(user, 86400), max_age=86400)
+    user.passwd = '******'
+    webResponse.content_type = 'application/json'
+    webResponse.body = json.dumps(user, ensure_ascii=False).encode()
+    return webResponse
 
 @get('/signout')
 def signout(request):
@@ -79,26 +140,9 @@ async def api_get_blogs(*, page='1'):
     blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
     return dict(page=p, blogs=blogs)
 
-
-@post('/api/new/user')
-async def api_register_user(*, name, email, passwd):
-    if not name or not name.strip():
-        raise APIResourceError('用户名不能为空', 'error Username')
-    if not email or not _RE_EMAIL.match(email):
-        raise APIResourceError('邮箱格式错误', 'error Email Format')
-    if not passwd or not _RE_SHA1.match(passwd):
-        raise APIResourceError('密码验证异常', 'Check SHA error')
+@post('/api/drop/user')
+async def api_drop_user(request, *, name, email):
+    check_admin(request)
     user = await User.findAll('email=?', [email])
-    if len(user) > 0:
-        raise APIResourceDeplicated('邮件已被注册', 'Email has been alerdy registered!')
-    uid = next_id()
-    sha1_passwd = '%s:%s' % (uid, passwd)
-    user = User(id=uid, name=name.strip(), email=email, passwd=hashlib.sha1(sha1_passwd.encode()).hexdigest(),
-                image='http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
-    await user.save()
-    webResponse = web.Response()
-    webResponse.set_cookie(COOKIE_NAME, user2cookie(user, 86400), max_age=86400)
-    user.passwd = '******'
-    webResponse.content_type = 'application/json'
-    webResponse.body = json.dumps(user, ensure_ascii=False).encode()
-    return webResponse
+    await user.remove()
+    return {'warning': 'drop %s success!' % name}
