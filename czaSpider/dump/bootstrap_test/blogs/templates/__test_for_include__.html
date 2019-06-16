@@ -1,0 +1,155 @@
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <ul class="pager" style="margin:10px;" id="nav-pager-footer">
+            <!--<li class="previous"><a href="#" v-on:click="prePage"><span aria-hidden="true">&larr;</span> Pre</a></li>-->
+            <li class="previous"><a href="#" id="prePage"><span aria-hidden="true">&larr;</span> Pre</a></li>
+            <li class="active"><a href="#" id="footer_page_index">{{ page_index }} <span class="sr-only"></span></a></li>
+            <!--<li class="next"><a href="#" v-on:click="nextPage">Next <span aria-hidden="true">&rarr;</span></a></li>-->
+            <li class="next"><a href="#" id="nextPage">Next <span aria-hidden="true">&rarr;</span></a></li>
+            <!--<li class="next"><a href="#" id="nextPage3">Next <span aria-hidden="true">&rarr;</span></a></li>-->
+        </ul>
+    </div>
+</nav>
+<script>
+    $(function(){
+        var
+            nextPage = $('#nextPage'),
+            prePage = $('#prePage');
+        nextPage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) + 1,
+                res = '';
+            page_index.text(nextPage);
+            $.get('/api/get/users', {
+                page: nextPage
+            }, function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    console.log(results)
+                    manageUsers.users = results.users
+                    manageUsers.page = results.page
+                    Vue.nextTick()
+                }
+            })
+        })
+        prePage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) - 1,
+                res = '';
+            page_index.text(nextPage);
+            $.get('/api/get/users', {
+                page: nextPage
+            }, function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    console.log(results)
+                    manageUsers.users = results.users
+                    manageUsers.page = results.page
+                    Vue.nextTick()
+                }
+            })
+        })
+    })
+    //定义manageUsers对象
+    var manageUsers = new Vue({
+        el: '#manageUsers',
+        data: {
+            users: '',
+            page: ''
+        }
+    })
+</script>
+
+<!--博客内容，暂存此处-->
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="blog1">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collblog1" aria-expanded="false" aria-controls="collblog1">
+                    Three
+                </a>
+            </h4>
+        </div>
+        <div id="collblog1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="blog1">
+            <div class="panel-body">
+                作者:czaOrz<br>
+                发表于2019.07.05<br>
+            </div>
+        </div>
+        <div class="panel-footer">
+            This Is Blog Body<br>
+            This Is Blog Body<br>
+            <br>
+            <a href="#"><small>继续阅读</small></a>
+        </div>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="blog2">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collblog2" aria-expanded="false" aria-controls="collblog2">
+                    Three
+                </a>
+            </h4>
+        </div>
+        <div id="collblog2" class="panel-collapse collapse" role="tabpanel" aria-labelledby="blog2">
+            <div class="panel-body">
+                作者:czaOrz<br>
+                发表于2019.07.05<br>
+            </div>
+        </div>
+        <div class="panel-footer">
+            This Is Blog Body<br>
+            This Is Blog Body<br>
+            <br>
+            <a href="#"><small>继续阅读</small></a>
+        </div>
+    </div>
+
+    <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="blog3">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collblog3" aria-expanded="false" aria-controls="collblog3">
+                    Three
+                </a>
+            </h4>
+        </div>
+        <div id="collblog3" class="panel-collapse collapse" role="tabpanel" aria-labelledby="blog3">
+            <div class="panel-body">
+                作者:czaOrz<br>
+                发表于2019.07.05<br>
+            </div>
+        </div>
+        <div class="panel-footer">
+            This Is Blog Body<br>
+            This Is Blog Body<br>
+            <br>
+            <a href="#"><small>继续阅读</small></a>
+        </div>
+    </div>
+
+        <div class="panel panel-info">
+        <div class="panel-heading" role="tab" id="blog4">
+            <h4 class="panel-title">
+                <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collblog4" aria-expanded="false" aria-controls="collblog4">
+                    Three
+                </a>
+            </h4>
+        </div>
+        <div id="collblog4" class="panel-collapse collapse" role="tabpanel" aria-labelledby="blog4">
+            <div class="panel-body">
+                作者:czaOrz<br>
+                发表于2019.07.05<br>
+            </div>
+        </div>
+        <div class="panel-footer">
+            This Is Blog Body<br>
+            This Is Blog Body<br>
+            <br>
+            <br>
+            <a href="#"><small>继续阅读</small></a>
+        </div>
+    </div>
+</div>

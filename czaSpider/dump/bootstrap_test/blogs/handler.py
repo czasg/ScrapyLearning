@@ -132,8 +132,7 @@ class RequestHandler:
                         copy[name] = kw[name]
                 kw = copy
             for k, v in request.match_info.items():
-                if k in kw:
-                    kw[k] = v
+                kw[k] = v
         if self._has_request:
             kw['request'] = request
         if self._keywordOnly_empty:

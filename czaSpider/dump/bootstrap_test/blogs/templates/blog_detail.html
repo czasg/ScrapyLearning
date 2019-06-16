@@ -1,0 +1,136 @@
+{% extends '__base2__.html' %}
+
+
+{% block title %}{{ blog.user_name }} - 博客{% endblock %}
+
+{% block beforehead %}
+<script>
+    function refresh () {
+        var
+            t = new Date().getTime(),
+            url = location.pathname;
+        if (location.search) {
+            url = url + location.search + '&time=' + t;
+        }else{
+            url = url + '?time=' + t;
+        }
+        location.assign(url);
+    }
+
+    $(function () {
+        var $comment = $('#comment-form');
+        $comment.submit(function (event) {
+            event.preventDefault();
+            var content = $comment.find('textarea').val().trim();
+            if (content==='') {
+                alert('评论不能为空')
+                return
+            }
+            var
+                data = {
+                    content: content
+                },
+                opt = {
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '/api/new/comment/from/blog/{{ blog.id }}',
+                    contentType: 'application/json'
+                };
+            opt.data = JSON.stringify(data || {});
+            $.ajax(opt).done(function(r){
+                if (r && r.error){
+                    alert(r.error);
+                } else {
+                    alert('发表评论成功');
+                    refresh();
+                }
+            }).fail(function(jqXHR, textStatus){
+                alert(textStatus);
+            })
+        })
+    })
+</script>
+{% endblock %}
+
+
+{% block base2_content %}
+<div class="media">
+    <div class="media-body">
+        <div class="page-header media-heading">
+            <h3><strong>{{ blog.name }}  </strong></h3><small>发表于: {{ blog.created_at|datetime }}</small>
+        </div>
+    </div>
+    <div class="media-right">
+        <a href="#">
+            <img class="media-object img-rounded" src="{{ __user__.image }}" alt="64x64" data-holder-rendered="true" style="width: 64px; height: 64px;">
+        </a>
+    </div>
+</div>
+<!--博客摘要-->
+<blockquote>
+    <em>{{ blog.summary }}</em>
+</blockquote>
+<!--博客内容-->
+<div>{{ blog.html_content|safe }}</div>
+
+
+<div class="page-header"></div>
+<h4>发表评论 <small>{% if __user__ %}当前用户: {{ __user__.name }}{% endif %}</small></h4>
+<form id="comment-form">
+    <div class="form-group">
+        <label class="sr-only">None</label>
+        <textarea class="form-control" rows="2" placeholder="说点什么吧..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-info">Submit</button>
+</form>
+<div class="page-header"></div>
+
+<h4><strong>最新评论</strong></h4>
+<div id="drop_comment_in_blog">
+{% for comment in comments %}
+<div class="panel panel-default">
+    <div class="panel-heading">用户: {{ comment.user_name }} {% if comment.user_id==blog.user_id %}(作者){% endif %} - {{ comment.created_at|datetime }} {% if __user__ %}{% if __user__.admin %}<a href="#" type="button" v-on:click="dropComment('{{ comment.id }}')">删除</a>{% endif %}{% endif %}</div>
+    <div class="panel-body">{{ comment.html_content|safe }}</div>
+</div>
+{% else %}
+<p>无人发表评论...</p>
+{% endfor %}
+</div>
+
+{% if __user__ %}
+{% if __user__.admin %}
+<script>
+    $(function () {
+        var drop = new Vue({
+            el: '#drop_comment_in_blog',
+            methods: {
+                dropComment: function (id) {
+                    console.log(id)
+                    var
+                        opt = {
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {},
+                            url: '/api/drop/comment/from/blog/'+id,
+                            contentType: 'application/json'
+                        };
+                    $.ajax(opt).done(function(r){
+                        if (r && r.error){
+                            alert(r.error);
+                        } else {
+                            alert('删除评论成功');
+                            refresh();
+                        }
+                    }).fail(function(jqXHR, textStatus){
+                        alert(textStatus);
+                    })
+                }
+            }
+        });
+    })
+</script>
+{% endif %}
+{% endif %}
+
+{% endblock %}
+

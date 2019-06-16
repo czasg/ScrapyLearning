@@ -1,0 +1,130 @@
+{% extends '__base2__.html' %}
+
+
+{% block title %}首页{% endblock %}
+
+
+{% block beforehead %}
+<script>
+    //首次刷新
+    function initBlogs(data) {
+        showBlogs.blogs = data.blogs
+        showBlogs.page = data.page
+        page_count = data.page.page_count
+    }
+    $(function() {
+        var page_count = 0;
+        $.get('/api/get/blogs', {},
+            function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    initBlogs(results);
+                }else{
+                    alert(results);
+            }
+        });
+    })
+</script>
+{% endblock %}
+
+
+{% block base2_content %}
+<div id="loading" class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+    正在加载
+  </div>
+</div>
+
+<div class="panel-group" id="show-blogs" role="tablist" aria-multiselectable="true">
+    <div v-for="(blog, index) in blogs">
+        <div class="panel panel-info">
+            <div class="panel-heading" role="tab">
+                <h4 class="panel-title">
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#show-blogs" v-bind:href="'#'+index" v-text="blog.name" aria-expanded="false"></a>
+                </h4>
+            </div>
+            <div v-bind:id="index" class="panel-collapse collapse" role="tabpanel">
+                <div class="panel-body">
+                    <span v-text="'作者: '+blog.user_name"></span><br>
+                    <span v-text="'发表于: '+blog.created_at.toDateTime()"></span><br>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <em>摘要:</em><br>
+                <strong><span v-text="blog.summary"></span></strong><br>
+                <br>
+                <a v-bind:href="'/blogs/blog/'+blog.id"><small>继续阅读</small></a>
+            </div>
+        </div><br>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block base2_footer %}
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <ul class="pager" style="margin:10px;" id="nav-pager-footer">
+            <li class="previous"><a href="#" id="prePage"><span aria-hidden="true">&larr;</span> Pre</a></li>
+            <li class="active"><a href="#" id="footer_page_index">1 <span class="sr-only"></span></a></li>
+            <li class="next"><a href="#" id="nextPage">Next <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
+    </div>
+</nav>
+<script>
+    $(function(){
+        var
+            nextPage = $('#nextPage'),
+            prePage = $('#prePage');
+        nextPage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) + 1,
+                res = '';
+            if (nextPage > page_count) {
+                alert('已经是末页')
+                return
+            }
+            $.get('/api/get/blogs', {
+                page: nextPage
+            }, function (results, status) {
+                if (status==='success'){
+                    showBlogs.blogs = results.blogs
+                    showBlogs.page = results.page
+                    page_index.text(results.page.page_index)
+                    Vue.nextTick()
+                }
+            })
+        })
+        prePage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) - 1,
+                res = '';
+            if (nextPage < 1) {
+                alert('已经是首页')
+                return
+            }
+            $.get('/api/get/blogs', {
+                page: nextPage
+            }, function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    showBlogs.blogs = results.blogs
+                    showBlogs.page = results.page
+                    page_index.text(results.page.page_index)
+                    Vue.nextTick()
+                }
+            })
+        })
+    })
+    //定义manageUsers对象
+    var showBlogs = new Vue({
+        el: '#show-blogs',
+        data: {
+            blogs: '',
+            page: ''
+        }
+    })
+</script>
+{% endblock %}

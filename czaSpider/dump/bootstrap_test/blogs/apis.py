@@ -1,4 +1,5 @@
 import json
+import markdown
 
 from aiohttp import web
 
@@ -12,16 +13,19 @@ logger = logging.getLogger(__name__)
 # 模板页面 #
 
 @get('/')
-async def index(*, page='1'):  # todo，权宜之计，就是测试用的，首页不需要page参数，后序转到blog里面
-    return {
-        '__template__': 'index.html',
-        'page_index': get_page_index(page)
-    }
+async def index(): return {'__template__': 'index.html'}
 
 
 @get('/register')
-async def register():
-    return {'__template__': 'register.html'}
+async def register(): return {'__template__': 'register.html'}
+
+
+@get('/register/root')
+async def root_register(): return {'__template__': 'register_root.html'}
+
+
+@get('/blogs')
+async def blogs(): return {'__template__': 'blogs.html'}
 
 
 @get('/root/manage/users')
@@ -33,7 +37,21 @@ async def root_manage_users(request, *, page='1'):
     }
 
 
-# 登陆认证、注册、退出模块 #
+@get('/blogs/blog/{id}')
+async def detail_blog(id):
+    blog = await Blog.find(id)
+    comments = await Comment.findAll('blog_id=?', [id], orderBy='created_at desc')
+    for c in comments:
+        c.html_content = text2html(c.content)
+    blog.html_content = markdown.markdown(blog.content)
+    return {
+        '__template__': 'blog_detail.html',
+        'blog': blog,
+        'comments': comments
+    }
+
+
+# 用户登陆认证、注册、退出、删除模块 #
 
 @post('/api/authenticate')
 async def authenticate(*, email, passwd):
@@ -55,6 +73,7 @@ async def authenticate(*, email, passwd):
     webResponse.content_type = 'application/json'
     webResponse.body = json.dumps(user, ensure_ascii=False).encode()
     return webResponse
+
 
 @post('/api/new/user')
 async def api_register_user(*, name, email, passwd):
@@ -78,6 +97,7 @@ async def api_register_user(*, name, email, passwd):
     webResponse.content_type = 'application/json'
     webResponse.body = json.dumps(user, ensure_ascii=False).encode()
     return webResponse
+
 
 @post('/api/new/root/user')
 async def api_register_root_user(*, name, email, passwd):
@@ -106,6 +126,7 @@ async def api_register_root_user(*, name, email, passwd):
     webResponse.body = json.dumps(user, ensure_ascii=False).encode()
     return webResponse
 
+
 @get('/signout')
 def signout(request):
     referer = request.headers.get('Referer')
@@ -113,6 +134,14 @@ def signout(request):
     webResponse.set_cookie(COOKIE_NAME, '-deleted-', max_age=0)
     logger.info('user signed out!')
     return webResponse
+
+
+@post('/api/drop/user')
+async def api_drop_user(request, *, name, email):
+    check_admin(request)
+    user = await User.findAll('email=?', [email])
+    await user.remove()
+    return {'warning': 'drop %s success!' % name}
 
 
 # json请求接口 #
@@ -140,9 +169,34 @@ async def api_get_blogs(*, page='1'):
     blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
     return dict(page=p, blogs=blogs)
 
-@post('/api/drop/user')
-async def api_drop_user(request, *, name, email):
+
+# 博客创建、删除模块 #
+
+
+# 评论穿件、删除模块 #
+
+@post('/api/new/comment/from/blog/{id}')
+async def api_new_comment(id, request, *, content):
+    user = request.__user__
+    if user is None:
+        raise APIResourceError('请先登陆', 'No User')
+    if not content or not content.strip():
+        raise APIResourceError('评论不能为空', 'Comment Can Not Be None')
+    blog = await Blog.find(id)
+    if blog is None:
+        raise APIResourceError('该文章异常，无法评论')
+    comment = Comment(blog_id=blog.id, user_id=user.id, user_name=user.name, user_image=user.image,content=content.strip())
+    print(blog.id, 'from blog')
+    await comment.save()
+    return comment
+
+@post('/api/drop/comment/from/blog/{id}')
+async def api_drop_comment(id, request):
     check_admin(request)
-    user = await User.findAll('email=?', [email])
-    await user.remove()
-    return {'warning': 'drop %s success!' % name}
+    print(id)
+    c = await Comment.find(id)
+    print(c)
+    if c is None:
+        raise APIResourceError('该评论状态异常', 'Comment Is Abnormal')
+    await c.remove()
+    return dict(id=id)
