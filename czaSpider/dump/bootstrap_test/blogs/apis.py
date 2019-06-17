@@ -36,6 +36,12 @@ async def root_manage_users(request, *, page='1'):
         'page_index': get_page_index(page)
     }
 
+@get('/new/blog')
+def new_blog():
+    return {
+        '__template__': 'blog_editor.html',
+    }
+
 
 @get('/blogs/blog/{id}')
 async def detail_blog(id):
@@ -172,8 +178,10 @@ async def api_get_blogs(*, page='1'):
 
 # 博客创建、删除模块 #
 
+# @post('/api/new/blog')
 
-# 评论穿件、删除模块 #
+
+# 评论创建、删除模块 #
 
 @post('/api/new/comment/from/blog/{id}')
 async def api_new_comment(id, request, *, content):
