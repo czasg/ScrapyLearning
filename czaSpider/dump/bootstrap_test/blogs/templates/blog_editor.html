@@ -1,0 +1,138 @@
+{% extends '__base2__.html' %}
+
+{% block title %}博客编辑{% endblock %}
+
+
+{% block beforehead %}
+<script>
+$(function(){
+        if (blog_id) {
+        $.getJSON('/api/get/blog/'+blog_id, {}).done(function(data) {
+            initBlog(data);
+        });
+    } else {
+        initBlog({
+            name: '',
+            summery: '',
+            content: ''
+        });
+    }
+})
+
+
+
+
+</script>
+{% endblock %}
+
+
+{% block base2_content %}
+
+<form id="blog_editor">
+    <div class="form-group">
+        <label>文章标题:</label>
+        <input class="form-control" v-model="name">
+    </div>
+    <div class="form-group">
+        <label>文章摘要:</label>
+        <textarea class="form-control" rows="2" v-model="summary"></textarea>
+    </div>
+    <div class="form-group">
+        <label>文章内容:</label>
+        <textarea class="form-control" rows="10" v-model="content"></textarea>
+    </div>
+    <button class="btn btn-info pull-right" v-on:click="submit">保存</button>
+</form>
+<pre id="czacza">
+    $(function(){
+        var
+            blog_id = '{{ id }}',
+            blog_api = '{{ api }}';
+
+        function initBlog (blog) {
+            blog_editor.data = blog
+        }
+
+        var blog_editor = new Vue({
+            el: '#blog_editor',
+            data: '',
+            methods: {
+                submit: function (event) {
+
+                    return
+                    event.preventDefault();
+                    var opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: blog_api,
+                        contentType: 'application/json',
+                        data: this.$data
+                    };
+                    console.log(opt);
+                    $.ajax(opt).done(function(r){
+                        if (r && r.error) {
+                            alert(r.error)
+                            return
+                        } else {
+                            location.assign('/blogs/blog/'+r.id);
+                        }
+                    });
+                }
+            }
+        });
+
+        if (blog_id) {
+            $.getJSON('/api/get/blog/'+blog_id, {}).done(function(data) {
+                initBlog(data);
+            });
+        } else {
+            initBlog({
+                name: '',
+                summery: '',
+                content: ''
+            });
+        }
+    })
+</pre>
+{% endblock %}
+
+{% block base2_footer %}
+<script>
+    function initBlog (blog) {
+            blog_editor.blog = blog
+        }
+
+    var
+        blog_id = '{{ id }}',
+        blog_api = '{{ api }}',
+        blog = {
+            name: '',
+            summary: '',
+            content: ''
+        };
+    var blog_editor = new Vue({
+            el: '#blog_editor',
+            data: blog,
+            methods: {
+                submit: function(event){
+                    event.preventDefault();
+                    var opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: blog_api,
+                        contentType: 'application/json'
+                    };
+                    opt.data = JSON.stringify(this.$data || {});
+                    $.ajax(opt).done(function(r){
+                        if (r && r.error) {
+                            alert(r.error)
+                            return
+                        } else {
+                            location.assign('/blogs/blog/'+r.id);
+                        }
+                    });
+                }
+            }
+    });
+</script>
+{% endblock %}

@@ -36,10 +36,21 @@ async def root_manage_users(request, *, page='1'):
         'page_index': get_page_index(page)
     }
 
+
 @get('/new/blog')
 def new_blog():
     return {
         '__template__': 'blog_editor.html',
+        'id': '',
+        'api': '/api/new/blog'
+    }
+
+@get('/edit/blog/{id}')
+def edit_blog(*, id):
+    return {
+        '__template__': 'blog_editor.html',
+        'id': id,
+        'api': '/api/edit/blog/%s' % id
     }
 
 
@@ -176,10 +187,39 @@ async def api_get_blogs(*, page='1'):
     return dict(page=p, blogs=blogs)
 
 
+@get('/api/get/blog/{id}')
+async def api_get_blog(*, id): return (await Blog.find(id))
+
+
 # 博客创建、删除模块 #
 
-# @post('/api/new/blog')
+@post('/api/new/blog')
+async def api_new_blog(request, *, name, summary, content):
+    if not name or not name.strip():
+        raise APIResourceError('文章标题不能为空', 'None Title For Blog')
+    if not summary or not summary.strip():
+        raise APIResourceError('文章摘要不能为空', 'None Summery For Blog')
+    if not content or not content.strip():
+        raise APIResourceError('文章内容不能为空', 'None Text For Blog')
+    blog = Blog(user_id=request.__user__.id, user_name=request.__user__.name, user_image=request.__user__.image,
+                name=name.strip(), summary=summary.strip(), content=content.strip())
+    await blog.save()
+    return blog
 
+@post('/api/edit/blog/{id}')
+async def api_edit_blog(id, *, name, summary, content):
+    blog = await Blog.find(id)
+    if not name or not name.strip():
+        raise APIResourceError('文章标题不能为空', 'None Title For Blog')
+    if not summary or not summary.strip():
+        raise APIResourceError('文章摘要不能为空', 'None Summery For Blog')
+    if not content or not content.strip():
+        raise APIResourceError('文章内容不能为空', 'None Text For Blog')
+    blog.name = name.strip()
+    blog.summary = summary.strip()
+    blog.content = content.strip()
+    await blog.update_table()
+    return blog
 
 # 评论创建、删除模块 #
 
@@ -193,10 +233,12 @@ async def api_new_comment(id, request, *, content):
     blog = await Blog.find(id)
     if blog is None:
         raise APIResourceError('该文章异常，无法评论')
-    comment = Comment(blog_id=blog.id, user_id=user.id, user_name=user.name, user_image=user.image,content=content.strip())
+    comment = Comment(blog_id=blog.id, user_id=user.id, user_name=user.name, user_image=user.image,
+                      content=content.strip())
     print(blog.id, 'from blog')
     await comment.save()
     return comment
+
 
 @post('/api/drop/comment/from/blog/{id}')
 async def api_drop_comment(id, request):
