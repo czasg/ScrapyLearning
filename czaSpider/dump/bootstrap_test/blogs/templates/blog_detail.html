@@ -57,7 +57,14 @@
 <div class="media">
     <div class="media-body">
         <div class="page-header media-heading">
-            <h3><strong>{{ blog.name }}  </strong></h3><small>发表于: {{ blog.created_at|datetime }}</small>
+            <h3>
+                <strong>{{ blog.name }}  </strong>
+                {% if __user__ %}
+                {% if __user__.id==blog.user_id %}
+                <a href="/edit/blog/{{ blog.id }}"><small>编辑博客</small></a>
+                {% endif %}{% endif %}
+            </h3>
+            <small>发表于: {{ blog.created_at|datetime }}</small>
         </div>
     </div>
     <div class="media-right">

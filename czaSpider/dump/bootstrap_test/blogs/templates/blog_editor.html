@@ -4,25 +4,6 @@
 
 
 {% block beforehead %}
-<script>
-$(function(){
-        if (blog_id) {
-        $.getJSON('/api/get/blog/'+blog_id, {}).done(function(data) {
-            initBlog(data);
-        });
-    } else {
-        initBlog({
-            name: '',
-            summery: '',
-            content: ''
-        });
-    }
-})
-
-
-
-
-</script>
 {% endblock %}
 
 
@@ -31,15 +12,15 @@ $(function(){
 <form id="blog_editor">
     <div class="form-group">
         <label>文章标题:</label>
-        <input class="form-control" v-model="name">
+        <input class="form-control" v-model="blog.name">
     </div>
     <div class="form-group">
         <label>文章摘要:</label>
-        <textarea class="form-control" rows="2" v-model="summary"></textarea>
+        <textarea class="form-control" rows="2" v-model="blog.summary"></textarea>
     </div>
     <div class="form-group">
         <label>文章内容:</label>
-        <textarea class="form-control" rows="10" v-model="content"></textarea>
+        <textarea class="form-control" rows="10" v-model="blog.content"></textarea>
     </div>
     <button class="btn btn-info pull-right" v-on:click="submit">保存</button>
 </form>
@@ -68,7 +49,6 @@ $(function(){
                         contentType: 'application/json',
                         data: this.$data
                     };
-                    console.log(opt);
                     $.ajax(opt).done(function(r){
                         if (r && r.error) {
                             alert(r.error)
@@ -112,7 +92,9 @@ $(function(){
         };
     var blog_editor = new Vue({
             el: '#blog_editor',
-            data: blog,
+            data: {
+                blog: blog
+            },
             methods: {
                 submit: function(event){
                     event.preventDefault();
@@ -122,8 +104,7 @@ $(function(){
                         url: blog_api,
                         contentType: 'application/json'
                     };
-                    opt.data = JSON.stringify(this.$data || {});
-                    console.log(opt.data)
+                    opt.data = JSON.stringify(this.$data.blog || {});
                     $.ajax(opt).done(function(r){
                         if (r && r.error) {
                             alert(r.error)
@@ -135,5 +116,19 @@ $(function(){
                 }
             }
     });
+
+    $(function(){
+        if (blog_id) {
+            $.getJSON('/api/get/blog/'+blog_id, {}).done(function(data) {
+                initBlog(data);
+            });
+        } else {
+            initBlog({
+                name: '',
+                summery: '',
+                content: ''
+            });
+        }
+    })
 </script>
 {% endblock %}

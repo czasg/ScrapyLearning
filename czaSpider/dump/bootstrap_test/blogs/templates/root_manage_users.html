@@ -93,9 +93,9 @@
                 <h4 class="modal-title">用户信息</h4>
             </div>
             <div class="modal-body">
-                <p>用户名称:<p v-text="user.name"></p></p>
-                用户邮箱:<p v-text="user.email"></p>
-                注册时间:<p v-text="user.created_at.toDateTime()"></p>
+                <p>用户名称: <strong v-text="user.name"></strong></p>
+                <p>用户邮箱: <strong v-text="user.email"></strong></p>
+                <p>注册时间: <strong v-text="user.created_at.toDateTime()"></strong></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -188,6 +188,7 @@
                             alert(r.error)
                             return
                         } else {
+                            alert('操作成功')
                             refresh();
                         }
                     })
@@ -196,8 +197,7 @@
             show_user: function (user) {
                 showUserInfo.user = user;
             }
-        },
-        show_user: function (user) {}
+        }
     })
 
     var showUserInfo = new Vue({

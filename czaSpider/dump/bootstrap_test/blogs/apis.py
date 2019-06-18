@@ -165,6 +165,12 @@ def signout(request):
 async def api_drop_user(request, *, id):
     check_admin(request)
     user = await User.find(id)
+    blogs = await Blog.findAll('user_id=?', [id])
+    for blog in blogs:
+        comments = await Comment.findAll('blog_id=?', blog.id)
+        for comment in comments:
+            await comment.remove()
+        await blog.remove()
     await user.remove()
     return {'id': id}
 

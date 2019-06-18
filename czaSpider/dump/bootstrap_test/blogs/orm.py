@@ -184,6 +184,6 @@ class Model(dict, metaclass=ModelMetaClass):
         args.append(self.getValueOrDefault(self.__primary_key__))
         await execute(self.__insert__, args)
 
-    async def remove(self):
-        args = [self.getValue(self.__primary_key__)]
+    async def remove(self, id=None):
+        args = [id or self.getValue(self.__primary_key__)]
         await execute(self.__remove__, args)
