@@ -36,6 +36,14 @@ async def root_manage_users(request, *, page='1'):
         'page_index': get_page_index(page)
     }
 
+@get('/root/manage/blogs')
+async def root_manage_blogs(request, *, page='1'):
+    check_admin(request)
+    return {
+        '__template__': 'root_manage_blogs.html',
+        'page_index': get_page_index(page)
+    }
+
 
 @get('/new/blog')
 def new_blog():
@@ -154,11 +162,11 @@ def signout(request):
 
 
 @post('/api/drop/user')
-async def api_drop_user(request, *, name, email):
+async def api_drop_user(request, *, id):
     check_admin(request)
-    user = await User.findAll('email=?', [email])
+    user = await User.find(id)
     await user.remove()
-    return {'warning': 'drop %s success!' % name}
+    return {'id': id}
 
 
 # json请求接口 #
@@ -177,10 +185,10 @@ async def api_get_users(*, page='1'):
 
 
 @get('/api/get/blogs')
-async def api_get_blogs(*, page='1'):
+async def api_get_blogs(*, page='1', page_size=None):
     page_index = get_page_index(page)
     num = await Blog.findNumber('count(id)')
-    p = Pager(num, page_index)
+    p = Pager(num, page_index, get_page_size(page_size)) if page_size else Pager(num, page_index)
     if num == 0:
         return dict(page=0, users=())
     blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
@@ -221,6 +229,12 @@ async def api_edit_blog(id, *, name, summary, content):
     await blog.update_table()
     return blog
 
+@post('/api/drop/blog/{id}')
+async def api_drop_blog(*, id):
+    blog = await Blog.find(id)
+    await blog.remove()
+    return dict(id=id)
+
 # 评论创建、删除模块 #
 
 @post('/api/new/comment/from/blog/{id}')
@@ -235,7 +249,6 @@ async def api_new_comment(id, request, *, content):
         raise APIResourceError('该文章异常，无法评论')
     comment = Comment(blog_id=blog.id, user_id=user.id, user_name=user.name, user_image=user.image,
                       content=content.strip())
-    print(blog.id, 'from blog')
     await comment.save()
     return comment
 

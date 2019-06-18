@@ -123,6 +123,7 @@ $(function(){
                         contentType: 'application/json'
                     };
                     opt.data = JSON.stringify(this.$data || {});
+                    console.log(opt.data)
                     $.ajax(opt).done(function(r){
                         if (r && r.error) {
                             alert(r.error)

@@ -23,6 +23,8 @@ __FILE__ = "Unfinished Todo"
 数博科技：爬虫工程师，
 2019.06.17 - 算法题，各种计算机基础（算法原理，计算机基础），太重要了把，你只会一些大家都有的东西有什么意义，Django，Flask等，都太普遍了，意义是找工作，而且也只能去打杂的工作！
 2019.06.17 - bootstrap wysiwyg 富文本编辑器
+2019.06.18 - 微信可以了解验证码，微博可以练selenium
+2019.06.18 - scrapy.extensions.logstats，scrapt的extension快怎么使用
 """
 
 """DONE!

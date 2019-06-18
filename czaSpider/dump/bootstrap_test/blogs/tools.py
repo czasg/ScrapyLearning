@@ -27,6 +27,15 @@ def get_page_index(page_str):
         pass
     return 1 if p < 1 else p
 
+def get_page_size(page_str):
+    p = 6
+    page_str = page_str[0] if isinstance(page_str, list) else page_str
+    try:
+        p = int(page_str)
+    except:
+        pass
+    return 6 if p < 6 else p
+
 def user2cookie(user, max_age):
     expires = str(time.time() + max_age)
     s = "%s-%s-%s-%s" % (user.id, user.passwd, expires, _COOKIE_KEY)
