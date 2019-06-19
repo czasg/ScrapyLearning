@@ -66,8 +66,13 @@ def edit_blog(*, id):
 async def detail_blog(id):
     blog = await Blog.find(id)
     comments = await Comment.findAll('blog_id=?', [id], orderBy='created_at desc')
+    son_comments = []
     for c in comments:
         c.html_content = text2html(c.content)
+        # sons = await SonComment.findAll('comment_id=?', [c.id])
+        # for s in sons:
+        #     s.html_content = text2html(s.content)
+        # son_comments.append(sons)
     blog.html_content = markdown.markdown(blog.content)
     return {
         '__template__': 'blog_detail.html',
@@ -153,17 +158,17 @@ async def api_register_root_user(*, name, email, passwd):
 
 
 @get('/signout')
-def signout(request):
-    referer = request.headers.get('Referer')
-    webResponse = web.HTTPFound(referer or '/')
+def signout():
+    webResponse = web.HTTPFound('/')
     webResponse.set_cookie(COOKIE_NAME, '-deleted-', max_age=0)
-    logger.info('user signed out!')
     return webResponse
 
 
 @post('/api/drop/user')
 async def api_drop_user(request, *, id):
     check_admin(request)
+    if request.__user__.id == id:
+        raise APIResourceError('root用户无法删除，请联系管理员', 'root User can not be drop')
     user = await User.find(id)
     blogs = await Blog.findAll('user_id=?', [id])
     for blog in blogs:
@@ -238,6 +243,9 @@ async def api_edit_blog(id, *, name, summary, content):
 @post('/api/drop/blog/{id}')
 async def api_drop_blog(*, id):
     blog = await Blog.find(id)
+    comments = await Comment.findAll('blog_id=?', blog.id)
+    for comment in comments:
+        await comment.remove()
     await blog.remove()
     return dict(id=id)
 
@@ -261,10 +269,9 @@ async def api_new_comment(id, request, *, content):
 
 @post('/api/drop/comment/from/blog/{id}')
 async def api_drop_comment(id, request):
-    check_admin(request)
     print(id)
+    check_admin(request)
     c = await Comment.find(id)
-    print(c)
     if c is None:
         raise APIResourceError('该评论状态异常', 'Comment Is Abnormal')
     await c.remove()

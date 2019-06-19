@@ -48,6 +48,8 @@
                 alert(textStatus);
             })
         })
+
+        $('[data-toggle="tooltip"]').tooltip()
     })
 </script>
 {% endblock %}
@@ -61,10 +63,10 @@
                 <strong>{{ blog.name }}  </strong>
                 {% if __user__ %}
                 {% if __user__.id==blog.user_id %}
-                <a href="/edit/blog/{{ blog.id }}"><small>编辑博客</small></a>
+                <small>&nbsp;&nbsp;<a href="/edit/blog/{{ blog.id }}" data-toggle="tooltip" data-placement="top" title="编辑博客"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></small>
                 {% endif %}{% endif %}
             </h3>
-            <small>发表于: {{ blog.created_at|datetime }}</small>
+            <small>作者: {{ blog.user_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发表于: {{ blog.created_at|datetime }}</small>
         </div>
     </div>
     <div class="media-right">
@@ -75,9 +77,10 @@
 </div>
 <!--博客摘要-->
 <blockquote>
-    <em>{{ blog.summary }}</em>
+    <p><strong>摘要:</strong></p><em>{{ blog.summary }}</em>
 </blockquote>
 <!--博客内容-->
+<hr/>
 <div>{{ blog.html_content|safe }}</div>
 
 
@@ -88,7 +91,7 @@
         <label class="sr-only">None</label>
         <textarea class="form-control" rows="2" placeholder="说点什么吧..."></textarea>
     </div>
-    <button type="submit" class="btn btn-info">Submit</button>
+    <button type="submit" class="btn btn-info">发表评论</button>
 </form>
 <div class="page-header"></div>
 
@@ -96,14 +99,32 @@
 <div id="drop_comment_in_blog">
 {% for comment in comments %}
 <div class="panel panel-default">
-    <div class="panel-heading">用户: {{ comment.user_name }} {% if comment.user_id==blog.user_id %}(作者){% endif %} - {{ comment.created_at|datetime }} {% if __user__ %}{% if __user__.admin %}<a href="#" type="button" v-on:click="dropComment('{{ comment.id }}')">删除</a>{% endif %}{% endif %}</div>
+    <div class="panel-heading">
+        用户: {{ comment.user_name }}
+        {% if comment.user_id==blog.user_id %}(作者){% endif %} - {{ comment.created_at|datetime }}
+        {% if __user__ %}
+        {% if __user__.admin %}
+        <a href="#" type="button" v-on:click="dropComment('{{ comment.id }}')">删除</a>
+        {% endif %}
+        {% endif %}
+        <!--<a href="#" type="button" v-on:click="dropComment('{{ comment.id }}')">删除</span></a>-->
+    </div>
     <div class="panel-body">{{ comment.html_content|safe }}</div>
+    <table class="table" id="test-for-cza2" style="display: none">
+        <tr>
+            <td>test</td>
+            <td>test</td>
+        </tr>
+        <tr>
+            <td>test</td>
+            <td>test</td>
+        </tr>
+    </table>
 </div>
 {% else %}
 <p>无人发表评论...</p>
 {% endfor %}
 </div>
-
 {% if __user__ %}
 {% if __user__.admin %}
 <script>
@@ -112,7 +133,6 @@
             el: '#drop_comment_in_blog',
             methods: {
                 dropComment: function (id) {
-                    console.log(id)
                     var
                         opt = {
                             type: 'POST',
@@ -131,6 +151,10 @@
                     }).fail(function(jqXHR, textStatus){
                         alert(textStatus);
                     })
+                },
+                hhhh: function () {
+                    console.log('hahaa');
+                    $("#test-for-cza2").css("display","table");
                 }
             }
         });

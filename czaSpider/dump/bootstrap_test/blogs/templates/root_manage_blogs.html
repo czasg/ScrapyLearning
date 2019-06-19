@@ -4,6 +4,8 @@
 
 {% block beforehead %}
 <script>
+
+
     //首次刷新
     function initManageBlog(data) {
         manageBlogs.blogs = data.blogs
@@ -49,6 +51,7 @@
         </thead>
         <tbody>
             <tr v-for="(blog, index) in blogs">
+
                 <th scope="row" v-text="index"></th>
                 <td>
                     <span v-text="blog.name"></span>
@@ -64,13 +67,14 @@
                 </td>
                 {% if __user__.admin %}
                 <td>
-                    <a href="#" v-on:click="showBlog(blog)"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                    <a href="#" v-on:click="showBlog(blog)" title="跳转"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></a>
                     <a href="#" v-on:click="drop_blog(blog)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>
                 </td>
                 {% else %}
                 <td>
-                    <a href="#" v-text="blog.user_name"></a>
-                    <a href="#" v-text="blog.user_name"></a>
+                    <a href="#" v-on:click="showBlog(blog)"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></a>
+                    <a href="#" v-on:click="edit_blog(blog)"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+                    <a href="#" v-on:click="drop_blog(blog)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>
                 </td>
                 {% endif %}
             </tr>
@@ -189,5 +193,7 @@
             }
         }
     })
+
+
 </script>
 {% endblock %}

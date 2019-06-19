@@ -24,6 +24,9 @@ __FILE__ = "Unfinished Todo"
 2019.06.17 - bootstrap wysiwyg 富文本编辑器
 2019.06.18 - 微信可以了解验证码，微博可以练selenium
 2019.06.18 - scrapy.extensions.logstats，scrapt的extension快怎么使用
+2019.06.18 - 普通用户管理界面的完善，博客如何添加其他字体或文本，富文本编辑器?
+2019.06.18 - numberAnimate数字滚动插件, 动态折线图 https://www.html5tricks.com/html5-canvas-animated-line.html
+2019.06.18 - 评论回复并拼接是如何实现的
 """
 
 """DONE!
@@ -52,6 +55,11 @@ __FILE__ = "Unfinished Todo"
 2019.05.30 - 对工具进行适当地整理，把不要的删除，或者重新命名整合下
 2019.05.30 - scrapy中间件需要在写一个模块，用于熟悉与练习
 2019.05.30 - 计算云中新建线上环境的git仓，用于部署，还有专门链接文件的仓。即一个专门接受文件，用于链接这里面的文件，来实现部署
+"""
+
+"""不错的学习平台
+html学习平台        https://www.html5tricks.com/   
+js转化平台          http://tool.oschina.net/codeformat/js    
 """
 
 """
