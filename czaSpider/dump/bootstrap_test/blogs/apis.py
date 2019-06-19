@@ -36,11 +36,22 @@ async def root_manage_users(request, *, page='1'):
         'page_index': get_page_index(page)
     }
 
+
 @get('/root/manage/blogs')
 async def root_manage_blogs(request, *, page='1'):
     check_admin(request)
     return {
         '__template__': 'root_manage_blogs.html',
+        'page_index': get_page_index(page)
+    }
+
+
+@get('/manage/blogs')
+async def root_manage_blogs(request, *, page='1'):
+    if request.__user__ is None:
+        raise APIResourceError('请先登陆', 'No Login')
+    return {
+        '__template__': 'manage_blogs.html',
         'page_index': get_page_index(page)
     }
 
@@ -52,6 +63,7 @@ def new_blog():
         'id': '',
         'api': '/api/new/blog'
     }
+
 
 @get('/edit/blog/{id}')
 def edit_blog(*, id):
@@ -66,13 +78,13 @@ def edit_blog(*, id):
 async def detail_blog(id):
     blog = await Blog.find(id)
     comments = await Comment.findAll('blog_id=?', [id], orderBy='created_at desc')
-    son_comments = []
     for c in comments:
         c.html_content = text2html(c.content)
-        # sons = await SonComment.findAll('comment_id=?', [c.id])
-        # for s in sons:
-        #     s.html_content = text2html(s.content)
-        # son_comments.append(sons)
+        sons = await SonComment.findAll('comment_id=?', [c.id], orderBy='created_at')
+        for s in sons:
+            s.html_content = text2html(s.content)
+        c.son_comments = sons
+        c.son_comments_nums = len(sons)
     blog.html_content = markdown.markdown(blog.content)
     return {
         '__template__': 'blog_detail.html',
@@ -196,13 +208,16 @@ async def api_get_users(*, page='1'):
 
 
 @get('/api/get/blogs')
-async def api_get_blogs(*, page='1', page_size=None):
+async def api_get_blogs(*, page='1', page_size=None, user_id=None):
     page_index = get_page_index(page)
     num = await Blog.findNumber('count(id)')
     p = Pager(num, page_index, get_page_size(page_size)) if page_size else Pager(num, page_index)
     if num == 0:
         return dict(page=0, users=())
-    blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    if user_id:
+        blogs = await Blog.findAll('user_id=?', [user_id], orderBy='created_at desc', limit=(p.offset, p.limit))
+    else:
+        blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
     return dict(page=p, blogs=blogs)
 
 
@@ -225,6 +240,7 @@ async def api_new_blog(request, *, name, summary, content):
     await blog.save()
     return blog
 
+
 @post('/api/edit/blog/{id}')
 async def api_edit_blog(id, *, name, summary, content):
     blog = await Blog.find(id)
@@ -240,6 +256,7 @@ async def api_edit_blog(id, *, name, summary, content):
     await blog.update_table()
     return blog
 
+
 @post('/api/drop/blog/{id}')
 async def api_drop_blog(*, id):
     blog = await Blog.find(id)
@@ -248,6 +265,7 @@ async def api_drop_blog(*, id):
         await comment.remove()
     await blog.remove()
     return dict(id=id)
+
 
 # 评论创建、删除模块 #
 
@@ -267,9 +285,26 @@ async def api_new_comment(id, request, *, content):
     return comment
 
 
+@post('/api/new/son/comment/from/blog/{id}')
+async def api_new_son_comment(id, request, *, comment_id, content):
+    user = request.__user__
+    if user is None:
+        raise APIResourceError('请先登陆', 'No User')
+    if not comment_id:
+        raise APIResourceError('评论异常，请联系管理员', 'No User')
+    if not content or not content.strip():
+        raise APIResourceError('评论不能为空', 'Comment Can Not Be None')
+    blog = await Blog.find(id)
+    if blog is None:
+        raise APIResourceError('该文章异常，无法评论')
+    comment = SonComment(blog_id=blog.id, user_id=user.id, user_name=user.name,
+                         content=content.strip(), comment_id=comment_id)
+    await comment.save()
+    return comment
+
+
 @post('/api/drop/comment/from/blog/{id}')
 async def api_drop_comment(id, request):
-    print(id)
     check_admin(request)
     c = await Comment.find(id)
     if c is None:

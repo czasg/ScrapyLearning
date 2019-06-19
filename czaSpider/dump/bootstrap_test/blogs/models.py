@@ -44,15 +44,14 @@ class Comment(Model):
     content = TextField()
     created_at = FloatField(default=time.time)
 
-# class SonComment(Model):
-#     __table__ = 'soncomments'
-#
-#     id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
-#     comment_id = StringField(ddl='varchar(50)')  # 父级评论，可以总的统计一次
-#     to_id = StringField(ddl='varchar(50)')  # 上一级评论
-#     blog_id = StringField(ddl='varchar(50)')
-#     user_id = StringField(ddl='varchar(50)')
-#     user_name = StringField(ddl='varchar(50)')
-#     content = TextField()
-#     created_at = FloatField(default=time.time)
+class SonComment(Model):
+    __table__ = 'son_comments'
+
+    id = StringField(primary_key=True, default=next_id, ddl='varchar(50)')
+    comment_id = StringField(ddl='varchar(50)')  # 父级评论，可以总的统计一次
+    blog_id = StringField(ddl='varchar(50)')
+    user_id = StringField(ddl='varchar(50)')
+    user_name = StringField(ddl='varchar(50)')
+    content = TextField()
+    created_at = FloatField(default=time.time)
 

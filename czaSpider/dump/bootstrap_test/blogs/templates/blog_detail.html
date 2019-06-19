@@ -107,32 +107,50 @@
         <a href="#" type="button" v-on:click="dropComment('{{ comment.id }}')">删除</a>
         {% endif %}
         {% endif %}
-        <!--<a href="#" type="button" v-on:click="dropComment('{{ comment.id }}')">删除</span></a>-->
+        <a href="javascript:void(0)" class="pull-right" type="button" v-on:click="showSons('son-comments-{{ comment.id }}')"><span class="caret"></span><span class="badge">{{ comment.son_comments_nums }}</span></a>
+        <div class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <a href="#" class="pull-right" type="button" v-on:click="addSons({{ comment }})" data-toggle="modal" data-target="#son-comment-modal"><span class="glyphicon glyphicon-edit"></span></a>
     </div>
     <div class="panel-body">{{ comment.html_content|safe }}</div>
-    <table class="table" id="test-for-cza2" style="display: none">
+    <table class="table" id="son-comments-{{ comment.id }}" style="display: none">
+        {% if comment.son_comments %}
+        {% for son in comment.son_comments %}
         <tr>
-            <td>test</td>
-            <td>test</td>
+            <td>{{ son.html_content|safe }}</td><td>用户:{{ son.user_name }}发表于: {{ blog.created_at|datetime }}</td>
         </tr>
-        <tr>
-            <td>test</td>
-            <td>test</td>
-        </tr>
+        {% endfor %}
+        {% else %}
+        <tr><td>暂无其他评论</td></tr>
+        {% endif %}
     </table>
 </div>
 {% else %}
 <p>无人发表评论...</p>
 {% endfor %}
 </div>
-{% if __user__ %}
-{% if __user__.admin %}
+<div id="son-comment-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">点评评论</h4>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" rows="2" v-model="content"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" v-on:click="addSonComment">添加评论</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 <script>
-    $(function () {
-        var drop = new Vue({
-            el: '#drop_comment_in_blog',
-            methods: {
-                dropComment: function (id) {
+    var drop = new Vue({
+        el: '#drop_comment_in_blog',
+        methods: {
+            dropComment: function (id) {
+                if (confirm('删除后不可恢复，是否继续删除！')) {
                     var
                         opt = {
                             type: 'POST',
@@ -151,17 +169,50 @@
                     }).fail(function(jqXHR, textStatus){
                         alert(textStatus);
                     })
-                },
-                hhhh: function () {
-                    console.log('hahaa');
-                    $("#test-for-cza2").css("display","table");
                 }
+            },
+            showSons: function (id) {
+                $('#'+id).toggle(50)
+            },
+            addSons: function (comment) {
+                son_comment.comment = comment
             }
-        });
+        }
+    });
+
+    var son_comment = new Vue({
+        el: '#son-comment-modal',
+        data: {
+            comment: '',
+            content: ''
+        },
+        methods: {
+            addSonComment: function () {
+                var
+                    data = {
+                        comment_id: this.comment.id,
+                        content: this.content
+                    }
+                    opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/api/new/son/comment/from/blog/{{ blog.id }}',
+                        contentType: 'application/json'
+                    };
+                opt.data = JSON.stringify(data || {})
+                $.ajax(opt).done(function (r) {
+                    if (r && r.error){
+                        alert(r.error);
+                    } else {
+                        alert('添加评论成功');
+                        refresh();
+                    }
+                }).fail(function(jqXHR, textStatus){
+                    alert(textStatus);
+                })
+            }
+        }
     })
 </script>
-{% endif %}
-{% endif %}
-
 {% endblock %}
 
