@@ -8,7 +8,6 @@
 
 
 {% block base2_content %}
-
 <form id="blog_editor">
     <div class="form-group">
         <label>文章标题:</label>
@@ -20,10 +19,137 @@
     </div>
     <div class="form-group">
         <label>文章内容:</label>
-        <textarea class="form-control" rows="20" v-model="blog.content"></textarea>
+        <textarea  class="form-control" rows="20" v-model="blog.content"></textarea>
+
     </div>
     <button class="btn btn-info pull-right" v-on:click="submit">保存</button>
 </form>
+
+
+<div class="container">
+    <div style="margin-top:20px" data-role="editor-toolbar" data-target="#editor" class="btn-toolbar">
+        <div class="btn-group btn-group-sm">
+            <a data-toggle="dropdown" title="Font" class="dropdown-toggle btn btn-default">
+                <span class="glyphicon glyphicon-font"></span>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu"></ul>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <a data-toggle="dropdown" title="Font Size" class="btn btn-default dropdown-toggle">
+                <span class="glyphicon glyphicon-text-height"></span>
+                <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a data-edit="fontSize 5"><font size="5">5</font></a></li>
+                <li><a data-edit="fontSize 3"><font size="3">3</font></a></li>
+                <li><a data-edit="fontSize 1"><font size="1">1</font></a></li>
+            </ul>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <a data-edit="bold" title="Bold (Ctrl/Cmd+B)" class="btn btn-default">
+                <span class="icon-bold"></span>
+            </a>
+            <a data-edit="italic" title="Italic (Ctrl/Cmd+I)" class="btn btn-default">
+                <span class="icon-italic"></span>
+            </a>
+            <a data-edit="strikethrough" title="Strikethrough" class="btn btn-default">
+                <span class="icon-strikethrough"></span>
+            </a>
+            <a data-edit="underline" title="Underline (Ctrl/Cmd+U)" class="btn btn-default">
+                <span class="icon-underline"></span>
+            </a>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <a data-edit="insertunorderedlist" title="Bullet list" class="btn btn-default">
+                <span class="icon-list-ul"></span>
+            </a>
+            <a data-edit="insertorderedlist" title="Number list" class="btn btn-default">
+                <span class="icon-list-ol"></span>
+            </a>
+            <a data-edit="outdent" title="Reduce indent (Shift+Tab)" class="btn btn-default">
+                <span class="icon-indent-left"></span>
+            </a>
+            <a data-edit="indent" title="Indent (Tab)" class="btn btn-default">
+                <span class="icon-indent-right"></span>
+            </a>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <a data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)" class="btn btn-default">
+                <span class="icon-align-left"></span>
+            </a>
+            <a data-edit="justifycenter" title="Center (Ctrl/Cmd+E)" class="btn btn-default">
+                <span class="icon-align-center"></span>
+            </a>
+            <a data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)" class="btn btn-default">
+                <span class="icon-align-right"></span>
+            </a>
+            <a data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)" class="btn btn-default">
+                <span class="icon-align-justify"></span>
+            </a>
+        </div>
+        <div class="btn-group btn-group-sm">
+            <a data-toggle="dropdown" title="Hyperlink" class="btn btn-default dropdown-toggle">
+                <span class="icon-link"></span>
+            </a>
+            <div class="dropdown-menu input-append">
+                <input placeholder="URL" type="text" data-edit="createLink" class="from-control">
+                <button type="button" class="btn">Add</button>
+            </div>
+            <a data-edit="unlink" title="Remove Hyperlink" class="btn btn-default">
+                <span class="icon-cut"></span>
+            </a>
+        </div>
+        <div class="btn-group btn-group-sm" role="group">
+            <a id="pictureBtn" title="Insert picture (or just drag &amp; drop)" class="btn btn-default">
+                <span class="icon-picture"></span>
+            </a>
+            <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage">
+            <input id="voiceBtn" type="text" data-edit="inserttext" x-webkit-speech="">
+        </div>
+        <div class="btn-group btn-group-sm">
+            <a data-edit="undo" title="Undo (Ctrl/Cmd+Z)" class="btn btn-default">
+                <span class="icon-undo"></span>
+            </a>
+            <a data-edit="redo" title="Redo (Ctrl/Cmd+Y)" class="btn btn-default">
+                <span class="icon-repeat"></span>
+            </a>
+        </div>
+    </div>
+    <div id="editor">123</div>
+
+    <!--<div id="editor"></div>-->
+</div>
+<script>
+    $(function () {
+        function initToolbarBootstrapBindings() {
+            var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
+                        'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
+                        'Times New Roman', 'Verdana'],
+                fontTarget = $('[title=Font]').siblings('.dropdown-menu');
+            $.each(fonts, function (idx, fontName) {
+                fontTarget.append($('<li><a data-edit="fontName ' + fontName + '" style="font-family:\'' + fontName + '\'">' + fontName + '</a></li>'));
+            });
+            $('a[title]').tooltip({container: 'body'});
+            $('.dropdown-menu input').click(function () {
+                return false;
+            }).change(function () {
+                $(this).parent('.dropdown-menu').siblings('.dropdown-toggle').dropdown('toggle');
+            }).keydown('esc', function () {
+                this.value = '';
+                $(this).change();
+            });
+            $('[data-role=magic-overlay]').each(function () {
+                var overlay = $(this), target = $(overlay.data('target'));
+                overlay.css('opacity', 0).css('position', 'absolute').offset(target.offset()).width(target.outerWidth()).height(target.outerHeight());
+            });
+            $('#voiceBtn').hide();
+        };
+        initToolbarBootstrapBindings();
+        $('#editor').wysiwyg();
+        window.prettyPrint && prettyPrint();
+    });
+</script>
 {% endblock %}
 
 {% block base2_footer %}

@@ -47,7 +47,7 @@ async def root_manage_blogs(request, *, page='1'):
 
 
 @get('/manage/blogs')
-async def root_manage_blogs(request, *, page='1'):
+async def manage_blogs(request, *, page='1'):
     if request.__user__ is None:
         raise APIResourceError('请先登陆', 'No Login')
     return {
@@ -125,13 +125,15 @@ async def api_register_user(*, name, email, passwd):
         raise APIResourceError('邮箱格式错误', 'error Email Format')
     if not passwd or not _RE_SHA1.match(passwd):
         raise APIResourceError('密码验证异常', 'Check SHA error')
+    if email == 'root@ioco.com':
+        raise APIResourceError('无法注册root用户', 'Check SHA error')
     user = await User.findAll('email=?', [email])
     if len(user) > 0:
         raise APIResourceDeplicated('邮件已被注册', 'Email has been alerdy registered!')
     uid = next_id()
     sha1_passwd = '%s:%s' % (uid, passwd)
     user = User(id=uid, name=name.strip(), email=email, passwd=hashlib.sha1(sha1_passwd.encode()).hexdigest(),
-                image='http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
+                image='/static/img/user.png')  #  % hashlib.md5(email.encode('utf-8')).hexdigest() todo, 增加用户头像
     await user.save()
     webResponse = web.Response()
     webResponse.set_cookie(COOKIE_NAME, user2cookie(user, 86400), max_age=86400)

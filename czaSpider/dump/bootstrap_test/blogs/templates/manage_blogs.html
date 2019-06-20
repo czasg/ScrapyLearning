@@ -8,7 +8,7 @@
 
     //首次刷新
     function initManageBlog(data) {
-        if (data.blogs.length) {
+        if (data.blogs && data.blogs.length) {
             console.log(data)
             manageBlogs.blogs = data.blogs
             manageBlogs.page = data.page
