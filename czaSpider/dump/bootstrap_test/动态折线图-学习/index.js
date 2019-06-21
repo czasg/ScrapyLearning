@@ -2,62 +2,63 @@
 // series of hacks. this one's all about the visuals.
 // - @hakimel
 
+//输入为: { data: [] }
 var LineChart = function( options ) {
 
-  var data = options.data;
-  var canvas = document.body.appendChild( document.createElement( 'canvas' ) );
-  var context = canvas.getContext( '2d' );
+    var data = options.data; // []
+    var canvas = document.body.appendChild( document.createElement( 'canvas' ) );  //创建元素并在body中添加
+    var context = canvas.getContext( '2d' );
 
-  var rendering = false,
-      paddingX = 40,
-      paddingY = 40,
-      width = options.width || window.innerWidth,
-      height = options.height || window.innerHeight,
-      progress = 0;
+    var rendering = false,
+        paddingX = 40,
+        paddingY = 40,
+        width = options.width || window.innerWidth,
+        height = options.height || window.innerHeight,
+        progress = 0;
 
-  canvas.width = width;
-  canvas.height = height;
+    canvas.width = width;
+    canvas.height = height;
 
-  var maxValue,
-      minValue;
+    var maxValue,
+        minValue;
 
-  var y1 = paddingY + ( 0.05 * ( height - ( paddingY * 2 ) ) ),
-      y2 = paddingY + ( 0.50 * ( height - ( paddingY * 2 ) ) ),
-      y3 = paddingY + ( 0.95 * ( height - ( paddingY * 2 ) ) );
+    var y1 = paddingY + ( 0.05 * ( height - ( paddingY * 2 ) ) ),
+        y2 = paddingY + ( 0.50 * ( height - ( paddingY * 2 ) ) ),
+        y3 = paddingY + ( 0.95 * ( height - ( paddingY * 2 ) ) );
 
-  format();
-  render();
+    format();
+    render();
 
-  function format( force ) {
+    function format( force ) {  //首次会执行一次，里面是空的
 
-    maxValue = 0;
-    minValue = Number.MAX_VALUE;
+        maxValue = 0;
+        minValue = Number.MAX_VALUE;
 
-    data.forEach( function( point, i ) {
-      maxValue = Math.max( maxValue, point.value );
-      minValue = Math.min( minValue, point.value );
-    } );
+        data.forEach( function( point, i ) { //forEach有三个参数，第一个是遍历数组的内容，第二个是数组索引，第三个是数组本身
+            maxValue = Math.max( maxValue, point.value );
+            minValue = Math.min( minValue, point.value );
+        });
 
-    data.forEach( function( point, i ) {
-      point.targetX = paddingX + ( i / ( data.length - 1 ) ) * ( width - ( paddingX * 2 ) );
-      point.targetY = paddingY + ( ( point.value - minValue ) / ( maxValue - minValue ) * ( height - ( paddingY * 2 ) ) );
-      point.targetY = height - point.targetY;
+        data.forEach( function( point, i ) {
+            point.targetX = paddingX + ( i / ( data.length - 1 ) ) * ( width - ( paddingX * 2 ) );
+            point.targetY = paddingY + ( ( point.value - minValue ) / ( maxValue - minValue ) * ( height - ( paddingY * 2 ) ) );
+            point.targetY = height - point.targetY;
 
-      if( force || ( !point.x && !point.y ) ) {
-        point.x = point.targetX + 30;
-        point.y = point.targetY;
-        point.speed = 0.04 + ( 1 - ( i / data.length ) ) * 0.05;
-      }
-    } );
-
-  }
-
-  function render() {
-
-    if( !rendering ) {
-      requestAnimationFrame( render );
-      return;
+            if( force || ( !point.x && !point.y ) ) {
+                point.x = point.targetX + 30;
+                point.y = point.targetY;
+                point.speed = 0.04 + ( 1 - ( i / data.length ) ) * 0.05;
+            }
+        });
     }
+
+    function render() {
+
+    if( !rendering ) {  // 这儿初始化的是False
+        requestAnimationFrame( render );  // 我擦，这就开始递归了?
+        return;
+    }
+
 
     context.font = '10px sans-serif';
     context.clearRect( 0, 0, width, height );
@@ -66,15 +67,15 @@ var LineChart = function( options ) {
     context.fillRect( paddingX, y1, width - ( paddingX * 2 ), 1 );
     context.fillRect( paddingX, y2, width - ( paddingX * 2 ), 1 );
     context.fillRect( paddingX, y3, width - ( paddingX * 2 ), 1 );
-
+    
     if( options.yAxisLabel ) {
-      context.save();
-      context.globalAlpha = progress;
-      context.translate( paddingX - 15, height - paddingY - 10 );
-      context.rotate( -Math.PI / 2 );
-      context.fillStyle = '#fff';
-      context.fillText( options.yAxisLabel, 0, 0 );
-      context.restore();
+        context.save();
+        context.globalAlpha = progress;
+        context.translate( paddingX - 15, height - paddingY - 10 );
+        context.rotate( -Math.PI / 2 );
+        context.fillStyle = '#fff';
+        context.fillText( options.yAxisLabel, 0, 0 );
+        context.restore();
     }
 
     var progressDots = Math.floor( progress * data.length );
@@ -86,7 +87,7 @@ var LineChart = function( options ) {
         point.y += ( point.targetY - point.y ) * point.speed;
 
         context.save();
-
+        
         var wordWidth = context.measureText( point.label ).width;
         context.globalAlpha = i === progressDots ? progressFragment : 1;
         context.fillStyle = point.future ? '#aaa' : '#fff';
@@ -154,39 +155,38 @@ var LineChart = function( options ) {
     context.restore();
 
     progress += ( 1 - progress ) * 0.02;
+  
+    requestAnimationFrame( render ); //这也是一个递归
+    }
+  
+    this.start = function() {
+        rendering = true;
+    }
+  
+    this.stop = function() {
+        rendering = false;
+        progress = 0;
+        format( true );
+    }
+  
+    this.restart = function() {
+        this.stop();
+        this.start();
+    }
+  
+    this.append = function( points ) {
+        progress -= points.length / data.length;
+        data = data.concat( points );
 
-    requestAnimationFrame( render );
+        format();
+    }
+  
+    this.populate = function( points ) {
+        progress = 0;
+        data = points;
 
-  }
-
-  this.start = function() {
-    rendering = true;
-  }
-
-  this.stop = function() {
-    rendering = false;
-    progress = 0;
-    format( true );
-  }
-
-  this.restart = function() {
-    this.stop();
-    this.start();
-  }
-
-  this.append = function( points ) {
-    progress -= points.length / data.length;
-    data = data.concat( points );
-
-    format();
-  }
-
-  this.populate = function( points ) {
-    progress = 0;
-    data = points;
-
-    format();
-  }
+        format();
+    }
 
 };
 
@@ -196,15 +196,20 @@ reset();
 
 chart.start();
 
+
+// 以下为三种操作方法
 function append() {
   chart.append([
     { label: 'Rnd', value: 1300 + ( Math.random() * 1500 ), future: true }
   ]);
 }
 
+
+
 function restart() {
   chart.restart();
 }
+
 
 function reset() {
   chart.populate([
@@ -222,4 +227,3 @@ function reset() {
     { label: 'Twelve', value: 1400, future: true }
   ]);
 }
-
