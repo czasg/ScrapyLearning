@@ -12,6 +12,12 @@
         showBlogs.page = data.page
         page_count = data.page.page_count
     }
+
+    function initComments (data) {
+        showComments.comments = data.comments,
+        showComments.page = data.page
+    }
+
     $(function() {
         var page_count = 0;
         $.get('/api/get/blogs', {},
@@ -19,6 +25,14 @@
                 if (status==='success'){
                     $('#loading').hide();
                     initBlogs(results);
+                }else{
+                    alert(results);
+            }
+        });
+        $.get('/api/get/comments', {},
+            function (results, status) {
+                if (status==='success'){
+                    initComments(results);
                 }else{
                     alert(results);
             }
@@ -40,10 +54,10 @@
         <div class="panel panel-info">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#show-blogs" v-bind:href="'#'+index" v-text="blog.name" aria-expanded="false"></a>
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#show-blogs" :href="'#'+index" v-text="blog.name" aria-expanded="false"></a>
                 </h4>
             </div>
-            <div v-bind:id="index" class="panel-collapse collapse" role="tabpanel">
+            <div :id="index" class="panel-collapse collapse" role="tabpanel">
                 <div class="panel-body">
                     <span v-text="'作者: '+blog.user_name"></span><br>
                     <span v-text="'发表于: '+blog.created_at.toDateTime()"></span><br>
@@ -53,13 +67,28 @@
                 <em>摘要:</em><br>
                 <strong><span v-text="blog.summary"></span></strong><br>
                 <br>
-                <a v-bind:href="'/blogs/blog/'+blog.id"><small>继续阅读</small></a>
+                <a :href="'/blogs/blog/'+blog.id"><small>继续阅读</small></a>
             </div>
         </div><br>
     </div>
 </div>
-
 {% endblock %}
+
+
+{% block base2_content_right %}
+<table class="table" id="show-comments">
+    <thead><tr><th>最新评论</th></tr></thead>
+    <tbody>
+        <tr v-for="comment in comments">
+            <td :title="'发布时间: ' + comment.created_at.toDateTime()">
+                <a type="button" :href="'/blogs/blog/' + comment.blog_id" v-text="comment.content" ></a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
+
+
 
 {% block base2_footer %}
 <nav class="navbar navbar-inverse navbar-fixed-bottom">
@@ -117,14 +146,32 @@
                 }
             })
         })
+
+        showBlogs = new Vue({
+            el: '#show-blogs',
+            data: {
+                blogs: '',
+                page: ''
+            }
+        })
+
+        showComments = new Vue({
+            el: '#show-comments',
+            data: {
+                comments: '',
+                page: ''
+            }
+        })
     })
-    //定义manageUsers对象
-    var showBlogs = new Vue({
-        el: '#show-blogs',
-        data: {
-            blogs: '',
-            page: ''
-        }
-    })
+
+
+//定义manageUsers对象
+//var showBlogs = new Vue({
+//    el: '#show-blogs',
+//    data: {
+//        blogs: '',
+//        page: ''
+//    }
+//})
 </script>
 {% endblock %}

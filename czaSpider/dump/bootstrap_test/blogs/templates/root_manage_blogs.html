@@ -154,44 +154,46 @@
                     Vue.nextTick()
                 }
             })
-        })
-    })
-    //定义manageUsers对象
-    var manageBlogs = new Vue({
-        el: '#manageBlogs',
-        data: {
-            blogs: '',
-            page: ''
-        },
-        methods: {
-            edit_blog: function (blog) {
-                location.assign('/edit/blog/' + blog.id);
+        });
+
+        //定义manageUsers对象
+        manageBlogs = new Vue({
+            el: '#manageBlogs',
+            data: {
+                blogs: '',
+                page: ''
             },
-            drop_blog: function (blog) {
-                if (confirm('确认要删除“' + blog.name + '”？删除后不可恢复！')) {
-                    var opt = {
-                        type: 'POST',
-                        dataType: 'json',
-                        url: '/api/drop/blog/' + blog.id,
-                        data: JSON.stringify({}),
-                        contentType: 'application/json'
-                    };
-                    $.ajax(opt).done(function(r) {
-                        if (r && r.error) {
-                            alert(r.error)
-                            return
-                        } else {
-                            refresh();
-                        }
-                    }).fail(function (jqXHR, textStatus) {
-                        alert(textStatus);
-                    })
+            methods: {
+                edit_blog: function (blog) {
+                    location.assign('/edit/blog/' + blog.id);
+                },
+                drop_blog: function (blog) {
+                    if (confirm('确认要删除“' + blog.name + '”？删除后不可恢复！')) {
+                        var opt = {
+                            type: 'POST',
+                            dataType: 'json',
+                            url: '/api/drop/blog/' + blog.id,
+                            data: JSON.stringify({}),
+                            contentType: 'application/json'
+                        };
+                        $.ajax(opt).done(function(r) {
+                            if (r && r.error) {
+                                alert(r.error)
+                                return
+                            } else {
+                                refresh();
+                            }
+                        }).fail(function (jqXHR, textStatus) {
+                            alert(textStatus);
+                        })
+                    }
+                },
+                showBlog: function (blog) {
+                    location.assign('/blogs/blog/' + blog.id);
                 }
-            },
-            showBlog: function (blog) {
-                location.assign('/blogs/blog/' + blog.id);
             }
-        }
+        })
+
     })
 
 

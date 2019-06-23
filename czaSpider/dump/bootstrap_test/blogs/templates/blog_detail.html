@@ -3,6 +3,7 @@
 
 {% block title %}{{ blog.user_name }} - 博客{% endblock %}
 
+
 {% block beforehead %}
 <script>
     function refresh () {
@@ -116,7 +117,7 @@
         {% if comment.son_comments %}
         {% for son in comment.son_comments %}
         <tr>
-            <td>{{ son.html_content|safe }}</td><td>用户:{{ son.user_name }}发表于: {{ blog.created_at|datetime }}</td>
+            <td>{{ son.html_content|safe }}</td><td>用户:{{ son.user_name }}发表于: {{ son.created_at|datetime }}</td>
         </tr>
         {% endfor %}
         {% else %}

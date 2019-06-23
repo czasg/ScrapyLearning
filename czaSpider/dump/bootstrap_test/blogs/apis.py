@@ -269,7 +269,7 @@ async def api_drop_blog(*, id):
     return dict(id=id)
 
 
-# 评论创建、删除模块 #
+# 评论创建、删除、查询模块 #
 
 @post('/api/new/comment/from/blog/{id}')
 async def api_new_comment(id, request, *, content):
@@ -313,3 +313,16 @@ async def api_drop_comment(id, request):
         raise APIResourceError('该评论状态异常', 'Comment Is Abnormal')
     await c.remove()
     return dict(id=id)
+
+
+@get('/api/get/comments')
+async def api_get_comments(*, page=1):
+    page_index = get_page_index(page)
+    num = await User.findNumber('count(id)')
+    p = Pager(num, page_index)
+    if num == 0:
+        return dict(page=0, comments=())
+    comments = await Comment.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
+    for c in comments:
+        c.html_content = text2html(c.content)
+    return dict(page=p, comments=comments)

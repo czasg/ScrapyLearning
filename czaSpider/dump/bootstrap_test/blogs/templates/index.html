@@ -5,4 +5,448 @@
 
 
 {% block base2_content %}
+<!--<div class="container-fluid">-->
+<!--<div class="container-fluid" id="canvasTest" style="height: 400px; width: 100%">-->
+<canvas class="sr-only" id="font-for-ioco" style="position: absolute"></canvas>
+<canvas id="rocket-and-shard" style="position: absolute"></canvas>
+<canvas id="font-for-ioco-detail" style=""></canvas>
+<!--</div><br>-->
+<br>
+<div class="container-fluid" id="canvasTest" style="background: #000; text-align: center; margin: 0; overflow: hidden;">
+<canvas id="the-line-chart" style="height: 400px;"></canvas>
+</div>
+<!--</div>-->
 {% endblock %}
+
+{% block base2_footer %} <!-- base2_footer -->
+<style>
+#canvasTest {
+    top: 100px;
+}
+</style>
+<script>
+class Shard {
+    constructor(x, y, hue) {
+        this.x = x;
+        this.y = y;
+        this.hue = hue;  // Math.floor(Math.random() * 360)  可以爆炸出财社的礼花
+        this.lightness = 50;
+        this.size = 15 + Math.random() * 10;  // 这个是爆炸后碎片的半径
+        const angle = Math.random() * 2 * Math.PI;  // 这个角度是碎片的角度
+        const blastSpeed = 1 + Math.random() * 6;
+        this.xSpeed = Math.cos(angle) * blastSpeed;
+        this.ySpeed = Math.sin(angle) * blastSpeed;
+        this.target = getTarget();
+        this.ttl = 100;
+        this.timer = 0;
+    }
+    draw() {
+        ctx2.fillStyle = `hsl(${this.hue}, 100%, ${this.lightness}%)`;
+        ctx2.beginPath();
+        ctx2.arc(this.x, this.y, this.size, 0, 2 * Math.PI);  // 画圆，也就是爆炸碎片
+        ctx2.closePath();
+        ctx2.fill();  // 针对每一个碎片对象，画一个圆出来咯
+    }
+    update() {
+        if (this.target) {
+            const dx = this.target.x - this.x;  // 起始与目的地之间的差距，早x轴上
+            const dy = this.target.y - this.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);  // 两点之间的直线距离
+            const a = Math.atan2(dy, dx);  // 计算角度
+            const tx = Math.cos(a) * 5;
+            const ty = Math.sin(a) * 5;
+            this.size = lerp(this.size, 2.5, 0.05);  // 牛逼，控制碎片的大小变化
+
+            if (dist < 5) {
+                this.lightness = lerp(this.lightness, 100, 0.01);
+                this.xSpeed = this.ySpeed = 0;
+                this.x = lerp(this.x, this.target.x + fidelity / 2, 0.05);
+                this.y = lerp(this.y, this.target.y + fidelity / 2, 0.05);
+                this.timer += 1;
+            } else if (dist < 10) {
+                this.lightness = lerp(this.lightness, 100, 0.01);
+                this.xSpeed = lerp(this.xSpeed, tx, 0.1);
+                this.ySpeed = lerp(this.ySpeed, ty, 0.1);
+                this.timer += 1;
+            } else {
+                this.xSpeed = lerp(this.xSpeed, tx, 0.02);
+                this.ySpeed = lerp(this.ySpeed, ty, 0.02);
+            }
+        } else {
+            this.ySpeed += 0.05;
+            //this.xSpeed = lerp(this.xSpeed, 0, 0.1);
+            this.size = lerp(this.size, 1, 0.05);
+
+            if (this.y > c2.height) {
+                shards.forEach((shard, idx) => {
+                    if (shard === this) {
+                        shards.splice(idx, 1);
+                    }
+                });
+            }
+        }
+        this.x = this.x + this.xSpeed;
+        this.y = this.y + this.ySpeed;
+    }
+}
+
+
+class Rocket {
+    constructor() {
+        const quarterW = c2.width / 4;  // 四分之一的屏宽
+        this.x = quarterW + Math.random() * (c2.width - quarterW);  // 火箭出现的位置，x轴
+        this.y = c2.height - 15;  // 火箭出来的位子，高度
+        this.angle = Math.random() * Math.PI / 4 - Math.PI / 6; // 方向，出现的角度  10*Math.PI/180 ， 这列写90度就会直接炸， 90度就是水平的意思， 0就是垂直向上
+        this.blastSpeed = 6 + Math.random() * 7;  // 火箭出现的速度
+        this.shardCount = 15 + Math.floor(Math.random() * 15);
+        this.xSpeed = Math.sin(this.angle) * this.blastSpeed;
+        this.ySpeed = -Math.cos(this.angle) * this.blastSpeed;
+        this.hue = Math.floor(Math.random() * 360); // 火箭出现的颜色。每一个火箭都是一个Rocket对象
+        this.trail = [];
+    }
+    draw() {
+        ctx2.save();
+        ctx2.translate(this.x, this.y);
+        ctx2.rotate(Math.atan2(this.ySpeed, this.xSpeed) + Math.PI / 2);  // 根据xy轴的速度，计算角度，牛逼  //  + Math.PI / 2 后面这段也非常重要，因为射出去的是一个矩阵，所以需要再旋转90度
+        ctx2.fillStyle = `hsl(${this.hue}, 100%, 50%)`;
+        ctx2.fillRect(0, 0, 5, 15);
+        ctx2.restore();
+//        console.log(Math.atan2(this.ySpeed, this.xSpeed), this.y)
+    }
+    update() {
+        this.x = this.x + this.xSpeed;  // 更新x轴的下一个位置，更新y轴的下一个位置，而且y轴的位置是递增的？
+        this.y = this.y + this.ySpeed;
+        this.ySpeed += 0.1;  // 若果把这行注释掉，那么火箭就永远是直线运动，一直上天不会下来，我给了他一个y轴上的增量， 原来如此，y轴上的速度，是用来计算角度的，当y逐渐增大的时候，
+    } // 原来如此，y轴上的速度是一个负值，相对坐标系的问题，当一个负值+上0.1后值是变小的
+
+    explode() {
+        for (let i = 0; i < 30; i++) {  // 达到爆炸条件，则开始创建碎片对象，这列可以设置数量，都以最后爆炸点初始化，继承颜色
+            shards.push(new Shard(this.x, this.y, this.hue));
+        }
+    }
+}
+
+
+// INITIALIZATION
+//const [c1, c2, c3] = document.querySelectorAll('canvas');  // 找到三个canvas对象
+const [c1, c2, c3] = [document.getElementById('font-for-ioco'),
+                      document.getElementById('rocket-and-shard'),
+                      document.getElementById('font-for-ioco-detail')]
+const [ctx1, ctx2, ctx3] = [c1, c2, c3].map(c => c.getContext('2d'));  // 对这三个对象进行获取画图属性
+let fontSize = 200;  // 初始化字体200
+const rockets = [];  // 火箭 - 这是装的什么
+const shards = [];  // 碎片 - 这是装的什么
+const targets = [];  // 目标 - 这里是？
+const fidelity = 3;  // 保真度，是3  // 绘画中间字体的时候，每次填写的方位， 他是由矩阵拼接起来的，所以定义矩阵的长宽很重要
+let counter = 0;  // 计数
+var aim = document.getElementById('canvasTest');
+//c2.width = c3.width = window.innerWidth;  // 初始化第二、三DOM的宽度和高度
+//c2.height = c3.height = window.innerHeight;  // 这是直接操作的DON了，不是画布 canvas-test
+c2.width = c3.width = aim.offsetWidth;//-20;
+c2.height = c3.height = 400;
+ctx1.fillStyle = '#000';  // 这是画布
+const text = 'IOCO';  // 这里是重要的入口，定义文本
+let textWidth = 99999999;  // 文本宽度？
+
+//while (textWidth > window.innerWidth) { // 这毫无疑问是true
+while (textWidth > c2.width) {
+    ctx1.font = `900 ${fontSize--}px Arial`;  // 画布1的字体大小是200
+    textWidth = ctx1.measureText(text).width; // 重新定义宽度，为文本宽度
+}
+// 画布1也是字体，但是他的字体是用来做圆料的，用来提供target，真正实现字体的是画布3
+c1.width = textWidth;  // 又操作DOM，定义其宽度为文本的宽度
+c1.height = fontSize * 1.5;  // 高度为字体宽度的1.5倍
+ctx1.font = `900 ${fontSize}px Arial`; // 这个时候变成了199把
+ctx1.fillText(text, 0, fontSize);
+const imgData = ctx1.getImageData(0, 0, c1.width, c1.height);
+for (let i = 0, max = imgData.data.length; i < max; i += 4) {
+    const alpha = imgData.data[i + 3];
+    const x = Math.floor(i / 4) % imgData.width;
+    const y = Math.floor(i / 4 / imgData.width) - 40;
+    if (alpha && x % fidelity === 0 && y % fidelity === 0) { // 灰度值大于0，且坐标为3的倍数
+        targets.push({ x, y });  // 把像素推到目标队列里面去
+    }
+} // 不加后面的过滤，太多target了
+
+ctx3.fillStyle = '#aaa';  // 画布三，是装的字体，aaa拜师紫色，而fff表示白色
+ctx3.shadowColor = '#FFF';
+ctx3.shadowBlur = 25;
+
+// ANIMATION LOOP
+(function loop() {
+    // 这里的画布二是背景颜色
+    // 255,252,153,0.5  暖黄色
+    // 144, 238 ,144, 0.5  半透明青苹果色
+    ctx2.fillStyle = "rgba(99, 99, 137, .1)";  // 0, 0, 0, .1 完全不透明的黑色
+    ctx2.fillRect(0, 0, c2.width, c2.height);
+    //ctx2.clearRect(0, 0, c2.width, c2.height);
+    counter += 1;
+
+    if (counter % 15 === 0) {  // 这个是用来过滤火箭的，不然太多了吓人啊
+        rockets.push(new Rocket());  // 说明这个火箭还是真弹出去的火箭
+    }
+    rockets.forEach((r, i) => {
+        r.draw();
+        r.update();
+        if (r.ySpeed > 0) {  // 是否爆炸
+            r.explode();
+            rockets.splice(i, 1); // 删除该火箭？
+        }
+    });
+
+    shards.forEach((s, i) => {
+        s.draw();
+        s.update();
+
+        if (s.timer >= s.ttl || s.lightness >= 99) {
+            ctx3.fillRect(s.target.x, s.target.y, fidelity + 1, fidelity + 1);
+            shards.splice(i, 1);
+        }
+    });
+
+    requestAnimationFrame(loop);
+})();
+
+// HELPER FUNCTIONS
+const lerp = (a, b, t) => Math.abs(b - a) > 0.1 ? a + t * (b - a) : b;  // ab相差是否大于0.1， 不是的话就取吧，否则就要经过一番计算
+//(this.size, 1.5, 0.05)
+
+function getTarget() {  // 从target数组中随机去一个，并删除，将此值作为target值传给对象
+    if (targets.length > 0) {
+//        console.log(targets.length)
+        const idx = Math.floor(Math.random() * targets.length);
+//        console.log(targets.length, idx)
+        let { x, y } = targets[idx];
+        targets.splice(idx, 1);
+
+        x += c2.width / 2 - textWidth / 2;  // 原来是画布位置放的不是最后位置，需要微调下
+        y += c2.height / 2 - fontSize / 2;  // 这两个的作用将他放在正中央
+
+        return { x, y };
+    }
+}
+</script>
+<script>
+var LineChart = function( options ) {
+
+    var data = options.data; // []
+    //var canvas = document.body.appendChild( document.createElement( 'canvas' ) );  //创建元素并在body中添加
+    var canvas = document.getElementById('the-line-chart');
+    var context = canvas.getContext( '2d' ); // canvas对象
+
+    var rendering = false,
+        paddingX = 40,
+        paddingY = 40,
+        width = options.width || window.innerWidth, // 当前window的宽度574
+        height = options.height || window.innerHeight,  // 当前window的高度604
+        progress = 0;
+
+    canvas.width = width;  // 画布的宽高填充整个屏幕
+    canvas.height = height;
+
+    var maxValue,
+        minValue;
+
+    var y1 = paddingY + ( 0.05 * ( height - ( paddingY * 2 ) ) ), // 66.2  // 这三个坐标是根据当前显示器，计算出三个平分线的Y轴坐标
+        y2 = paddingY + ( 0.50 * ( height - ( paddingY * 2 ) ) ), // 302
+        y3 = paddingY + ( 0.95 * ( height - ( paddingY * 2 ) ) ); // 537
+
+    format();
+    render();
+
+    function format( force ) {  // 定义坐标，定义速度
+
+        maxValue = 0;
+        minValue = Number.MAX_VALUE;
+
+        data.forEach( function( point, i ) { //forEach有三个参数，第一个是遍历数组的内容，第二个是数组索引，第三个是数组本身
+            maxValue = Math.max( maxValue, point.value );
+            minValue = Math.min( minValue, point.value );
+        });  // 选出当前数组中的最大值和最小值
+
+        data.forEach( function( point, i ) { // 计算数组中各个标签的坐标位置，x是从做到右逐渐变大，y则与value有灌
+            point.targetX = paddingX + ( i / ( data.length - 1 ) ) * ( width - ( paddingX * 2 ) );  // 根据数组的长度平分x轴
+            point.targetY = paddingY + ( ( point.value - minValue ) / ( maxValue - minValue ) * ( height - ( paddingY * 2 ) ) );  // 根据最大最小值平分y轴
+            point.targetY = height - point.targetY;  // 取反
+
+            if( force || ( !point.x && !point.y ) ) {
+                point.x = point.targetX + 30;  // 计算具体的坐标，x需要偏移30  // target是目标x，也就是最后的位置，而这里得到的x是其实位置，我们需要从其实位置移动到目标位置就ok
+                point.y = point.targetY;
+                point.speed = 0.1//0.04 + ( 1 - ( i / data.length ) ) * 0.05;  // 定义速度吗， 越到后面越慢 // speed就是移动过去的速度，他是位进
+            }  // 我定义了速度，怎么起作用呢？还不是速度啊  0.1就可以保证最后一定可以到
+        });
+    }
+    // console.log(data) 仍然为空
+
+    function render() {
+
+        if( !rendering ) {  // 这儿初始化的是False
+            requestAnimationFrame( render );  // 我擦，这就开始递归了?
+            return;
+        }
+
+
+        context.font = '10px sans-serif';
+        context.clearRect( 0, 0, width, height ); // 清除整个画布
+
+        context.fillStyle = '#222';  // 白色，用于画背景的三条线
+        context.fillRect( paddingX, y1, width - ( paddingX * 2 ), 1 ); // 在背景后面有三个矩形，蒙蔽
+        context.fillRect( paddingX, y2, width - ( paddingX * 2 ), 1 );
+        context.fillRect( paddingX, y3, width - ( paddingX * 2 ), 1 ); // 哦哦，这原来是三根坐标线
+
+        if( options.yAxisLabel ) {
+            context.save();
+            context.globalAlpha = progress;
+            context.translate( paddingX - 15, height - paddingY - 10 );  // 重新映射画布上的 位置
+            context.rotate( -Math.PI / 2 );  // 旋转当前绘图
+            context.fillStyle = '#fff';
+            context.fillText( options.yAxisLabel, 0, 0 );
+            context.restore();
+        }  // 这段代码并未被执行
+
+        var progressDots = Math.floor( progress * data.length );  // 这是一个点，获取不超过输入值的最大整数
+        var progressFragment = ( progress * data.length ) - Math.floor( progress * data.length );
+
+        data.forEach( function( point, i ) {  // 画文本，画点的，应该就这两个做作用
+            if( i <= progressDots ) {
+//              // 这两个很强大，能够对xy轴进行平滑，缩小， 这里就需要注意，目标x和实际位置x之间的差距，如果把我的好就可以慢慢哦听话，不然可能会出现左右横条的请款，这里不够好，感觉很奇怪，可以优化优化
+                point.x += ( point.targetX - point.x ) * point.speed; // x加了30  // x变小了  // 定义了这个，就会往左边进行偏移，很神器也很漂亮的操作
+                point.y += ( point.targetY - point.y ) * point.speed; // y 未变化
+//console.log(point.x, point.y)
+                context.save();  // 保存当前环境的状态
+                // 这里开始画 文本， 也就是label
+                var wordWidth = context.measureText( point.label ).width;  // 返回包含指定文本宽度的对象，也就是获取对象的宽度
+                context.globalAlpha = i === progressDots ? progressFragment : 1;
+                context.fillStyle = point.future ? '#aaa' : '#fff';
+                context.fillText( point.label, point.x - ( wordWidth / 2 ), height - 18 );
+
+                if( i < progressDots && !point.future ) { // 画点
+                    context.beginPath();
+                    context.arc( point.x, point.y, 4, 0, Math.PI * 2 ); // 画焦点，也就是那个小粗点
+                    context.fillStyle = '#1baee1';
+                    context.fill();
+                } // 这力是画圆点的
+            context.restore();  // 返回之前保存过的路径状态和属性， 保存但没画是把
+          }
+        });
+
+        context.save();
+        context.beginPath();  // 绘画开始，或者重新开始绘画  ctx.stroke(); // 进行绘制
+        context.strokeStyle = '#1baee1';  // 定义路径的style
+        context.lineWidth = 2; // 定义路径宽度
+
+        var futureStarted = false;
+
+        data.forEach( function( point, i ) {
+
+            if( i <= progressDots ) {
+
+                var px = i === 0 ? data[0].x : data[i-1].x, // 前一个坐标点的下标，若是第一个，则为它本身
+                    py = i === 0 ? data[0].y : data[i-1].y;
+
+                var x = point.x,  // 获取当前点的坐标，上面是前一个点的坐标
+                    y = point.y;
+
+                if( i === progressDots ) {  // 这个函数很重要，起到平滑移动的作用！
+                    x = px + ( ( x - px ) * progressFragment );  // ( x - px )表示无和目标之间的差距，以前一个节点为基底，不停加上来是把
+                    y = py + ( ( y - py ) * progressFragment );
+                } // 这里是平滑作用，但是速度与他貌似没有关系啊
+
+                if( point.future && !futureStarted ) {  // 这个函数是用来化未来节点的
+                    futureStarted = true;
+
+                    context.stroke();  // 进行绘制
+                    context.beginPath();
+                    context.moveTo( px, py );  // 以前一个节点为起始节点， 就可以造成连接在一起的效果是吧
+                    context.strokeStyle = '#aaa';
+
+                    if( typeof context.setLineDash === 'function' ) {
+                        context.setLineDash( [2,3] );
+                    }
+                }
+
+                if( i === 0 ) {
+                  context.moveTo( x, y );
+                }
+                else {
+                  context.lineTo( x, y );
+                }
+            }
+        });
+
+        context.stroke();
+        context.restore();
+        //console.log(progress)
+        progress += ( 1 - progress ) * 0.02; // 这里才是控制速度的地方，约到后面长的越慢，开始快一些
+
+        requestAnimationFrame( render ); //这也是一个递归
+    }
+
+    this.start = function() {
+        rendering = true;
+    }
+
+    this.stop = function() {
+        rendering = false;
+        progress = 0;
+        format( true );
+    }
+
+    this.restart = function() {
+        this.stop();
+        this.start();
+    }
+
+    this.append = function( points ) {
+        progress -= points.length / data.length;
+        data = data.concat( points );
+        format();
+    }
+
+    this.populate = function( points ) { //在此处定义了data函数
+        progress = 0;
+        data = points;
+        format();
+    }
+};
+
+var chart = new LineChart({ data: [] });
+
+reset(); // 该函数就是用来初始化data数值的吗
+
+chart.start();
+
+
+// 以下为三种操作方法
+function append() {
+    chart.append([
+        { label: 'Rnd', value: 1300 + ( Math.random() * 1500 ), future: true }
+    ]);
+}
+
+
+
+function restart() {
+    chart.restart();
+}
+
+
+function reset() { // 定义标签和值， 原来如此，在这里就开始定义不同的折现坐标了，相当牛逼
+    chart.populate([
+        { label: 'One', value: 0 },
+        { label: 'Two', value: 100 },
+        { label: 'Three', value: 200 },
+        { label: 'Four', value: 840 },
+        { label: 'Five', value: 620 },
+        { label: 'Six', value: 500 },
+        { label: 'Seven', value: 600 },
+        { label: 'Eight', value: 1100 },
+        { label: 'Nine', value: 800 },
+        { label: 'Ten', value: 900 },
+        { label: 'Eleven', value: 1200, future: true },
+        { label: 'Twelve', value: 1400, future: true }
+    ]);
+}
+</script>
+{% endblock %}
+
