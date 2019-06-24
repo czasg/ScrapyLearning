@@ -1,0 +1,413 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>统计图</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="shortcut icon" href="../images/shubologo.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../css/font-awesome.min.css">
+    <link rel="stylesheet" href="../js/vue/element-ui.css">
+    <link rel="stylesheet" href="../css/bass.css">
+    <link rel="stylesheet" href="../css/bar_chart.css">
+    <style>
+        .menuLIstitem:nth-of-type(5)>a {
+            font-weight: 700;
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="heaeder_fixed">
+        <a href="/index.html"><span class="logoHeader">数据特种部队</span></a>
+        <div class="menuHeader">
+            <ul class="menuList">
+                <li class="menuLIstitem" data-name="menuone">
+                    <a href="../menubox/datadisplay.html">数据流展示</a>
+                </li>
+                <li class="menuLIstitem" data-name="menutwo">
+                    <a href="../menubox/manufacturingShop.html">爬虫生产车间</a>
+                    <span class="redCircle manufacturingShop"></span>
+                </li>
+                <li class="menuLIstitem" data-name="menuthree">
+                    <a href="../menubox/controlcenter.html">调度运维中心</a>
+                </li>
+                <li class="menuLIstitem" data-name="menufour">
+                    <a href="../menubox/ancillaryservice.html">辅助服务</a>
+                </li>
+                <li class="menuLIstitem" data-name="menufive">
+                    <a href="../menubox/listplayers.html">队员风云榜</a>
+                    <span class="redCircle listplayers"></span>
+                </li>
+                <li class="menuLIstitem" data-name="menusix">
+                    <a href="../menubox/mypagebox.html">我的</a>
+                </li>
+                <li class="menuLIstitem" data-name="menuseven">
+                    <a href="../menubox/continuedpage.html">未完待续</a>
+                    <span class="redCircle continuedpage"></span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="isLoginBox">
+            <a href="#" class="userIco">
+                <img src="../images/首页/我的.svg" class="img-circle userImg" alt="UserImage">
+                <p class="username"></p>
+            </a>
+            <div class="isloginOut">
+                <div class="goIndex">首 页</div>
+                <div class="goOut">退 出</div>
+            </div>
+        </div>
+
+        <div class="PingTimeout" title="登录">
+            <img src="../images/首页/我的.svg" class="loginImg" alt="登录">
+        </div>
+    </header>
+
+    <div class="contentBody">
+        <div id="app">
+            <div v-cloak>
+                <el-row>
+                    <div v-show="isChartLine" class="allChartBox" v-loading="isChartLine"
+                        element-loading-text="工作统计图加载中"></div>
+                    <div :id="`${v}`" class="line_iten_ct" v-for="(v,i) in linecharts" :key="i"></div>
+                </el-row>
+
+                <el-row class="myChartBox">
+                    <el-row class="searchRow" :gutter="20">
+                        <el-col :span="5">
+                            <el-date-picker size="small" v-model="enddate" type="date" placeholder="选择日期">
+                            </el-date-picker>
+                        </el-col>
+                        <el-col :span="5">
+                            <el-input size="small" v-model="duration" placeholder="查询天数"></el-input>
+                        </el-col>
+                        <el-col :span="5">
+                            <el-input size="small" v-model="staff" placeholder="被查询用户"></el-input>
+                        </el-col>
+                        <el-col :span="5">
+                            <el-button size="small" type="primary" @click.native="bar_eachart">搜 索</el-button>
+                        </el-col>
+                    </el-row>
+                    <div id="barchart_s"></div>
+                </el-row>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../dropdownMenu.js"></script>
+    <script src="../js/commont.js"></script>
+    <script src="../js/echarts.min.js"></script>
+    <script src="../js/publicMethod.js"></script>
+    <script src="../js/vue/vue.min.js"></script>
+    <script src="../js/vue/axios.min.js"></script>
+    <script src="../js/vue/element-ui.js"></script>
+    <script>
+        axios.defaults.withCredentials = true; //让ajax携带cookie
+        var pageType = GetRequest().page;
+        if (pageType == "news") {
+            document.getElementsByTagName("title")[0].innerText = '新闻数据';
+        } else if (pageType == "credit") {
+            document.getElementsByTagName("title")[0].innerText = '诚信数据';
+        } else if (pageType == "law") {
+            document.getElementsByTagName("title")[0].innerText = '法律数据';
+        }
+        var username = window.sessionStorage.getItem("username");
+        new Vue({
+            el: "#app",
+            data() {
+                return {
+                    enddate: '',
+                    duration: '15',
+                    staff: username,
+                    nameArr: [],
+                    linecharts: [],
+                    isChartLine: false,
+                    comChart: '',
+                }
+            },
+            created() {
+                if (this.staff == "熊盛") {
+                    this.staff = "郭正霆";//查询数据
+                }
+            },
+            mounted() {
+                this.comChart = echarts.init(document.getElementById("barchart_s"));
+                this.enddate = this.getNowFormatDate();
+                (async () => {
+                    var logintype = await islogin();
+                    if (logintype) {
+                        this.getteamname();
+                        this.bar_eachart();
+                    }
+                })()
+            },
+            methods: {
+                //获取当前时间，格式YYYY-MM-DD
+                getNowFormatDate() {
+                    var date = new Date();
+                    var seperator1 = "-";
+                    var year = date.getFullYear();
+                    var month = date.getMonth() + 1;
+                    var strDate = date.getDate();
+                    if (month >= 1 && month <= 9) {
+                        month = "0" + month;
+                    }
+                    if (strDate >= 0 && strDate <= 9) {
+                        strDate = "0" + strDate;
+                    }
+                    var currentdate = year + seperator1 + month + seperator1 + strDate;
+                    return currentdate;
+                },
+                obj_res(arr) {
+                    var obj = {};
+                    for (var p in arr) {
+                        obj = $.extend(obj, arr[p])
+                    }
+                    return obj;
+                },
+                // 柱形图
+                bar_eachart() {
+                    this.comChart.showLoading({
+                        text: '图谱加载中...'
+                    });
+                    axios.get(componemt + '/' + pageType + '/report/analysis', {
+                        params: {
+                            enddate: this.enddate,
+                            duration: this.duration,
+                            staff: this.staff
+                        }
+                    }).then(res => {
+                        var data = res.data;
+                        if (data.success == "200") {
+                            data = data.info;
+                            var data_info = data.info;
+                            var dar_data_a = [];
+                            var date_arr = [];
+                            var type_arr = data.types;
+                            for (var i in data_info) {
+                                date_arr.push(data_info[i]["日期"]);
+                                var obj_arr = this.obj_res(data_info[i]["统计结果"])
+                                var bar_arr = [];
+                                for (var t in type_arr) {
+                                    var dd = type_arr[t];
+                                    if (obj_arr[dd] == undefined) {
+                                        bar_arr[t] = "-"
+                                    } else {
+                                        bar_arr[t] = obj_arr[dd]
+                                    }
+
+                                }
+                                dar_data_a.push(bar_arr)
+                            }
+                            var data_res_a = [];
+                            for (var e in dar_data_a[0]) {
+                                var data_res_o = [];
+                                for (var q in dar_data_a) {
+                                    data_res_o.push(dar_data_a[q][e])
+                                }
+                                data_res_a[e] = data_res_o
+                            }
+                            this.bardatachart(data_res_a, type_arr, date_arr);
+                        } else {
+                            this.$message({
+                                type: "error",
+                                message: "获取图谱数据出错",
+                            });
+                        }
+
+                    }).catch(err => {
+                        this.$message({
+                            type: "error",
+                            message: "获取图谱数据出错",
+                        });
+                    })
+                },
+                bardatachart(dar_data_a, datatitle, date_arr) {
+                    var zoomnum;
+                    zoomnum = Math.floor(7 / (date_arr.length) * 100) - 1;
+                    this.comChart.title = '堆叠条形图';
+                    var series = [];
+                    for (var i in datatitle) {
+                        var obj = {
+                            name: datatitle[i],
+                            type: 'bar',
+                            stack: '总量',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'inside',
+                                    formatter: function (param) {
+                                        return param.seriesName + ":" + param.data;
+                                    }
+                                }
+                            },
+                            data: []
+                        };
+                        series.push(obj)
+                    }
+
+                    option = {
+                        legend: {
+                            data: datatitle
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '8%',
+                            top: '10%',
+                            containLabel: true
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        xAxis: {
+                            type: 'category',
+                            data: date_arr
+                        },
+                        dataZoom: [{
+                            show: true,
+                            start: 0,
+                            end: zoomnum
+                        },
+                        {
+                            type: 'inside',
+                            start: 0,
+                            end: 100,
+                            zoomLock: true, //锁定缩放
+                        },
+                        ],
+                        series: series
+                    };
+                    for (var op in dar_data_a) {
+                        option.series[op].data = dar_data_a[op];
+                        dar_data_a[op] = [];
+                    }
+                    this.comChart.hideLoading();
+                    this.comChart.setOption(option, true);
+                },
+                // 获取队员姓名
+                getteamname() {
+                    axios.get(componemt + '/' + pageType + '/staff', {
+                        params: {}
+                    }).then(res => {
+                        var data = res.data;
+                        if (data.success == "200") {
+                            this.nameArr = data.info;
+                            this.getalluderwork();
+                        } else {
+                            this.$message({
+                                type: "error",
+                                message: "获取队员姓名出错",
+                            });
+                        }
+                    }).catch(err => {
+                        this.$message({
+                            type: "error",
+                            message: "获取队员姓名出错",
+                        });
+                    })
+                },
+                getalluderwork() {
+                    this.isChartLine = true;
+                    axios.get(componemt + "/" + pageType + '/report/analysisall', {
+                        params: {}
+                    }).then(res => {
+                        this.isChartLine = false;
+                        var data = res.data;
+                        if (data.success == "200") {
+                            for (var q = 0; q < data.info.length; q++) {
+                                var classname = "linecanvas" + q;
+                                this.linecharts.push(classname);
+                            }
+                            this.$nextTick(() => {
+                                for (var e = 0; e < data.info.length; e++) {
+                                    var chartName = "linecanvas" + e;
+                                    // console.log(echarts.init(document.getElementById(chartName)))
+                                    this.drawlinechart(e, data.info[e], this.nameArr[data.info[
+                                        e].work], chartName)
+                                }
+                            })
+
+                        } else {
+                            this.$message({
+                                type: "error",
+                                message: "获取工作统计数据出错",
+                            });
+                        }
+
+                    }).catch(err => {
+                        this.isChartLine = false;
+                        this.$message({
+                            type: "error",
+                            message: "获取工作统计数据出错",
+                        });
+                    })
+                },
+                drawlinechart(numc, data, legend, classname) {
+                    var series = [];
+                    var times = [];
+                    if (data.data.length > 0) {
+                        times = data.data[0].data.date;
+                    } else {
+                        var idnm = "#" + classname;
+                        $(idnm).hide();
+                        return;
+                    }
+
+                    for (var pp in data.data) {
+                        var obj = {
+                            name: data.data[pp].staff,
+                            type: 'line',
+                            data: data.data[pp].data.count
+                        }
+                        series.push(obj)
+                    };
+
+                    option = {
+                        title: {
+                            text: data.work + '工作统计图',
+                            textStyle: {
+                                color: "#4A61E2",
+                                fontSize: 20
+                            }
+                        },
+                        tooltip: {
+                            trigger: 'axis'
+                        },
+                        legend: {
+                            data: legend,
+                            top: 25,
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '4%',
+                            bottom: '3%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'category',
+                            boundaryGap: false,
+                            data: times
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        series: series
+                    };
+                    echarts.init(document.getElementById(classname)).setOption(option, true);
+                },
+            },
+        })
+
+
+    </script>
+</body>
+
+</html>

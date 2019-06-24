@@ -20,5 +20,8 @@ border-right: 设置右边框样式。dotted点状、solid实线、double双线�
 @media: 当文档达到某些条件是触发。min-width:768px则表示当宽度大于167时触发
 
 line-height: 属性设置行间的距离（行高） .li 就表示被一个li之间的行间距是这么多
-
+border-style: 设置元素边框的样式，或单独设置边框样式。dotted solid double dashed; 分别表示点状、实线、双线、虚线。
+border-width: 设置各边框的宽度
+white-space: nowrap 设置段落中的文本不进行换行
+transition: width 2s;  -- transition: property duration timing-function delay; 分别表示：需要设置的css属性名称、规定完成过渡需要的时间、规定速度小郭的速度曲线、定义过渡时间合适开始
 """

@@ -5,25 +5,39 @@
 
 
 {% block base2_content %}
-<!--<div class="container-fluid">-->
-<!--<div class="container-fluid" id="canvasTest" style="height: 400px; width: 100%">-->
-<canvas class="sr-only" id="font-for-ioco" style="position: absolute"></canvas>
-<canvas id="rocket-and-shard" style="position: absolute"></canvas>
-<canvas id="font-for-ioco-detail" style=""></canvas>
-<!--</div><br>-->
-<br>
-<div class="container-fluid" id="canvasTest" style="background: #000; text-align: center; margin: 0; overflow: hidden;">
-<canvas id="the-line-chart" style="height: 400px;"></canvas>
+<div class="container-fluid">
+<!--<canvas class="sr-only" id="font-for-ioco" style="position: absolute"></canvas>-->
+<!--<canvas id="rocket-and-shard" style="position: absolute"></canvas>-->
+<!--<canvas id="font-for-ioco-detail" style="position: relative"></canvas>-->
+</div>
+<!--<br>-->
+<div class="container-fluid" id="canvasTest" style="background: #000; text-align: center; margin: 0; overflow: hidden; ">
+<!--<canvas id="the-line-chart" style="height: 400px;"></canvas>-->
+</div>
+<div class="panel panel-default">
+    <div class="panel-body" style="height: 400px;">
+<!--<canvas class="sr-only" id="font-for-ioco" style="position: absolute"></canvas>-->
+<!--<canvas id="rocket-and-shard" style="position: absolute"></canvas>-->
+<!--<canvas id="font-for-ioco-detail" style="position: relative"></canvas>-->
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body" id="the-line-chart-father" style="height: 400px; position: relative">
+        <canvas id="the-line-chart"></canvas>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body" style="height: 400px;"></div>
 </div>
 <!--</div>-->
 {% endblock %}
 
 {% block base2_footer %} <!-- base2_footer -->
-<style>
-#canvasTest {
-    top: 100px;
-}
-</style>
+<!--<style>-->
+<!--#canvasTest {-->
+    <!--top: 100px;-->
+<!--}-->
+<!--</style>-->
 <script>
 class Shard {
     constructor(x, y, hue) {
@@ -142,7 +156,7 @@ let counter = 0;  // 计数
 var aim = document.getElementById('canvasTest');
 //c2.width = c3.width = window.innerWidth;  // 初始化第二、三DOM的宽度和高度
 //c2.height = c3.height = window.innerHeight;  // 这是直接操作的DON了，不是画布 canvas-test
-c2.width = c3.width = aim.offsetWidth;//-20;
+c2.width = c3.width = aim.offsetWidth-10;//-20;
 c2.height = c3.height = 400;
 ctx1.fillStyle = '#000';  // 这是画布
 const text = 'IOCO';  // 这里是重要的入口，定义文本
@@ -162,7 +176,7 @@ const imgData = ctx1.getImageData(0, 0, c1.width, c1.height);
 for (let i = 0, max = imgData.data.length; i < max; i += 4) {
     const alpha = imgData.data[i + 3];
     const x = Math.floor(i / 4) % imgData.width;
-    const y = Math.floor(i / 4 / imgData.width) - 40;
+    const y = Math.floor(i / 4 / imgData.width);
     if (alpha && x % fidelity === 0 && y % fidelity === 0) { // 灰度值大于0，且坐标为3的倍数
         targets.push({ x, y });  // 把像素推到目标队列里面去
     }
@@ -174,7 +188,7 @@ ctx3.shadowBlur = 25;
 
 // ANIMATION LOOP
 (function loop() {
-    // 这里的画布二是背景颜色
+    // 这里的画布二是背景颜色rgba(99, 99, 137, .1)
     // 255,252,153,0.5  暖黄色
     // 144, 238 ,144, 0.5  半透明青苹果色
     ctx2.fillStyle = "rgba(99, 99, 137, .1)";  // 0, 0, 0, .1 完全不透明的黑色
@@ -237,12 +251,15 @@ var LineChart = function( options ) {
     var rendering = false,
         paddingX = 40,
         paddingY = 40,
-        width = options.width || window.innerWidth, // 当前window的宽度574
-        height = options.height || window.innerHeight,  // 当前window的高度604
+        //width = options.width || window.innerWidth, // 当前window的宽度574
+        //height = options.height || window.innerHeight,  // 当前window的高度604
         progress = 0;
 
-    canvas.width = width;  // 画布的宽高填充整个屏幕
-    canvas.height = height;
+    var father = document.getElementById('the-line-chart-father');
+    width = father.offsetWidth;
+    height = father.offsetHeight;
+    canvas.width = father.offsetWidth;  // 画布的宽高填充整个屏幕
+    canvas.height = father.offsetHeight;
 
     var maxValue,
         minValue;
