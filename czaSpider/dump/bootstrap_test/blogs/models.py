@@ -31,6 +31,8 @@ class Blog(Model):
     summary = StringField(ddl='varchar(200)')
     content = TextField()
     created_at = FloatField(default=time.time)
+    count = IntegerField()
+    label = StringField(ddl='varchar(50)')
 
 
 class Comment(Model):

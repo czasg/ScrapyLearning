@@ -54,7 +54,7 @@
         <div class="panel panel-info">
             <div class="panel-heading" role="tab">
                 <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#show-blogs" :href="'#'+index" v-text="blog.name" aria-expanded="false"></a>
+                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#show-blogs" :href="'#'+index" v-text="blog.name" aria-expanded="false"></a><span class="badge pull-right" v-text="blog.count"></span><span class="glyphicon glyphicon-flash pull-right"></span>
                 </h4>
             </div>
             <div :id="index" class="panel-collapse collapse" role="tabpanel">
@@ -69,7 +69,7 @@
                 <br>
                 <a :href="'/blogs/blog/'+blog.id"><small>继续阅读</small></a>
             </div>
-        </div><br>
+        </div>
     </div>
 </div>
 {% endblock %}

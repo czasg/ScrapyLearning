@@ -77,6 +77,8 @@ def edit_blog(*, id):
 @get('/blogs/blog/{id}')
 async def detail_blog(id):
     blog = await Blog.find(id)
+    blog.count += 1
+    await blog.update_table()
     comments = await Comment.findAll('blog_id=?', [id], orderBy='created_at desc')
     for c in comments:
         c.html_content = text2html(c.content)
@@ -85,7 +87,8 @@ async def detail_blog(id):
             s.html_content = text2html(s.content)
         c.son_comments = sons
         c.son_comments_nums = len(sons)
-    blog.html_content = markdown.markdown(blog.content)
+    # blog.html_content = markdown.markdown(blog.content)
+    blog.html_content = blog.content
     return {
         '__template__': 'blog_detail.html',
         'blog': blog,
@@ -221,6 +224,10 @@ async def api_get_blogs(*, page='1', page_size=None, user_id=None):
     else:
         blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
     return dict(page=p, blogs=blogs)
+
+@get('/api/get/blogs/statistic')
+async def api_get_blogs_statistic():
+    pass
 
 
 @get('/api/get/blog/{id}')

@@ -5,28 +5,36 @@
 
 
 {% block base2_content %}
-<div id="main" style="width: 600px; height: 400px;"></div>
+<div class="panel panel-default">
+    <div class="panel-body" id="the-line-chart-father" style="height: 400px; position: relative">
+        <div id="main" style="width: 100%; height: 100%;" class="form-control"></div>
+    </div>
+</div>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
+    myChart.showLoading();
+
+
+
 
     // 指定图表的配置项和数据
     var option = {
         title: {
-            text: 'ECharts 入门示例'
+            text: '博客统计'
         },
         tooltip: {},
         legend: {
-            data:['销量']
+            data:['数量']
         },
         xAxis: {
-            data: ["衬衫","羊毛衫","雪纺衫","裤子","高跟鞋","袜子"]
+            data: ["前端知识","后端知识","生活知识"]
         },
         yAxis: {},
         series: [{
-            name: '销量',
+            name: '统计',
             type: 'bar',
-            data: [5, 20, 36, 10, 10, 20]
+            data: [0, 20, 36]
         }]
     };
 
@@ -35,15 +43,15 @@
 </script>
 
 
-<div class="container-fluid">
+<!--<div class="container-fluid">-->
 <!--<canvas class="sr-only" id="font-for-ioco" style="position: absolute"></canvas>-->
 <!--<canvas id="rocket-and-shard" style="position: absolute"></canvas>-->
 <!--<canvas id="font-for-ioco-detail" style="position: relative"></canvas>-->
-</div>
+<!--</div>-->
 <!--<br>-->
-<div class="container-fluid" id="canvasTest" style="background: #000; text-align: center; margin: 0; overflow: hidden; ">
+<!--<div class="container-fluid" id="canvasTest" style="background: #000; text-align: center; margin: 0; overflow: hidden; ">-->
 <!--<canvas id="the-line-chart" style="height: 400px;"></canvas>-->
-</div>
+<!--</div>-->
 <div class="panel panel-default">
     <div class="panel-body" style="height: 400px;">
 <!--<canvas class="sr-only" id="font-for-ioco" style="position: absolute"></canvas>-->
@@ -51,11 +59,11 @@
 <!--<canvas id="font-for-ioco-detail" style="position: relative"></canvas>-->
     </div>
 </div>
-<div class="panel panel-default">
-    <div class="panel-body" id="the-line-chart-father" style="height: 400px; position: relative">
-        <canvas id="the-line-chart"></canvas>
-    </div>
-</div>
+<!--<div class="panel panel-default">-->
+    <!--<div class="panel-body" id="the-line-chart-father" style="height: 400px; position: relative">-->
+        <!--<canvas id="the-line-chart"></canvas>-->
+    <!--</div>-->
+<!--</div>-->
 <div class="panel panel-default">
     <div class="panel-body" style="height: 400px;"></div>
 </div>

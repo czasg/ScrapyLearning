@@ -4,13 +4,16 @@
 
 
 {% block beforeScript %}
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">
-<link href="/static/css/bootstrap-wysiwyg.css" rel="stylesheet">
+<!--<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/3.0.2/css/font-awesome.css">-->
+<!--<link href="/static/css/bootstrap-wysiwyg.css" rel="stylesheet">-->
+<link rel="stylesheet" href="/static/css/wangEditor.min.css">
+
 {% endblock %}
 
 {% block beforehead %}
-<script src="/static/js/bootstrap-wysiwyg.js"></script>
-<script src="/static/js/jquery.hotkeys.js"></script>
+<!--<script src="/static/js/bootstrap-wysiwyg.js"></script>-->
+<!--<script src="/static/js/jquery.hotkeys.js"></script>-->
+<script src="/static/js/wangEditor.min.js"></script>
 {% endblock %}
 
 
@@ -26,127 +29,21 @@
     </div>
     <div class="form-group">
         <label>文章内容:</label>
-        <textarea class="form-control" rows="20" v-model="blog.content"></textarea>
-        <div ></div>
+       <div id="editor"></div>
     </div>
+
     <button class="btn btn-info pull-right" v-on:click="submit">保存</button>
 </form>
-
-
-<div class="container">
-    <div style="margin-top:20px" data-role="editor-toolbar" data-target="#editor" class="btn-toolbar">
-        <div class="btn-group btn-group-sm">
-            <a data-toggle="dropdown" title="Font" class="dropdown-toggle btn btn-default">
-                <span class="glyphicon glyphicon-font"></span>
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu"></ul>
-        </div>
-        <div class="btn-group btn-group-sm">
-            <a data-toggle="dropdown" title="Font Size" class="btn btn-default dropdown-toggle">
-                <span class="glyphicon glyphicon-text-height"></span>
-                <span class="caret"></span>
-            </a>
-            <ul class="dropdown-menu">
-                <li><a data-edit="fontSize 5"><font size="5">5</font></a></li>
-                <li><a data-edit="fontSize 3"><font size="3">3</font></a></li>
-                <li><a data-edit="fontSize 1"><font size="1">1</font></a></li>
-            </ul>
-        </div>
-        <div class="btn-group btn-group-sm">
-            <a data-edit="bold" title="Bold (Ctrl/Cmd+B)" class="btn btn-default">
-                <span class="icon-bold"></span>
-            </a>
-            <a data-edit="italic" title="Italic (Ctrl/Cmd+I)" class="btn btn-default">
-                <span class="icon-italic"></span>
-            </a>
-            <a data-edit="strikethrough" title="Strikethrough" class="btn btn-default">
-                <span class="icon-strikethrough"></span>
-            </a>
-            <a data-edit="underline" title="Underline (Ctrl/Cmd+U)" class="btn btn-default">
-                <span class="icon-underline"></span>
-            </a>
-        </div>
-        <div class="btn-group btn-group-sm">
-            <a data-edit="insertunorderedlist" title="Bullet list" class="btn btn-default">
-                <span class="icon-list-ul"></span>
-            </a>
-            <a data-edit="insertorderedlist" title="Number list" class="btn btn-default">
-                <span class="icon-list-ol"></span>
-            </a>
-            <a data-edit="outdent" title="Reduce indent (Shift+Tab)" class="btn btn-default">
-                <span class="icon-indent-left"></span>
-            </a>
-            <a data-edit="indent" title="Indent (Tab)" class="btn btn-default">
-                <span class="icon-indent-right"></span>
-            </a>
-        </div>
-        <div class="btn-group btn-group-sm">
-            <a data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)" class="btn btn-default">
-                <span class="icon-align-left"></span>
-            </a>
-            <a data-edit="justifycenter" title="Center (Ctrl/Cmd+E)" class="btn btn-default">
-                <span class="icon-align-center"></span>
-            </a>
-            <a data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)" class="btn btn-default">
-                <span class="icon-align-right"></span>
-            </a>
-            <a data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)" class="btn btn-default">
-                <span class="icon-align-justify"></span>
-            </a>
-        </div>
-        <div class="btn-group btn-group-sm">
-            <a data-toggle="dropdown" title="Hyperlink" class="btn btn-default dropdown-toggle">
-                <span class="icon-link"></span>
-            </a>
-            <div class="dropdown-menu input-append">
-                <input placeholder="URL" type="text" data-edit="createLink" class="from-control">
-                <button type="button" class="btn">Add</button>
-            </div>
-            <a data-edit="unlink" title="Remove Hyperlink" class="btn btn-default">
-                <span class="icon-cut"></span>
-            </a>
-        </div>
-        <div class="btn-group btn-group-sm" role="group">
-            <a id="pictureBtn" title="Insert picture (or just drag &amp; drop)" class="btn btn-default">
-                <span class="icon-picture"></span>
-            </a>
-            <input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage">
-            <input id="voiceBtn" type="text" data-edit="inserttext" x-webkit-speech="">
-        </div>
-        <div class="btn-group btn-group-sm">
-            <a data-edit="undo" title="Undo (Ctrl/Cmd+Z)" class="btn btn-default">
-                <span class="icon-undo"></span>
-            </a>
-            <a data-edit="redo" title="Redo (Ctrl/Cmd+Y)" class="btn btn-default">
-                <span class="icon-repeat"></span>
-            </a>
-        </div>
-    </div>
-    <div id="editor"></div>
-</div>
-<a href="javascript:void(0)" type="button" id="test-by-cza" data-test='bold'>ccccccccccccceb</a>
-<div id="aaaaa">
-</div>
-<script>
-var test = $('#test-by-cza');
-test.click(function(e){
-    var command = $(this).data('test')
-    doCommand(command)
-})
-function doCommand(cmdKey) {
-  document.execCommand(cmdKey, false, ""); // Thanks to https://codepen.io/bluestreak for finding this bug
-}
-
-var formHtml = $('#blog_editor');
-console.log(formHtml.html())
-</script>
 {% endblock %}
 
 {% block base2_footer %}
 <script>
     function initBlog (blog) {
             blog_editor.blog = blog
+            var E = window.wangEditor;
+            var editor = new E('#editor');
+            editor.create();
+            editor.txt.html(blog.content)
         }
 
     var
@@ -171,7 +68,14 @@ console.log(formHtml.html())
                         url: blog_api,
                         contentType: 'application/json'
                     };
+
+                    var E = window.wangEditor;
+                    var editor = new E('#editor');
+                    editor.create()
+                    this.$data.blog.content = editor.txt.html();
+                    alert(editor.txt.text())
                     opt.data = JSON.stringify(this.$data.blog || {});
+                    console.log(opt.data)
                     $.ajax(opt).done(function(r){
                         if (r && r.error) {
                             alert(r.error)
@@ -199,3 +103,136 @@ console.log(formHtml.html())
     })
 </script>
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--<div class="container">-->
+    <!--<div style="margin-top:20px" data-role="editor-toolbar" data-target="#editor" class="btn-toolbar">-->
+        <!--<div class="btn-group btn-group-sm">-->
+            <!--<a data-toggle="dropdown" title="Font" class="dropdown-toggle btn btn-default">-->
+                <!--<span class="glyphicon glyphicon-font"></span>-->
+                <!--<span class="caret"></span>-->
+            <!--</a>-->
+            <!--<ul class="dropdown-menu"></ul>-->
+        <!--</div>-->
+        <!--<div class="btn-group btn-group-sm">-->
+            <!--<a data-toggle="dropdown" title="Font Size" class="btn btn-default dropdown-toggle">-->
+                <!--<span class="glyphicon glyphicon-text-height"></span>-->
+                <!--<span class="caret"></span>-->
+            <!--</a>-->
+            <!--<ul class="dropdown-menu">-->
+                <!--<li><a data-edit="fontSize 5"><font size="5">5</font></a></li>-->
+                <!--<li><a data-edit="fontSize 3"><font size="3">3</font></a></li>-->
+                <!--<li><a data-edit="fontSize 1"><font size="1">1</font></a></li>-->
+            <!--</ul>-->
+        <!--</div>-->
+        <!--<div class="btn-group btn-group-sm">-->
+            <!--<a data-edit="bold" title="Bold (Ctrl/Cmd+B)" class="btn btn-default">-->
+                <!--<span class="icon-bold"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="italic" title="Italic (Ctrl/Cmd+I)" class="btn btn-default">-->
+                <!--<span class="icon-italic"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="strikethrough" title="Strikethrough" class="btn btn-default">-->
+                <!--<span class="icon-strikethrough"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="underline" title="Underline (Ctrl/Cmd+U)" class="btn btn-default">-->
+                <!--<span class="icon-underline"></span>-->
+            <!--</a>-->
+        <!--</div>-->
+        <!--<div class="btn-group btn-group-sm">-->
+            <!--<a data-edit="insertunorderedlist" title="Bullet list" class="btn btn-default">-->
+                <!--<span class="icon-list-ul"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="insertorderedlist" title="Number list" class="btn btn-default">-->
+                <!--<span class="icon-list-ol"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="outdent" title="Reduce indent (Shift+Tab)" class="btn btn-default">-->
+                <!--<span class="icon-indent-left"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="indent" title="Indent (Tab)" class="btn btn-default">-->
+                <!--<span class="icon-indent-right"></span>-->
+            <!--</a>-->
+        <!--</div>-->
+        <!--<div class="btn-group btn-group-sm">-->
+            <!--<a data-edit="justifyleft" title="Align Left (Ctrl/Cmd+L)" class="btn btn-default">-->
+                <!--<span class="icon-align-left"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="justifycenter" title="Center (Ctrl/Cmd+E)" class="btn btn-default">-->
+                <!--<span class="icon-align-center"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="justifyright" title="Align Right (Ctrl/Cmd+R)" class="btn btn-default">-->
+                <!--<span class="icon-align-right"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="justifyfull" title="Justify (Ctrl/Cmd+J)" class="btn btn-default">-->
+                <!--<span class="icon-align-justify"></span>-->
+            <!--</a>-->
+        <!--</div>-->
+        <!--<div class="btn-group btn-group-sm">-->
+            <!--<a data-toggle="dropdown" title="Hyperlink" class="btn btn-default dropdown-toggle">-->
+                <!--<span class="icon-link"></span>-->
+            <!--</a>-->
+            <!--<div class="dropdown-menu input-append">-->
+                <!--<input placeholder="URL" type="text" data-edit="createLink" class="from-control">-->
+                <!--<button type="button" class="btn">Add</button>-->
+            <!--</div>-->
+            <!--<a data-edit="unlink" title="Remove Hyperlink" class="btn btn-default">-->
+                <!--<span class="icon-cut"></span>-->
+            <!--</a>-->
+        <!--</div>-->
+        <!--<div class="btn-group btn-group-sm" role="group">-->
+            <!--<a id="pictureBtn" title="Insert picture (or just drag &amp; drop)" class="btn btn-default">-->
+                <!--<span class="icon-picture"></span>-->
+            <!--</a>-->
+            <!--<input type="file" data-role="magic-overlay" data-target="#pictureBtn" data-edit="insertImage">-->
+            <!--<input id="voiceBtn" type="text" data-edit="inserttext" x-webkit-speech="">-->
+        <!--</div>-->
+        <!--<div class="btn-group btn-group-sm">-->
+            <!--<a data-edit="undo" title="Undo (Ctrl/Cmd+Z)" class="btn btn-default">-->
+                <!--<span class="icon-undo"></span>-->
+            <!--</a>-->
+            <!--<a data-edit="redo" title="Redo (Ctrl/Cmd+Y)" class="btn btn-default">-->
+                <!--<span class="icon-repeat"></span>-->
+            <!--</a>-->
+        <!--</div>-->
+    <!--</div>-->
+    <!--<div id="editor"></div>-->
+<!--</div>-->
+<!--<a href="javascript:void(0)" type="button" id="test-by-cza" data-test='bold'>ccccccccccccceb</a>-->
+<!--<div id="aaaaa">-->
+<!--</div>-->
+<!--<script>-->
+<!--var test = $('#test-by-cza');-->
+<!--test.click(function(e){-->
+    <!--var command = $(this).data('test')-->
+    <!--doCommand(command)-->
+<!--})-->
+<!--function doCommand(cmdKey) {-->
+  <!--document.execCommand(cmdKey, false, ""); // Thanks to https://codepen.io/bluestreak for finding this bug-->
+<!--}-->
+
+<!--var formHtml = $('#blog_editor');-->
+<!--console.log(formHtml.html())-->
+<!--</script>-->
