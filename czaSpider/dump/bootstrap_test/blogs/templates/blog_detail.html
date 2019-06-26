@@ -105,12 +105,12 @@
         {% if comment.user_id==blog.user_id %}(作者){% endif %} - {{ comment.created_at|datetime }}
         {% if __user__ %}
         {% if __user__.admin %}
-        <a href="#" type="button" v-on:click="dropComment('{{ comment.id }}')">删除</a>
+        <a href="#" type="button" @click="dropComment('{{ comment.id }}')">删除</a>
         {% endif %}
         {% endif %}
-        <a href="javascript:void(0)" class="pull-right" type="button" v-on:click="showSons('son-comments-{{ comment.id }}')"><span class="caret"></span><span class="badge">{{ comment.son_comments_nums }}</span></a>
+        <a href="javascript:void(0)" class="pull-right" type="button" @click="showSons('son-comments-{{ comment.id }}')"><span class="caret"></span><span class="badge">{{ comment.son_comments_nums }}</span></a>
         <div class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
-        <a href="#" class="pull-right" type="button" v-on:click="addSons({{ comment }})" data-toggle="modal" data-target="#son-comment-modal"><span class="glyphicon glyphicon-edit"></span></a>
+        <a href="#" class="pull-right" type="button" @click="addSons({{ comment }})" data-toggle="modal" data-target="#son-comment-modal"><span class="glyphicon glyphicon-edit"></span></a>
     </div>
     <div class="panel-body">{{ comment.html_content|safe }}</div>
     <table class="table" id="son-comments-{{ comment.id }}" style="display: none">
@@ -141,7 +141,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" v-on:click="addSonComment">添加评论</button>
+                <button type="button" class="btn btn-primary" @click="addSonComment">添加评论</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

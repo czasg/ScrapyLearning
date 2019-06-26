@@ -87,7 +87,6 @@ async def detail_blog(id):
             s.html_content = text2html(s.content)
         c.son_comments = sons
         c.son_comments_nums = len(sons)
-    # blog.html_content = markdown.markdown(blog.content)
     blog.html_content = blog.content
     return {
         '__template__': 'blog_detail.html',

@@ -40,7 +40,9 @@
     function initBlog (blog) {
             blog_editor.blog = blog
             var E = window.wangEditor;
-            var editor = new E('#editor');
+            editor = new E('#editor');
+            editor.customConfig.uploadImgShowBase64 = true
+            editor.customConfig.zIndex = 100; // 感动到哭，终于找到了
             editor.create();
             editor.txt.html(blog.content)
         }
@@ -67,14 +69,8 @@
                         url: blog_api,
                         contentType: 'application/json'
                     };
-
-                    var E = window.wangEditor;
-                    var editor = new E('#editor');
-                    editor.create()
                     this.$data.blog.content = editor.txt.html();
-                    alert(editor.txt.text())
                     opt.data = JSON.stringify(this.$data.blog || {});
-                    console.log(opt.data)
                     $.ajax(opt).done(function(r){
                         if (r && r.error) {
                             alert(r.error)
