@@ -24,4 +24,9 @@ border-style: 设置元素边框的样式，或单独设置边框样式。dotted
 border-width: 设置各边框的宽度
 white-space: nowrap 设置段落中的文本不进行换行
 transition: width 2s;  -- transition: property duration timing-function delay; 分别表示：需要设置的css属性名称、规定完成过渡需要的时间、规定速度小郭的速度曲线、定义过渡时间合适开始
+
+label:before{ // 在标签前面添加元素
+content: '在标签前面添加内容'
+background-repeat: repeat；  // 是否重复，这个就是去全部重复啊 infinite 无限重复无限滚动概念
+}
 """

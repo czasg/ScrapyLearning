@@ -30,11 +30,11 @@ http://front-back.com/animate-png-sprites-with-css3-animations
 }
 .ken:before, .fireball:before {
   content: '';
-  background: url("ken-tatsumaki-senpuu-kyaku.png") no-repeat;
+  background: url("ken-tatsumaki-senpuu-kyaku.png") no-repeat;  /*旋转腿*/
 }
 .ken:after, .fireball:after {
   content: '';
-  background: url("ken-shoryuken.png") no-repeat;
+  background: url("ken-shoryuken.png") no-repeat; /*升龙拳的图*/
 }
 
 /* ken's fireball */
@@ -63,7 +63,7 @@ http://front-back.com/animate-png-sprites-with-css3-animations
 .fireball.moving {
   margin-left: 4000px;
 }
-
+/*keyframes定义动画规则，使用animation来执行此规则*/
 @-webkit-keyframes fireball {
   from {
     background-position: 0px -320px;

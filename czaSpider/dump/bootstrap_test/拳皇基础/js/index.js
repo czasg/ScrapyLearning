@@ -1,9 +1,9 @@
 var $ken = $('.ken');
 var $kenPos, $fireballPos;
 
-var punch = function(){
-  $ken.addClass('punch'); 
-  setTimeout(function() { $ken.removeClass('punch'); }, 150);
+var punch = function(){ // 普通攻击
+  $ken.addClass('punch'); //修改class属性吗，为啥?
+  setTimeout(function() { $ken.removeClass('punch'); }, 150);  // 设置时间，1.5毫秒就移除这个class类
 };
 var kick = function(){
   $ken.addClass('kick');
@@ -20,17 +20,17 @@ var tatsumaki = function(){
 };
 var hadoken = function(){
   $ken.addClass('hadoken'); 
-  setTimeout(function() { $ken.removeClass('hadoken'); }, 500); 
+  setTimeout(function() { $ken.removeClass('hadoken'); }, 500); // 角色的动作结束，但是波还是在的
   setTimeout(function() {
       var $fireball = $('<div/>', { class:'fireball' });
-      $fireball.appendTo($ken);
+      $fireball.appendTo($ken);  // 追加到子节点下
               
-      var isFireballColision = function(){ 
+      var isFireballColision = function(){ // 判断是不是到了隔屏幕75的距离
           return $fireballPos.left + 75 > $(window).width() ? true : false;
       };
   
-      var explodeIfColision = setInterval(function(){
-                  
+      var explodeIfColision = setInterval(function(){ // setInterval是重复跑的意思吗
+
           $fireballPos = $fireball.offset();
           //console.log('fireballInterval:',$fireballPos.left);
   
@@ -42,12 +42,12 @@ var hadoken = function(){
   
       }, 50);
   
-      setTimeout(function() { $fireball.addClass('moving'); }, 20);
+      setTimeout(function() { $fireball.addClass('moving'); }, 20);  // 20是这个波出现后，0.2毫秒，添加moving状态
               
       setTimeout(function() { 
           $fireball.remove(); 
           clearInterval(explodeIfColision);
-      }, 3020);
+      }, 3020);  // 3秒后无论是否达到爆炸程度，都直接消失，强行移除
   
   }, (250));
 };
@@ -95,7 +95,7 @@ $('#right').on('mousedown mouseup', function(e){
 // on keydown events
 $(document).on('keydown keyup', function(e) {
     if (e.type == 'keydown') { 
-        
+
         // s - hadoken
         if (e.keyCode == 83 
             && !$ken.hasClass('tatsumaki') 

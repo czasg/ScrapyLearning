@@ -173,11 +173,20 @@
             $('.flag2').toggle(300);
         })
     })
+
+    $(document).on('keydown', function(e) {
+        if (e.type === 'keydown' && e.keyCode === 13) {
+            var obj = $('#LOGIN-IN');
+            if (obj.css('display') === 'block') {
+                login_object.LOGINFunc(event)
+            }
+        }
+    })
 </script>
 <!-- 用户登陆 -->
 <script>
     $(function(){
-        var login_object = new Vue({
+        login_object = new Vue({
             el: '#LOGIN-IN',
             data: {
                 email: '',
