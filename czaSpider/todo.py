@@ -22,10 +22,11 @@ __FILE__ = "Unfinished Todo"
 2019.06.25 - 在首页做一个统计算了，博客统计，访问统计、爬虫统计，然后最下面放一些细分模块。得好好想象到底怎么部署整个页面。
 2019.06.25 - 前端页面太牛逼了，各种游戏！！！！！可以看看最后一页
 2019.06.06 - <input type="text" ref="input1"/>  this.$refs.input1.value ="22"; 减少获取dom节点的消耗  - Vue props, mounted()
+2019.06.26 - 插入视屏是个啥玩意：<video src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" autoplay="autoplay" controls="controls" loop="-1" poster="false.png">
 """
 
 """DONE!
-2019.06.24 - wangEditor 富文本编辑器
+2019.06.24 - wangEditor 富文本编辑器  background-color: #f4f3f4  xs 使用的背景颜色，很好看啊，浅灰色
 2019.06.25 - 富文本编辑器有一个坑，我似乎没法获取文本内容，阿卡宁夏xs泽呢么获取的，怎么获取怎么编辑。图片视频什么都可以直接插入，神奇
 2019.06.26 - python邮件功能发出去
 2019.06.25 - 添加统计模块 - alter table blogs add count bigint not null default 0;

@@ -65,7 +65,7 @@
                 </div>
                 <div class="form-group">
                     <label>密码</label>
-                    <input v-model="passwd" type="password" class="form-control" placeholder="Password">
+                    <input v-model="passwd" type="password" class="form-control" placeholder="Password" @keyup.enter.native="alert('123')">
                 </div>
             </div>
             <div class="modal-footer">
