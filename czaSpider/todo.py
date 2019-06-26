@@ -81,6 +81,25 @@ You Are An Apple In My Eyes
 Courage is not the absence of fear, but rather the judgment that something else is more important than fear.
 """
 
+#todo
+"""
+在我不能丢弃当前工作的前提下，考研的可能基本是0.但是数据结构是一门基础课程，还是需要学习的。面试笔试都没得谈。
+构建已有的web端：我到底需要一个怎样的前台和后端的功能
+后端：等部署好了，要开始接触flask和Django了
+爬虫：scrapy需要逐渐写完总结，初步就可
+爬虫requests小模块是否有必要完善。
+有关自动化部署的selenium，博个可能也需要我完成一个自动抢票的玩具
+
+首先首页不能是现在这样的，首页应该是展示页，展示这里的内容，模块，功能，意义
+左上角可以跳转，或者展示页力可以跳转
+
+不能有左边的导航栏，在上面添加导航栏，然后
+第一个作者没问题，怎么写这个就是个问题了。一片骚气的自我介绍哦？
+第二个改名叫知识工厂
+
+/ 可以指向作者，如果你前端写的够靓仔的话
+"""
+
 # todo
 """
 085212  软件工程
