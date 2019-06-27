@@ -21,3 +21,11 @@ By.CLASS_NAME
 a = driver.find_element_by_link_text("Continue")
 a = driver.find_element_by_partial_link_text("Con")
 """
+
+"""使用下拉框
+element = driver.find_element_by_xpath("//select[@name='name']")
+all_options = element.find_elements_by_tag_name('option')
+for o in all_options:
+    option.click()
+
+"""

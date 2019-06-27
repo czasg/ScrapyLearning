@@ -13,6 +13,10 @@ web.get(url)
 username = waiter.until(EC.presence_of_element_located((By.ID, 'loginName')))
 password = waiter.until(EC.presence_of_element_located((By.ID, 'loginPassword')))
 submit = waiter.until(EC.presence_of_element_located((By.ID, 'loginAction')))
+
+
+import time  # 擦，原来是要睡几秒就好
+time.sleep(3)
 username.send_keys('15607173521')
 # password.send_keys('cza19950917')
 # submit.click()

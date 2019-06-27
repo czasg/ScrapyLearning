@@ -33,7 +33,7 @@ action_chains.drag_and_drop(element, target).perform()
 action_chains.move_to_element(menu).click(hidden_submenu).perform()
 click()
 click_and_hold()
-.drag_and_drop_by_offset()  # 通过偏移量拖放
+.drag_and_drop_by_offset()  # 通过偏移量拖放  -- 也就是左键点击元素拖动一定距离然后释放鼠标
 move_to_element_with_offset()  # 移动到具有偏移量的元素
 tt = switch_to_alert()  # 捕捉弹框
 print(tt.text)  # 打印弹框中的文本
