@@ -86,6 +86,9 @@ async def api_get_blogs(*, page='1', page_size=None, user_id=None):
 
 @get('/api/get/blogs/statistic')
 async def api_get_blogs_statistic():  # todo，获取统计博客，置于首页做展示把
+    # SELECT AVG(score) average FROM students WHERE gender = 'M';
+    # SELECT COUNT(*) num FROM students GROUP BY class_id;
+    # SELECT class_id, COUNT(*) num FROM students GROUP BY class_id;
     pass
 
 
