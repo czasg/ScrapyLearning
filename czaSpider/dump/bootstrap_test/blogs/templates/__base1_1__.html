@@ -16,11 +16,12 @@
             <a class="navbar-brand" href="#" type="button" data-toggle="modal" data-target="#IOCO">IOCO</a>
         </div>
         <div class="collapse navbar-collapse" id="NAVBAR-HEADER">
-            <form class="navbar-form navbar-left">
+            <form class="navbar-form navbar-left" id="top-search">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
+                    <input type="text" class="form-control" placeholder="Search" v-model="content">
                 </div>
-                <button type="submit" class="btn">Submit</button>
+                <!--<button type="submit" class="btn" @click="topSearch">Submit</button>-->
+                <a type="button" class="btn btn-info" @click="topSearch">Submit</a>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
@@ -222,6 +223,54 @@
             }
         });
     });
+</script>
+<script>
+$(function(){
+    top_search = new Vue({
+        el: '#top-search',
+        data: {
+            content: ''
+        },
+        methods: {
+            topSearch: function () {
+                pathname = location.pathname
+                if (pathname !== '/blogs') {
+                    alert('改页暂不提供搜索功能，请移步到补给站尝试~')
+                }
+                if (!this.content.trim()) {
+                    $.get('/api/get/blogs', {
+                        page: '1'
+                    }, function (results, status) {
+                        if (status==='success'){
+                            showBlogs.blogs = results.blogs
+                            showBlogs.page = results.page
+                            Vue.nextTick()
+                        }
+                    })
+                    return
+                }
+                var
+                    data = {
+                        user_input: this.content.trim()
+                    },
+                    opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/api/find/blog/by/engine',
+                        contentType: 'application/json',
+                    };
+                opt.data = JSON.stringify(data || {});
+                $.ajax(opt).done(function(r){
+                    if (r && r.error) {
+                        alert(r.error);
+                    } else {
+                        showBlogs.blogs = r.blogs;
+                    }
+                })
+            }
+        }
+    })
+})
 </script>
 </body>
 {% endblock %}

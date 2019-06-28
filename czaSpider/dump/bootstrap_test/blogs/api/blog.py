@@ -1,4 +1,5 @@
 from handler import get, post
+from simengine import SimEngine
 from tools import *
 
 logger = logging.getLogger(__name__)
@@ -134,3 +135,13 @@ async def api_drop_blog(*, id):
         await comment.remove()
     await blog.remove()
     return dict(id=id)
+
+
+@post('/api/find/blog/by/engine')
+async def api_find_blog_by_engine(*, user_input):
+    result = SimEngine.search(user_input)
+    if not result:
+        return dict(error='未查询到相关补给资源~')
+    results = re.sub('\[(.*)\]', '(\\1)', str(result))
+    blogs = await Blog.findAll(where='id in %s' % results, orderBy='created_at desc', limit=(0, 10))
+    return dict(blogs=blogs)

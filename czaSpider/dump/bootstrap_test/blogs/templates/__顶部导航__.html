@@ -11,11 +11,11 @@
             <a class="navbar-brand" href="#" type="button" data-toggle="modal" data-target="#IOCO">IOCO</a>
         </div>
         <div class="collapse navbar-collapse" id="NAVBAR-HEADER">
-            <form class="navbar-form navbar-left">
+            <form class="navbar-form navbar-left" id="top-search">
                 <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
+                    <input type="text" class="form-control" placeholder="Search" v-model="content">
                 </div>
-                <button type="submit" class="btn">Submit</button>
+                <button type="submit" class="btn" @click="top_search">Submit</button>
             </form>
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
@@ -168,4 +168,20 @@
             }
         });
     });
+</script>
+<script>
+    top_search = new Vue({
+        el: '#top-search',
+        data: {
+            content: ''
+        },
+        method: {
+            top_search: function () {
+                pathname = location.pathname
+                if (pathname !== '/blogs') {
+                    alter('改页暂不提供搜索功能，请移步到补给站尝试~')
+                }
+            }
+        }
+    })
 </script>
