@@ -1,9 +1,10 @@
-from czaSpider.czaBaseSpider import czaSpider
+from czaSpider.czaBaseSpider import IOCO
 from czaSpider.czaTools import *
 
 
-class MySpider(czaSpider):
-    name = "ziru2-housePrice"
+class MySpider(IOCO):
+    name = "ziru-housePrice"
+    parse_item = True
 
     url = "http://wh.ziroom.com/z/nl/z3.html"
 
@@ -58,6 +59,5 @@ class MySpider(czaSpider):
                                  check_current_page="?p=1")
 
 
-if __name__ == "__main__":
-    MySpider.run_timer_task(MySpider.cza_run_spider, second=1)
-
+if __name__ == '__main__':
+    MySpider.cza_run_spider()
