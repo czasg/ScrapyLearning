@@ -40,20 +40,21 @@ class MySpider(IOCO):
         urls = []
         item["house_place"] = house_place
         for index, house in enumerate(houses):
+            _item = item.copy()
             price = [price_template[i] for i in price_list[index]]
-            item["house_price"] = int("".join([str(v) for v in price]))
+            _item["house_price"] = int("".join([str(v) for v in price]))
 
-            item["house_name"] = data_from_xpath(house, './/a[@class="t1"]/text()', first=True)
+            _item["house_name"] = data_from_xpath(house, './/a[@class="t1"]/text()', first=True)
 
-            item["house_area"], \
-            item["house_floor"], \
-            item["house_scale"], \
-            item["distance_from_subway"] = \
+            _item["house_area"], \
+            _item["house_floor"], \
+            _item["house_scale"], \
+            _item["distance_from_subway"] = \
                 data_from_xpath(house, './/div[@class="detail"]/p/span/text()', returnList=True)
 
             url = data_from_xpath(house, './/a[@class="t1"]/@href', url=True, source=response)
             urls.append(url)
-            items.setdefault(url, item)
+            items.setdefault(url, _item)
         yield from traverse_urls(response, self, detail_urls=urls, meta=response.meta,
                                  items=items, next_page_format="p=%d",
                                  check_current_page="?p=1")

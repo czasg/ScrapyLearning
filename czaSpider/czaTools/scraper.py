@@ -44,6 +44,7 @@ def traverse_urls(response, spider, xpath_rule=None, next_page_format=None, next
         new_urls = []
         _urls = urls
         print("未开启去重模块，默认为获取到的所有urls")
+    items = kwargs.get("items", {})
     for url in _urls:
         if not url:
             continue
@@ -54,7 +55,7 @@ def traverse_urls(response, spider, xpath_rule=None, next_page_format=None, next
             yield Request(url, callback, meta=meta)
             time.sleep(request_delay)
         else:
-            item = kwargs.get("items", {})
+            item = items.copy()
             if item:
                 item = item.get(url, {})
             if isinstance(item, dict):

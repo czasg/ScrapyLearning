@@ -32,7 +32,7 @@ class Blog(Model):
     content = TextField()
     created_at = FloatField(default=time.time)
     count = IntegerField()
-    label = StringField(ddl='varchar(50)')
+    update_at = FloatField(default=time.time)
 
 
 class Comment(Model):

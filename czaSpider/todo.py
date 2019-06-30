@@ -22,6 +22,7 @@ __FILE__ = "Unfinished Todo"
 2019.06.25 - 前端页面太牛逼了，各种游戏！！！！！可以看看最后一页
 2019.06.06 - <input type="text" ref="input1"/>  this.$refs.input1.value ="22"; 减少获取dom节点的消耗  - Vue props, mounted()
 2019.06.26 - 插入视屏是个啥玩意：<video src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" autoplay="autoplay" controls="controls" loop="-1" poster="false.png">
+2019.06.30 - 邮件模块记得拿到手，别浪费了
 """
 
 """DONE!
@@ -68,11 +69,13 @@ __FILE__ = "Unfinished Todo"
 2019.05.30 - 对工具进行适当地整理，把不要的删除，或者重新命名整合下
 2019.05.30 - scrapy中间件需要在写一个模块，用于熟悉与练习
 2019.05.30 - 计算云中新建线上环境的git仓，用于部署，还有专门链接文件的仓。即一个专门接受文件，用于链接这里面的文件，来实现部署
+2019.05.30 - 今晚学习了集中算法冒泡、直接插入、希尔排序、快速排序、简单排序
 """
 
 """不错的学习平台
 html学习平台        https://www.html5tricks.com/   
 js转化平台          http://tool.oschina.net/codeformat/js    
+爬虫学习            https://github.com/Jack-Cherish/python-spider/commit/10610ab354fc1bb8264edc566766df6588111914     https://cuijiahua.com/blog/ml/
 """
 
 """

@@ -1,6 +1,8 @@
 import re
 import hashlib
 
+from datetime import datetime
+
 from models import *
 from error_man import *
 from config import configs
@@ -10,13 +12,17 @@ _COOKIE_KEY = configs.session.secret
 _RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
 _RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
 
+
 def check_admin(request):
     if request.__user__ is None or not request.__user__.admin:
         raise APIResourceError('非管理员用户，无发执行此类操作', 'Not Admin')
 
+
 def text2html(text):
-    lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'), filter(lambda s: s.strip() != '', text.split('\n')))
+    lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'),
+                filter(lambda s: s.strip() != '', text.split('\n')))
     return ''.join(lines)
+
 
 def get_page_index(page_str):
     p = 1
@@ -27,6 +33,7 @@ def get_page_index(page_str):
         pass
     return 1 if p < 1 else p
 
+
 def get_page_size(page_str):
     p = 6
     page_str = page_str[0] if isinstance(page_str, list) else page_str
@@ -36,11 +43,13 @@ def get_page_size(page_str):
         pass
     return 6 if p < 6 else p
 
+
 def user2cookie(user, max_age):
     expires = str(time.time() + max_age)
     s = "%s-%s-%s-%s" % (user.id, user.passwd, expires, _COOKIE_KEY)
     cookie = [user.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
     return '-'.join(cookie)
+
 
 async def cookie2user(cookie_str):
     if not cookie_str:
@@ -62,6 +71,32 @@ async def cookie2user(cookie_str):
         return user
     except:
         return None
+
+
+def process_commands(all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):
+    commands = []
+    if kwargs:
+        commands.append(kwargs)
+    if all:  # {key:[v1,v2]}
+        commands.append({key: {"$all": value} for key, value in all.items()})
+    if size:  # {key:value}
+        commands.append({key: {"$size": value} for key, value in size.items()})
+    if ne:
+        commands.append({key: {"$ne": value} for key, value in ne.items()})
+    if gt:
+        commands.append({key: {"$gt": value} for key, value in gt.items()})
+    if gte:
+        commands.append({key: {"$gte": value} for key, value in gte.items()})
+    if lt:
+        commands.append({key: {"$lt": value} for key, value in lt.items()})
+    if lte:
+        commands.append({key: {"$lte": value} for key, value in lte.items()})
+    query = {"$and": commands} if commands else {}
+    return query
+
+def get_now_datetime():
+    __date = datetime.now()
+    return datetime(__date.year, __date.month, __date.day)
 
 
 class Pager:

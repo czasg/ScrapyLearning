@@ -46,7 +46,7 @@ class SpiderMetaClass(type):
         parse_item = attrs.get("parse_item", False)
         attrs["collName"] = collName
         attrs["dbName"] = dbName
-        attrs["mongo"] = Mongodb(dbName, collName)
+        attrs["mongo"] = Mongodb(dbName, collName, parse_item)
         attrs["custom_settings"] = merge_dict(get_custom_settings(name, parse_item), custom_settings)
         return super(SpiderMetaClass, cls).__new__(cls, className, bases, attrs)
 

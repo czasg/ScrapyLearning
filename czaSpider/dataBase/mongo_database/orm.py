@@ -2,6 +2,8 @@ import logging
 
 import pymongo
 
+from motor.motor_asyncio import AsyncIOMotorClient
+
 from czaSpider.dataBase.config import MONGO_INFO
 
 logging = logging.getLogger(__name__)
@@ -51,6 +53,7 @@ class BaseMongodb(object):
         self.dbName = dbName
         self.collName = collName
         self.client = get_mongo_client()
+        self.async_client = AsyncIOMotorClient('127.0.0.1', 27017)
         self.database = self.client[dbName]
         self.collection = self.database[collName]
         self._docs = self.collection.count()
@@ -138,10 +141,17 @@ class BaseMongodb(object):
         self.database.drop_collection(name)
         return self
 
+    async def async_count(self, all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):
+        query = process_commands(all, size, ne, gt, gte, lt, lte, **kwargs)
+        pass  # todo, add async?
+
 
 class SourceDB(BaseMongodb):
-    def __init__(self, dbName, collName):
-        super(SourceDB, self).__init__(dbName + "-source", collName)
+    def __init__(self, dbName, collName, parse_item=False):
+        if parse_item:
+            super(SourceDB, self).__init__(dbName, collName)
+        else:
+            super(SourceDB, self).__init__(dbName + "-source", collName)
 
 
 class ResolverDB(BaseMongodb):

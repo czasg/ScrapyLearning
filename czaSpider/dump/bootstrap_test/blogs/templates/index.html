@@ -5,6 +5,85 @@
 
 
 {% block base2_content %}
+<div id="index-canvas1" style="height: 400px;"></div>
+<script>
+var dom = document.getElementById("index-canvas1");
+var myChart1 = echarts.init(dom);
+myChart1.setOption({
+    title: {
+        text: '补给站'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    xAxis: {
+        type: 'category',
+        data: []
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [],
+        type: 'line'
+    }]
+});
+myChart1.showLoading();
+$.get('/api/get/blogs/statistic').done(function(data){
+    myChart1.hideLoading();
+    console.log(data)
+    myChart1.setOption({
+        xAxis: {
+            data: data.times
+        },
+        series: [{
+            data: data.nums
+        }]
+    });
+})
+</script>
+
+<div id="index-canvas2" style="height: 400px;"></div>
+<script>
+var dom = document.getElementById("index-canvas2");
+var myChart2 = echarts.init(dom);
+myChart2.setOption({
+    title: {
+        text: '自如-武汉'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    xAxis: {
+        type: 'category',
+        data: []
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [],
+        type: 'line'
+    }]
+});
+myChart2.showLoading();
+$.get('/api/get/housePrice/statistic', {
+    dbName: 'housePrice',
+    collectionName: 'ziru'
+}).done(function(data){
+    myChart2.hideLoading();
+    myChart2.setOption({
+        xAxis: {
+            data: data.times
+        },
+        series: [{
+            data: data.nums
+        }]
+    });
+})
+</script>
+
+
 <div id="container" style="height: 500px;"></div>
 <script>
 var dom = document.getElementById("container");
