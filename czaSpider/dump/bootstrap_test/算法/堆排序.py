@@ -17,7 +17,7 @@ def HeadSort(input_list):
                 break
             input_list[parent] = input_list[child]
             parent = child
-            child = 2 * child + 1
+            child = 2 * parent + 1
         input_list[parent] = parent_value
 
     sorted_list = input_list
@@ -39,7 +39,8 @@ def HeadSort(input_list):
 
 if __name__ == '__main__':
     # input_list = [6, 4, 8, 9, 2, 3, 1]
-    input_list = [ 1, 3, 4, 5, 2, 6, 9, 7, 8, 0 ]
+    # input_list = [ 1, 3, 4, 5, 2, 6, 9, 7, 8, 0 ]
+    input_list = [5, 3, 8, 6, 9, 1, 4, 2, 7]
     print('排序前:', input_list)
     sorted_list = HeadSort(input_list)
     print('排序后:', sorted_list)

@@ -236,6 +236,7 @@ $(function(){
                 pathname = location.pathname
                 if (pathname !== '/blogs') {
                     alert('改页暂不提供搜索功能，请移步到补给站尝试~')
+                    return
                 }
                 if (!this.content.trim()) {
                     $.get('/api/get/blogs', {

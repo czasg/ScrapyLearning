@@ -14,10 +14,10 @@ def QuickSort(input_list, left, right):
     def division(input_list, left, right):
         base = input_list[left]
         while left < right:
-            while left < right and base < input_list[right]:
+            while left < right and base < input_list[right]:  # 在右边找到一个比之小的数
                 right -= 1
             input_list[left] = input_list[right]
-            while left < right and base > input_list[left]:
+            while left < right and base > input_list[left]:  # 在左边找到一个比之大的数
                 left += 1
             input_list[right] = input_list[left]
         input_list[left] = base
@@ -25,7 +25,7 @@ def QuickSort(input_list, left, right):
 
     if left < right:
         base_index = division(input_list, left, right)
-        QuickSort(input_list, left, base_index - 1)
+        QuickSort(input_list, left, base_index - 1)  # 往左往右分别进行，这是一个可怕的递归，得亏是共同维护一个list
         QuickSort(input_list, base_index + 1, right)
 
 
