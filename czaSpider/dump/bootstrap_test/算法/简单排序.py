@@ -1,3 +1,9 @@
+"""
+首先需要遍历(N)次，从第一个端点值开始，假设此值为最小，然后遍历(N-i)次，是否存在比之更小的值
+存在则交换
+
+"""
+
 def SelectSort(input_list):
     sorted_list = input_list
     length = len(input_list)

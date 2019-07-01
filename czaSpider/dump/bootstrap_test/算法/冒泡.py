@@ -1,13 +1,9 @@
+"""
+对于N个数据，遍历(N-1)(N-1)次，每次对比相邻的两数，对两数进行排序
+
+"""
+
 def bubbleSort(input_list):
-	'''
-	函数说明:冒泡排序（升序）
-	Author:
-		www.cuijiahua.com
-	Parameters:
-		input_list - 待排序列表
-	Returns:
-		sorted_list - 升序排序好的列表
-	'''
 	if len(input_list) == 0:
 		return []
 	sorted_list = input_list

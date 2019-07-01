@@ -1,3 +1,11 @@
+"""
+堆的基本属性parent
+两个子节点: (2*parent)+1、(2*parent)+2
+父节点：(parent-1)/2
+
+小根堆、大根堆
+"""
+
 def HeadSort(input_list):
     def HeadAdjust(input_list, parent, length):
         parent_value = input_list[parent]

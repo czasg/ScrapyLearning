@@ -1,3 +1,8 @@
+"""
+以第一个端点数未基准，首先遍历后面的(N-1)次，每次的数，与前面的值进行比对、排序
+
+"""
+
 def insertSort(input_list):
     sorted_list = input_list
 
