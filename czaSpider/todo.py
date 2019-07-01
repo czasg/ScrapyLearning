@@ -22,10 +22,11 @@ __FILE__ = "Unfinished Todo"
 2019.06.25 - 前端页面太牛逼了，各种游戏！！！！！可以看看最后一页
 2019.06.06 - <input type="text" ref="input1"/>  this.$refs.input1.value ="22"; 减少获取dom节点的消耗  - Vue props, mounted()
 2019.06.26 - 插入视屏是个啥玩意：<video src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" autoplay="autoplay" controls="controls" loop="-1" poster="false.png">
-2019.06.30 - 邮件模块记得拿到手，别浪费了
+2019.07.01 - 现阶段的主要任务就是编写文档，储存补给站
 """
 
 """DONE!
+2019.06.30 - 邮件模块记得拿到手，别浪费了
 2019.06.18 - 微信可以了解验证码，微博可以练selenium -- 没有遇到验证码，说明有cookie，下午可以试一试
 2019.06.26 - 监听回车键进行登陆完成
 2019.06.24 - wangEditor 富文本编辑器  background-color: #f4f3f4  xs 使用的背景颜色，很好看啊，浅灰色
