@@ -64,6 +64,10 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
         mongodb2csv(cls, source, resolver)
 
     @classmethod
+    def mongodb2json(cls, source=False, resolver=False, dropColumn=''):
+        mongodb2json(cls, source, resolver, dropColumn)
+
+    @classmethod
     def file_download(cls, thread=1, delay=0, tolerate=6):
         cls._file_download(thread, delay, tolerate)
 
@@ -106,12 +110,17 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
         yield from [Request(self.url, self.parse)] if self.url else [Request(url, self.parse) for url in self.urls]
 
     def process_item(self, **kwargs):
-        func = None
-        if getattr(self, "parse_item"):
-            if hasattr(items, self.dbName + "Item"):
-                func = getattr(items, self.dbName + "Item")
-        func = func if func else getattr(items, "sourceItem")
-        return func(**kwargs)
+        if self.parse_item_func:
+            return self.parse_item_func(self, **kwargs)
+        else:
+            func = None
+            if getattr(self, "parse_item"):  # 是否直接保存item，不使用文件服务器
+                if hasattr(items, self.dbName + "Item"):  # 是否有定义特殊爬虫管道
+                    func = getattr(items, self.dbName + "Item")
+                else:
+                    func = getattr(items, "publicItem")  # 未定义特殊管道，使用公共管道
+            self.parse_item_func = func if func else getattr(items, "sourceItem")
+            return self.parse_item_func(self, **kwargs)
 
     # 文件解析部分 #
 

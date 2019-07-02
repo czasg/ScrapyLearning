@@ -17,3 +17,12 @@ def process_base_item(**kwargs):
     info["parse_time"] = kwargs.pop('parse_time', None)
     info["more"] = kwargs
     return info
+
+
+def publicItem(spider, **kwargs):
+    res = dict()
+    if spider.clean_item:
+        res.update(kwargs)
+    else:
+        res.update(process_base_item(**kwargs))
+    return res

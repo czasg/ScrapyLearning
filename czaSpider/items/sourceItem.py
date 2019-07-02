@@ -8,7 +8,7 @@ class Item(czaBaseItem):
     source = scrapy.Field()
 
 
-def sourceItem(**kwargs):
+def sourceItem(spider, **kwargs):
     item = Item()
     html = kwargs.pop('html', None)
     item.update(process_base_item(**kwargs))

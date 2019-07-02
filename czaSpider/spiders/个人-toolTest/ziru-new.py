@@ -5,6 +5,7 @@ from czaSpider.czaTools import *
 class MySpider(IOCO):
     name = "ziru1-housePrice"
     parse_item = True
+    clean_item = True
 
     url = "http://wh.ziroom.com/z/nl/z3.html"
 

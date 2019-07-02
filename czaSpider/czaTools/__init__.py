@@ -8,7 +8,7 @@ __all__ = ["re", "os", "sys", "time", "np", "pd", "shutil", "datetime", "import_
            "data_from_xpath", "get_next_page", "constant",
            "get_current_path", "to_path", "timed_task", "get_now_time",
            "TableParser", "dict_strip", "encoder",
-           "cover_dict", "merge_dict", "mongodb2csv", "Record"]
+           "cover_dict", "merge_dict", "mongodb2csv", "Record", "mongodb2json"]
 
 import re, os, sys, time, datetime
 import numpy as np
@@ -31,5 +31,5 @@ from .timer_task import timed_task, get_now_time
 from .url_func import get_next_page
 from .webTable import TableParser
 from .xpather import Xpather as xpather
-from .process_mongodb import mongodb2csv
+from .process_mongodb import mongodb2csv, mongodb2json
 from .process_dict import Record, cover_dict, merge_dict,strJoin,arrayJoin,dict_strip

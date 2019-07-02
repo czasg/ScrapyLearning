@@ -12,7 +12,7 @@ class Item(czaBaseItem):
     house_scale = scrapy.Field()
     distance_from_subway = scrapy.Field()
 
-def housePriceItem(**kwargs):
+def housePriceItem(spider, **kwargs):
     item = Item()
     item["house_price"] = kwargs.pop('house_price', None)
     item["house_place"] = kwargs.pop('house_place', None)
@@ -21,5 +21,6 @@ def housePriceItem(**kwargs):
     item["house_floor"] = kwargs.pop('house_floor', None)
     item["house_scale"] = kwargs.pop('house_scale', None)
     item["distance_from_subway"] = kwargs.pop('distance_from_subway', None)
-    item.update(process_base_item(**kwargs))
+    if not spider.clean_item:
+        item.update(process_base_item(**kwargs))
     return item

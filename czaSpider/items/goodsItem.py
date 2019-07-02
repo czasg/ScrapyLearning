@@ -7,9 +7,10 @@ class Item(czaBaseItem):
     goods_price = scrapy.Field()
     goods_name = scrapy.Field()
 
-def goodsItem(**kwargs):
+def goodsItem(spider, **kwargs):
     item = Item()
     item["goods_price"] = kwargs.pop('goods_price', None)
     item["goods_name"] = kwargs.pop('goods_name', None)
-    item.update(process_base_item(**kwargs))
+    if not spider.clean_item:
+        item.update(process_base_item(**kwargs))
     return item

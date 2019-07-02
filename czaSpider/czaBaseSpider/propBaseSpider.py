@@ -12,6 +12,9 @@ class PropBaseSpider(scrapy.Spider):
     url = None
     urls = None
     parse_item = False  # 是否使用原生scrapy中间件解析
+    clean_item = False  # 是否仅保存目标item，不携带多余杂志
+    parse_item_func = None
+    filters = []
 
     # 动态加载属性 #
     mongo = None

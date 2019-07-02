@@ -14,7 +14,7 @@ class Item(czaBaseItem):
     company_nature = scrapy.Field()
     company_scale = scrapy.Field()
 
-def jobPositionItem(**kwargs):
+def jobPositionItem(spider, **kwargs):
     item = Item()
     item["job_name"] = kwargs.pop('job_name', None)
     item["job_salary"] = kwargs.pop('job_salary', None)
