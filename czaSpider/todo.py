@@ -1,4 +1,4 @@
-__FILE__ = "Unfinished Todo"
+__FILE__ = "Unfinished Schedule"
 
 # todo
 """
@@ -24,6 +24,7 @@ __FILE__ = "Unfinished Todo"
 2019.06.26 - 插入视屏是个啥玩意：<video src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" autoplay="autoplay" controls="controls" loop="-1" poster="false.png">
 2019.07.01 - 现阶段的主要任务就是编写文档，储存补给站
 2019.07.02 - 不能舍进求远，自己的框架有大问题，scrapy怎么会跳转这么慢，把其他逻辑偶读好好完善下，问题越来越多了
+2019.07.02 - IOCO爬虫流程图，可以用md文件写了放在首页啊，nice啊马飞
 """
 
 """DONE!
@@ -79,6 +80,8 @@ __FILE__ = "Unfinished Todo"
 html学习平台        https://www.html5tricks.com/   
 js转化平台          http://tool.oschina.net/codeformat/js    
 爬虫学习            https://github.com/Jack-Cherish/python-spider/commit/10610ab354fc1bb8264edc566766df6588111914     https://cuijiahua.com/blog/ml/
+百度AI开放平台       https://ai.baidu.com/docs#/Face-Detect-V3/top
+
 """
 
 """
