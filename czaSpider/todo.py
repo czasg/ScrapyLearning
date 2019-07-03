@@ -26,6 +26,7 @@ __FILE__ = "Unfinished Schedule"
 2019.07.02 - 不能舍进求远，自己的框架有大问题，scrapy怎么会跳转这么慢，把其他逻辑偶读好好完善下，问题越来越多了
 2019.07.02 - IOCO爬虫流程图，可以用md文件写了放在首页啊，nice啊马飞
 2019.07.03 - aiohttp中部分源码，还是可以了解下
+2019.07.03 - "select name from sqlite_master where type='table' order by name"
 """
 
 """DONE!
