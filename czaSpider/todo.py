@@ -22,14 +22,16 @@ __FILE__ = "Unfinished Schedule"
 2019.06.25 - 前端页面太牛逼了，各种游戏！！！！！可以看看最后一页
 2019.06.06 - <input type="text" ref="input1"/>  this.$refs.input1.value ="22"; 减少获取dom节点的消耗  - Vue props, mounted()
 2019.06.26 - 插入视屏是个啥玩意：<video src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" autoplay="autoplay" controls="controls" loop="-1" poster="false.png">
-2019.07.01 - 现阶段的主要任务就是编写文档，储存补给站
 2019.07.02 - 不能舍进求远，自己的框架有大问题，scrapy怎么会跳转这么慢，把其他逻辑偶读好好完善下，问题越来越多了
 2019.07.02 - IOCO爬虫流程图，可以用md文件写了放在首页啊，nice啊马飞
 2019.07.03 - aiohttp中部分源码，还是可以了解下
-2019.07.03 - "select name from sqlite_master where type='table' order by name"
+2019.07.03 - fiddler抓包工具到底怎么用啊啊啊啊啊啊啊啊啊   网易云爬虫 - https://www.jianshu.com/p/a45714d16294-
 """
 
 """DONE!
+2019.07.03 - pip install pycryptodome 安装网易云解析音乐的爬虫包.
+2019.07.01 - 现阶段的主要任务就是编写文档，储存补给站 -- 文档卸载这边感觉不太合适啊，可以适当的卸载博客园里面吧
+2019.07.03 - "select name from sqlite_master where type='table' order by name"  -- 神奇的sql指令
 2019.07.01 - 发展历史线，可以使用ol/li有序表？还是ul无序表
 2019.06.30 - 邮件模块记得拿到手，别浪费了
 2019.06.18 - 微信可以了解验证码，微博可以练selenium -- 没有遇到验证码，说明有cookie，下午可以试一试
