@@ -24,3 +24,9 @@ kill -9 pid
 
 ssh-keygen -t rsa -C "972542655@qq.com"
 cat ~/.ssh/id_rsa.pub
+
+
+
+virtualenv py3env -p python3
+source py3env/bin/activate
+deactivate

@@ -191,7 +191,7 @@ class Netease():
 		:params song_name: 歌曲名字
 		:params song_num: 下载的歌曲数
 		"""
-
+		song = None
 		try:
 			song = self.crawler.search_song(song_name, song_num, self.quiet)
 		except:

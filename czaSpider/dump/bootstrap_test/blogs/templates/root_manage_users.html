@@ -59,8 +59,8 @@
                 </td>
                 {% if __user__.admin %}
                 <td>
-                    <a href="#" v-on:click="show_user(user)" type="button" data-toggle="modal" data-target="#SHOW-USER-INFO"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></a>
-                    <a href="#" v-on:click="drop_user(user)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>
+                    <a href="#" @click="show_user(user)" type="button" data-toggle="modal" data-target="#SHOW-USER-INFO"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></a>
+                    <a href="#" @click="drop_user(user)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>
                 </td>
                 {% else %}
                 <td>
