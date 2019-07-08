@@ -1,0 +1,196 @@
+/*通配符, 外边距和内边距*/
+*{
+	margin: 0;
+	padding: 0;
+}
+
+body{
+	background: #333;
+}
+
+.content{
+	width: 1000px;
+	height: 400px;
+	background: pink;
+	margin: 50px auto;
+}
+/*响应式布局*/
+@media screen and (max-width: 980px) {
+	.content .box{
+		width: 205px;
+		height: 220px;
+	}
+}
+.content .box{
+	width: 205px;
+	height: 220px;
+	float: left;
+	margin: 0 60px; /*上边距为0， 左右为60*/
+}
+
+
+.box-miss .icon{
+	width: 75px;
+	height: 75px;
+	display: block;  /*行内元素，需要变为快捷元素*/
+	background: url(./img/test1.jpg) no-repeat;
+	margin: 0 auto;  /*水平居中*/ 
+	transition: all 0.2s; /*增加过度效果*/
+	-webkit-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+}
+
+.box-miss .icon:hover{
+	transform: scale(1.2) rotate(360deg);  /*变大1.2倍，旋转360度*/
+	-webkit-transform: scale(1.2) rotate(360deg);
+	-o-transform: scale(1.2) rotate(360deg);
+	-moz-transform: scale(1.2) rotate(360deg);
+}/*设置动画，但没有过度效果，僵硬*/
+
+
+.box-play .icon{
+	width: 75px;
+	height: 75px;
+	display: block;  /*行内元素，需要变为快捷元素*/
+	background: url(./img/test2.jpg) no-repeat;
+	margin: 0 auto;  /*水平居中*/ 
+	transition: all 0.2s; /*增加过度效果*/
+	-webkit-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+}
+
+.box-play .icon:hover{
+	transform: scale(1.2) rotate(360deg);  /*变大1.2倍，旋转360度*/
+	-webkit-transform: scale(1.2) rotate(360deg);
+	-o-transform: scale(1.2) rotate(360deg);
+	-moz-transform: scale(1.2) rotate(360deg);
+}/*没有过度效果，僵硬*/
+
+
+.box-touch .icon{
+	width: 75px;
+	height: 75px;
+	display: block;  /*行内元素，需要变为快捷元素*/
+	background: url(./img/test3.jpg) no-repeat;
+	margin: 0 auto;  /*水平居中*/ 
+	transition: all 0.2s; /*增加过度效果*/
+	-webkit-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+}
+
+.box-touch .icon:hover{
+	transform: scale(1.2) rotate(360deg);  /*变大1.2倍，旋转360度*/
+	-webkit-transform: scale(1.2) rotate(360deg);
+	-o-transform: scale(1.2) rotate(360deg);
+	-moz-transform: scale(1.2) rotate(360deg);
+}/*没有过度效果，僵硬*/
+
+
+.box .button{
+	width: 175px;
+	height: 75px;
+	line-height: 70px; /*行高*/
+	background: pink url(./img/test4.jpg) no-repeat 130px; /*行内元素，不会显示的.  后面的130可以让他往右边移动这么多*/
+	display: block;
+	margin: 0 auto; /*外边距*/
+	font-family: "微软雅黑";
+	font-size: 18px;
+	font-weight: bolder;
+	color: #2ecc71;
+	text-decoration: none; /*设置下划线为空*/
+	padding-left: 20px; /*内补吗？*/
+	border: 8px solid rgba(255, 255, 255, 0.5); /*边框宽度，类型，颜色*/
+	transition: all 0.2s ease;
+	-webkit-transition: all 0.2s ease;
+	-o-transition: all 0.2s ease;
+	-moz-transition: all 0.2s ease;
+	position: relative;/*相对定位*/
+}
+
+
+.box .button:hover{/*僵硬的动画,一共就来年各个变化了*/
+	background-position: 140px center;
+	border: 2px solid rgba(255, 100, 255, 1)
+}
+
+.box .line{/*相对定位嵌套绝对定位？*/
+	background-color: red;
+}
+
+.box .line-top{
+	width: 0px;
+	height: 2px;
+	display: block;
+	position: absolute;
+	top: -2px;
+	left: -50%;
+	transition: all 0.2s;
+	-webkit-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+}
+
+.box .button:hover .line-top{ /*针对后面这个做适配啊，可以*/
+	width: 205px;
+	left: -2px;
+}
+
+
+.box .line-bottom{
+	width: 0px;
+	height: 2px;
+	display: block;
+	position: absolute;
+	bottom: -2px;
+	right: -50%;
+	transition: all 0.2s;
+	-webkit-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+}
+
+.box .button:hover .line-bottom{ /*针对后面这个做适配啊，可以*/
+	width: 205px;
+	right: -2px;
+}
+
+
+
+.box .line-right{
+	width: 2px;
+	height: 0px;
+	display: block;
+	position: absolute;
+	right: -2px;
+	top: -50%;
+	transition: all 0.2s;
+	-webkit-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+}
+
+.box .button:hover .line-right{ /*针对后面这个做适配啊，可以*/
+	height: 80px;
+	top: -2px;
+}
+
+.box .line-left{
+	width: 2px;
+	height: 0px;
+	display: block;
+	position: absolute;
+	bottom: -50%;
+	left: -2px;
+	transition: all 0.2s;
+	-webkit-transition: all 0.2s;
+	-o-transition: all 0.2s;
+	-moz-transition: all 0.2s;
+}
+
+.box .button:hover .line-left{ /*针对后面这个做适配啊，可以*/
+	height: 80px;
+	bottom: -2px;
+}

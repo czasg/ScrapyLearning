@@ -1,8 +1,8 @@
 from __future__ import print_function
 import sys, os
-import optparse
-import cProfile
-import inspect
+import optparse  # 抓取命令行参数
+import cProfile  # 性能/耗时分析
+import inspect   # 分析函数
 import pkg_resources
 
 import scrapy
@@ -15,7 +15,6 @@ from scrapy.utils.python import garbage_collect
 from scrapy.settings.deprecated import check_deprecated_settings
 
 def _iter_command_classes(module_name):
-    # TODO: add `name` attribute to commands and and merge this function with
     # scrapy.utils.spider.iter_spider_classes
     for module in walk_modules(module_name):
         for obj in vars(module).values():
@@ -33,7 +32,7 @@ def _get_commands_from_module(module, inproject):
             d[cmdname] = cmd()
     return d
 
-def _get_commands_from_entry_points(inproject, group='scrapy.commands'):
+def _get_commands_from_entry_points(inproject, group=' .commands'):
     cmds = {}
     for entry_point in pkg_resources.iter_entry_points(group):
         obj = entry_point.load()
