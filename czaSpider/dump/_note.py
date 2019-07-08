@@ -30,7 +30,11 @@ urlencode 拼接元素使称为url后缀参数
 
 在命令行中定义log级别与指定日志文件，使用scrapy crawl spider -s LOG_FILE=file.log --loglevel=INFO 来启动
 --nolog表示不开启日志
+
+如何加载setting模块，使用import_module然后再dir加载具体的内容
 """
+
+
 
 """
 垂直爬虫，即特定领域的爬虫。垂直爬虫是垂直搜索引擎的核心
