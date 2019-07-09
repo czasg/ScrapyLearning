@@ -33,7 +33,8 @@ def get_next_page(url=None, format=None, jump=None, diff="_", step=1, check_curr
     if jump is None:
         reRule = format.replace("%d", "(\d+)")
         return re.sub(reRule, lambda v: format % next_page(v.group(1)), url)
-    reRule = re.sub(diff + "%d", "(?:" + diff + "(\d+))?", format)
+    # reRule = re.sub(diff + "%d", "(?:" + diff + "(\d+))?", format)
+    reRule = format.replace(diff + "%d", "(?:" + diff + "(\d+))?")
     return re.sub(reRule, lambda v: format % next_page(v.group(1) or jump), url)
 
 
@@ -48,12 +49,14 @@ def _json_data(url):
 
 
 if __name__ == "__main__":
-    # url = 'http://sz.ziroom.com/z/nl/z3-d23008679-b612400051.html'
-    # for i in range(10):
-    #     url = get_next_page(url, format="p=%d", check_current_page="?p=1")
-    #     print(url)
+    url = 'http://sz.ziroom.com/z/nl/z3-d23008679-b612400051.html'
+    for i in range(2):
+        url = get_next_page(url, format="p=%d", check_current_page="?p=1")
+        print(url)
     form = {
         'test': 'hello',
         'page': '1'
     }
     print(json.loads(get_next_page(json_data=form, format="page=%d")))
+    url = "http://xxgk.beihai.gov.cn/bhshjbhj/xzzfzl_84504/index.html"
+    print(get_next_page(url, format="index_%d", jump=1))

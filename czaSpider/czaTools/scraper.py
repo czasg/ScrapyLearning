@@ -11,7 +11,7 @@ from czaSpider.czaTools.process_dict import arrayJoin
 def traverse_urls(response, spider, xpath_rule=None, next_page_format=None, next_page_without_new_urls=False,
                   allow_next_page=True, meta=None, callback=None, extend_callback=None, filter_diplicate=True,
                   request_delay=0,
-                  **kwargs):  # todo. mongodb is error
+                  **kwargs):
     """
     遍历url，封装了翻页逻辑
     :param response:
