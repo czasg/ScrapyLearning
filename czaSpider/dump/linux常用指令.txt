@@ -30,3 +30,12 @@ cat ~/.ssh/id_rsa.pub
 virtualenv py3env -p python3
 source py3env/bin/activate
 deactivate
+
+
+sudo vi 50-default.conf  -- 修改配置cron的日志
+sudo service rsyslog restart
+sudo service cron restart
+
+sudo apt-get install postfix
+sudo service postfix start
+sudo service postfix stop  -- 邮件模块
