@@ -62,12 +62,12 @@ def walk_modules(path):
     mods = []
     mod = import_module(path)
     mods.append(mod)
-    if hasattr(mod, '__path__'):
-        for _, subpath, ispkg in iter_modules(mod.__path__):
+    if hasattr(mod, '__path__'): # 通过mod.__path__获取子模块
+        for _, subpath, ispkg in iter_modules(mod.__path__):  # 通过iter_modules(mod.__path__)迭代子模块
             fullpath = path + '.' + subpath
-            if ispkg:
+            if ispkg:  # 子模块是python包，则进行递归迭代
                 mods += walk_modules(fullpath)
-            else:
+            else:  # 否则直接import_module加载当前模块
                 submod = import_module(fullpath)
                 mods.append(submod)
     return mods

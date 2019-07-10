@@ -24,12 +24,12 @@ def get_settings_priority(priority):
     numerical value, or directly returns a given numerical priority.
     """
     if isinstance(priority, six.string_types):
-        return SETTINGS_PRIORITIES[priority]
+        return SETTINGS_PRIORITIES[priority]  # 比如get_settings_priority('default') 就返回 0
     else:
         return priority
 
 
-class SettingsAttribute(object):
+class SettingsAttribute(object):  # 基本的属性管理
 
     """Class for storing data related to settings attributes.
 
@@ -59,7 +59,7 @@ class SettingsAttribute(object):
     __repr__ = __str__
 
 
-class BaseSettings(MutableMapping):
+class BaseSettings(MutableMapping):  # 定义了一票基础方法
     """
     Instances of this class behave like dictionaries, but store priorities
     along with their ``(key, value)`` pairs, and can be frozen (i.e. marked
@@ -284,9 +284,9 @@ class BaseSettings(MutableMapping):
         :type priority: string or int
         """
         self._assert_mutability()
-        if isinstance(module, six.string_types):
+        if isinstance(module, six.string_types):  # 如果是str，则进行import_module导入
             module = import_module(module)
-        for key in dir(module):  # 关键就是先import_module然后再dir他，果然还是使用了这个模块
+        for key in dir(module):  # 关键就是先import_module然后再dir他，果然还是使用了这个模块。dir模块可以把整个文件内部的配置展现开开
             if key.isupper():
                 self.set(key, getattr(module, key), priority)
 
@@ -317,7 +317,7 @@ class BaseSettings(MutableMapping):
             values = json.loads(values)
         if values is not None:
             if isinstance(values, BaseSettings):
-                for name, value in six.iteritems(values):
+                for name, value in six.iteritems(values):  # 类似dict.items()，这个以生成器的形式返回，好处是当dict很大的时候不占内存
                     self.set(name, value, values.getpriority(name))
             else:
                 for name, value in six.iteritems(values):
@@ -426,7 +426,7 @@ class _DictProxy(MutableMapping):
         return iter(self.o)
 
 
-class Settings(BaseSettings):
+class Settings(BaseSettings):  # 继承基础的方法模块
     """
     This object stores Scrapy settings for the configuration of internal
     components, and can be used for any further customization.

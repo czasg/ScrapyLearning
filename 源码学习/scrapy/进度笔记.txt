@@ -1,0 +1,5 @@
+判断是否为scrapy项目环境，由当前环境往上递归查询，看是否能够找到scrapy.cfg配置文件
+加载settings模块。如果SCRAPY_SETTINGS_MODULE这玩意不在so.environ环境里，则初始化他，首先找到配置文件scrapy.cfg，把他里面关于setting-default的值加载到系统环境中。然后使用Setting模块加载此配置文件的值，也就是那个路径
+加载所有的commands指令，通过遍历scrapy.commands目录，加载所有的指令，到cmds的一个list里面，就是不听的import_module，iter_modules，进行一些逻辑上的判断，是否是子模块
+解析从sys.argv系统环境获取的输入参数，检查是否符合规则，也就是指令是否正确，此时通过输入的指令，我们就可以定位一个确切的scrapy-command指令，还通过optparse包，获取其余参数，准备好执行环境
+通过实例化一个CrawlerProcess对象，进行爬虫管理，然后执行command.run启动指令

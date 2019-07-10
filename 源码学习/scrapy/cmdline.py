@@ -2,11 +2,11 @@ from __future__ import print_function
 import sys, os
 import optparse  # 抓取命令行参数
 import cProfile  # 性能/耗时分析
-import inspect   # 分析函数
+import inspect   # 分析函数参数
 import pkg_resources
 
 import scrapy
-from scrapy.crawler import CrawlerProcess
+from scrapy.crawler import CrawlerProcess  # 爬虫进程管理模块
 from scrapy.commands import ScrapyCommand
 from scrapy.exceptions import UsageError
 from scrapy.utils.misc import walk_modules
@@ -17,7 +17,7 @@ from scrapy.settings.deprecated import check_deprecated_settings
 def _iter_command_classes(module_name):
     # scrapy.utils.spider.iter_spider_classes
     for module in walk_modules(module_name):
-        for obj in vars(module).values():
+        for obj in vars(module).values():  # vars()，以字典形式返回目标对象（如class）的属性和方法。inspect.isclass可以判断是否为class
             if inspect.isclass(obj) and \
                     issubclass(obj, ScrapyCommand) and \
                     obj.__module__ == module.__name__ and \
@@ -28,11 +28,11 @@ def _get_commands_from_module(module, inproject):
     d = {}
     for cmd in _iter_command_classes(module):
         if inproject or not cmd.requires_project:
-            cmdname = cmd.__module__.split('.')[-1]
-            d[cmdname] = cmd()
+            cmdname = cmd.__module__.split('.')[-1]  # scrapy.commands.crawl，也就是取最后一个
+            d[cmdname] = cmd()  # 还顺便将其实例化了
     return d
 
-def _get_commands_from_entry_points(inproject, group=' .commands'):
+def _get_commands_from_entry_points(inproject, group='scrapy.commands'):
     cmds = {}
     for entry_point in pkg_resources.iter_entry_points(group):
         obj = entry_point.load()
@@ -44,7 +44,7 @@ def _get_commands_from_entry_points(inproject, group=' .commands'):
 
 def _get_commands_dict(settings, inproject):
     cmds = _get_commands_from_module('scrapy.commands', inproject)
-    cmds.update(_get_commands_from_entry_points(inproject))
+    cmds.update(_get_commands_from_entry_points(inproject))  # None
     cmds_module = settings['COMMANDS_MODULE']
     if cmds_module:
         cmds.update(_get_commands_from_module(cmds_module, inproject))

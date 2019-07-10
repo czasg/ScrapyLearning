@@ -63,7 +63,7 @@ def arglist_to_dict(arglist):
     return dict(x.split('=', 1) for x in arglist)
 
 
-def closest_scrapy_cfg(path='.', prevpath=None):
+def closest_scrapy_cfg(path='.', prevpath=None):  # 从当前目录往父级目录递归，是否能够找到scrapy.cfg配置文件，能找到就表示属于项目内
     """Return the path to the closest scrapy.cfg file by traversing the current
     directory and its parents
     """
@@ -82,18 +82,18 @@ def init_env(project='default', set_syspath=True):
     be able to locate the project module.
     """
     cfg = get_config()
-    if cfg.has_option('settings', project):
-        os.environ['SCRAPY_SETTINGS_MODULE'] = cfg.get('settings', project)
+    if cfg.has_option('settings', project):  # 通过SafeConfigParser模块，加载配置文件后，可以直接使用has_option寻找配置，如default
+        os.environ['SCRAPY_SETTINGS_MODULE'] = cfg.get('settings', project)  # get 获取section下option的值，也就是default = scrapyProj.settings
     closest = closest_scrapy_cfg()
     if closest:
-        projdir = os.path.dirname(closest)
-        if set_syspath and projdir not in sys.path:
+        projdir = os.path.dirname(closest)  # 获取项目路径
+        if set_syspath and projdir not in sys.path:  # 如果项目路径不在sys.path里面，也就是python的运行环境，则加载进python的运行环境
             sys.path.append(projdir)
 
 
 def get_config(use_closest=True):
     """Get Scrapy config file as a SafeConfigParser"""
-    sources = get_sources(use_closest)
+    sources = get_sources(use_closest)  # list
     cfg = SafeConfigParser()
     cfg.read(sources)
     return cfg
@@ -104,7 +104,7 @@ def get_sources(use_closest=True):
         os.path.expanduser('~/.config')
     sources = ['/etc/scrapy.cfg', r'c:\scrapy\scrapy.cfg',
                xdg_config_home + '/scrapy.cfg',
-               os.path.expanduser('~/.scrapy.cfg')]
+               os.path.expanduser('~/.scrapy.cfg')]  # 这儿的都感觉怪怪的
     if use_closest:
-        sources.append(closest_scrapy_cfg())
+        sources.append(closest_scrapy_cfg())  # 应该是从这里加载了scrapy.cfg文件
     return sources

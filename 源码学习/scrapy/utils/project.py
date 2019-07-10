@@ -58,14 +58,14 @@ def data_path(path, createdir=False):
 
 
 def get_project_settings():
-    if ENVVAR not in os.environ:
-        project = os.environ.get('SCRAPY_PROJECT', 'default')
-        init_env(project)
+    if ENVVAR not in os.environ:  # ENVVAR = 'SCRAPY_SETTINGS_MODULE'
+        project = os.environ.get('SCRAPY_PROJECT', 'default')  # 似乎都是default
+        init_env(project)  # 将scrapy.cfg模块加载到os.environ环境里面，名字叫SCRAPY_SETTINGS_MODULE
 
-    settings = Settings()
-    settings_module_path = os.environ.get(ENVVAR)
+    settings = Settings()  # 实例一个Settings管理对象
+    settings_module_path = os.environ.get(ENVVAR)  # 获取上一步获取的os.environ
     if settings_module_path:
-        settings.setmodule(settings_module_path, priority='project')
+        settings.setmodule(settings_module_path, priority='project')  #
 
     # XXX: remove this hack
     pickled_settings = os.environ.get("SCRAPY_PICKLED_SETTINGS_TO_OVERRIDE")
