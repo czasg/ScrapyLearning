@@ -28,7 +28,8 @@ def init_jinja2(app, **kwargs):
     )
     path = kwargs.get('path', None)
     if path is None:
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+        # path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates_new')
     logger.info('set jinja2 template path: %s' % path)
     env = Environment(loader=FileSystemLoader(path), **options)
     filters = kwargs.get('filters', None)
@@ -116,8 +117,8 @@ async def init(loop):
     app = web.Application(loop=loop, middlewares=[
         auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
-    # add_routes(app, 'apis')
-    add_routes(app, 'api')  # todo, 待转移到这边来，分类进行管理
+    add_routes(app, 'apis')
+    # add_routes(app, 'api')  # todo, 待转移到这边来，分类进行管理
     add_static(app)
     runner = web.AppRunner(app)
     await runner.setup()

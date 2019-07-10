@@ -1,27 +1,29 @@
 import json
-import markdown
 
 from aiohttp import web
+from motor.motor_asyncio import AsyncIOMotorClient
+from datetime import timedelta
 
 from handler import get, post
 from tools import _RE_EMAIL, _RE_SHA1
 from tools import *
 
+client = AsyncIOMotorClient('127.0.0.1', 27017)
 logger = logging.getLogger(__name__)
 
 
 # 模板页面 #
 
 @get('/')
-async def index(): return {'__template__': 'index.html'}
+async def index(): return {'__template__': 'index_show_data.html'}
 
 
-@get('/register')
-async def register(): return {'__template__': 'register.html'}
+@get('/register')  # '/api/new/user'
+async def register(): return {'__template__': 'register.html', 'register_url': '/api/new/user'}
 
 
-@get('/register/root')
-async def root_register(): return {'__template__': 'register_root.html'}
+@get('/register/root')  # '/api/new/root/user'
+async def root_register(): return {'__template__': 'register.html', 'register_url': '/api/new/root/user'}
 
 
 @get('/blogs')
@@ -224,9 +226,49 @@ async def api_get_blogs(*, page='1', page_size=None, user_id=None):
         blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
     return dict(page=p, blogs=blogs)
 
+
 @get('/api/get/blogs/statistic')
-async def api_get_blogs_statistic():
-    pass
+async def api_get_blogs_statistic(*, limit=7):
+    _date = get_now_datetime()
+    pre = None
+    nums = []
+    times = []
+    for i in range(limit):
+        count = await Blog.findNumber('count(id)', where='update_at > %s' % _date.timestamp())
+        if i == 0:
+            pre = count
+            nums.append(count)
+            times.append('%s.%s.%s' % (_date.year, _date.month, _date.day))
+        else:
+            nums.append(count - pre)
+            times.append('%s.%s.%s' % (_date.year, _date.month, _date.day))
+            pre = count
+        _date = _date - timedelta(days=1)
+    return dict(nums=nums[::-1], times=times[::-1])
+
+
+@get('/api/get/housePrice/statistic')
+async def api_get_housePrice_statistic(*, dbName, collectionName, limit=7):
+    _date = get_now_datetime()
+    pre = None
+    nums = []
+    times = []
+    db = client[dbName[0]]
+    collection = db[collectionName[0]]
+    for i in range(limit):
+        query = process_commands(gte={"download_time": _date.timestamp()})
+        count = await collection.count_documents(query)
+        if i == 0:
+            pre = count
+            nums.append(count)
+            times.append('%s.%s.%s' % (_date.year, _date.month, _date.day))
+        else:
+            nums.append(count - pre)
+            times.append('%s.%s.%s' % (_date.year, _date.month, _date.day))
+            pre = count
+        _date = _date - timedelta(days=1)
+    return dict(nums=nums[::-1], times=times[::-1])
+
 
 
 @get('/api/get/blog/{id}')
