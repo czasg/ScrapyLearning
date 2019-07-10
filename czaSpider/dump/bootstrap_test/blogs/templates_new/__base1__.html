@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    {% block meta %}<!-- block meta  --> {% endblock %}
+    <title>{% block title %} ? {% endblock %} - IOCO</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    {% block beforeScript %}<!-- link --> {% endblock %}
+    <!-- jquery must be ahead of bootstrap -->
+    <script src="/static/js/jquery.min.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/vue.js"></script>
+    <script src="/static/js/awesome.js"></script>
+    <script src="/static/js/sha1.min.js"></script>
+    <script src="/static/js/echarts.min.js"></script>
+    {% block beforehead %}<!-- before head  --> {% endblock %}
+</head>
+{% block body %} <!-- body --> {% endblock %}
+</html>

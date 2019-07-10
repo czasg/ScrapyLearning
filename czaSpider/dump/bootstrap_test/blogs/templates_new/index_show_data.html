@@ -1,0 +1,115 @@
+{% extends '_顶部_.html' %}
+
+
+{% block title %}show data{% endblock %}
+
+
+{% block base2_content %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="index-canvas1" style="height: 400px;"></div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="index-canvas2" style="height: 400px;"></div>
+    </div>
+</div>
+
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
+            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
+            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
+        </tr>
+        <tr>
+            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
+            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
+            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
+        </tr>
+    </tbody>
+</table>
+{% endblock %}
+
+{% block base2_footer %}
+<style>
+    body {
+        background-color: #EEEEEE;
+    }
+</style>
+<script>
+var dom = document.getElementById("index-canvas1");
+var myChart1 = echarts.init(dom);
+myChart1.setOption({
+    title: {
+        text: '补给站'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    xAxis: {
+        type: 'category',
+        data: []
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [],
+        type: 'line'
+    }]
+});
+myChart1.showLoading();
+$.get('/api/get/blogs/statistic').done(function(data){
+    myChart1.hideLoading();
+    console.log(data)
+    myChart1.setOption({
+        xAxis: {
+            data: data.times
+        },
+        series: [{
+            data: data.nums
+        }]
+    });
+})
+</script>
+<script>
+var dom = document.getElementById("index-canvas2");
+var myChart2 = echarts.init(dom);
+myChart2.setOption({
+    title: {
+        text: '自如-武汉'
+    },
+    tooltip: {
+        trigger: 'axis'
+    },
+    xAxis: {
+        type: 'category',
+        data: []
+    },
+    yAxis: {
+        type: 'value'
+    },
+    series: [{
+        data: [],
+        type: 'line'
+    }]
+});
+myChart2.showLoading();
+$.get('/api/get/housePrice/statistic', {
+    dbName: 'housePrice',
+    collectionName: 'ziru'
+}).done(function(data){
+    myChart2.hideLoading();
+    myChart2.setOption({
+        xAxis: {
+            data: data.times
+        },
+        series: [{
+            data: data.nums
+        }]
+    });
+})
+</script>
+{% endblock %}
