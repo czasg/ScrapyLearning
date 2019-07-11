@@ -38,7 +38,6 @@
                         <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
                         {% else %}
                         <li class="dropdown-header">当前用户: {{ __user__.name }}</li>
-                        <li><a href="#">个人账号管理</a></li>
                         <li><a href="/manage/blogs">个人博客管理</a></li>
                         <li><a href="/new/blog">创建个人博客</a></li>
                         <li role="separator" class="divider"></li>
@@ -57,14 +56,14 @@
 {% block for_left_nav_content %}{% endblock %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-3 col-md-2 nav-sider-fix">
+        <div class="col-sm-2 col-md-2 nav-sider-fix">
             {% block left_nav_content %}{% endblock %}
         </div>
-        <div class="col-sm-9 col-md-8">
+        <div class="col-sm-8 col-md-8" id="middle_content">
             {% block base2_content %}
             {% endblock %}
         </div>
-        <div class="col-md-2 col-sm-2">{% block base2_content_right %}{% endblock %}</div>
+        <div class="col-sm-2 col-md-2">{% block base2_content_right %}{% endblock %}</div>
     </div>
 </div>
 

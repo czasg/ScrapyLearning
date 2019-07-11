@@ -27,14 +27,14 @@ async def root_register(): return {'__template__': 'register.html', 'register_ur
 
 
 @get('/blogs')
-async def blogs(): return {'__template__': 'blogs.html'}
+async def blogs(): return {'__template__': 'show_blogs_all.html'}
 
 
 @get('/root/manage/users')
 async def root_manage_users(request, *, page='1'):
     check_admin(request)
     return {
-        '__template__': 'root_manage_users.html',
+        '__template__': 'manage_users_root.html',
         'page_index': get_page_index(page)
     }
 
@@ -61,7 +61,7 @@ async def manage_blogs(request, *, page='1'):
 @get('/new/blog')
 def new_blog():
     return {
-        '__template__': 'blog_editor.html',
+        '__template__': 'show_blog_editor.html',
         'id': '',
         'api': '/api/new/blog'
     }
@@ -70,7 +70,7 @@ def new_blog():
 @get('/edit/blog/{id}')
 def edit_blog(*, id):
     return {
-        '__template__': 'blog_editor.html',
+        '__template__': 'show_blog_editor.html',
         'id': id,
         'api': '/api/edit/blog/%s' % id
     }
@@ -91,7 +91,7 @@ async def detail_blog(id):
         c.son_comments_nums = len(sons)
     blog.html_content = blog.content
     return {
-        '__template__': 'blog_detail.html',
+        '__template__': 'show_blog.html',
         'blog': blog,
         'comments': comments
     }

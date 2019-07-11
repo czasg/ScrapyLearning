@@ -5,21 +5,21 @@
 {% block for_left_nav_content %}
 <style>
 .nav-sider-fix {
-  display: none;
+    display: none;
 }
 @media (min-width: 768px){
-.nav-sider-fix {
-    position: fixed;
-    top: 50px;
-    bottom: 0;
-    left: 0;
-    z-index: 1000;
-    display: block;
-    padding: 10px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background-color: #f5f5f5;
-    border-right: 1px solid #eee;
+    .nav-sider-fix {
+        position: fixed;
+        top: 50px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        display: block;
+        padding: 10px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background-color: #f5f5f5;
+        border-right: 1px solid #eee;
     }
 }
 .sidebar-nav li {
@@ -29,6 +29,12 @@
   width: 100%;
 }
 </style>
+<script>
+    $(function(){
+        middle_content = $('#middle_content');
+        middle_content.addClass('col-md-offset-2 col-sm-offset-2')
+    })
+</script>
 {% endblock %}
-{% include '__左侧导航栏_首页__.html' %}
+{% include '__base1_左侧导航栏_首页__.html' %}
 {% endblock %}
