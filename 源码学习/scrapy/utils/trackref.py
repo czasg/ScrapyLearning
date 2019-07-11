@@ -18,7 +18,7 @@ import six
 
 
 NoneType = type(None)
-live_refs = defaultdict(weakref.WeakKeyDictionary)
+live_refs = defaultdict(weakref.WeakKeyDictionary)  # 这个操作真是让人汗颜，直接默认就使用弱引用类的字典
 
 
 class object_ref(object):

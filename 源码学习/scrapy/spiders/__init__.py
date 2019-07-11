@@ -15,7 +15,7 @@ from scrapy.exceptions import ScrapyDeprecationWarning
 from scrapy.utils.deprecate import method_is_overridden
 
 
-class Spider(object_ref):
+class Spider(object_ref):  # 我想起来了，所有的爬虫都是派生与scrapy.Spider
     """Base class for scrapy spiders. All spiders must inherit from this
     class.
     """
@@ -64,7 +64,7 @@ class Spider(object_ref):
     def _set_crawler(self, crawler):
         self.crawler = crawler
         self.settings = crawler.settings
-        crawler.signals.connect(self.close, signals.spider_closed)
+        crawler.signals.connect(self.close, signals.spider_closed)  # 传入了一个crawler对象，里面还有signals
 
     def start_requests(self):
         cls = self.__class__

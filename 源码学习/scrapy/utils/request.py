@@ -15,7 +15,7 @@ from w3lib.url import canonicalize_url
 from scrapy.utils.httpobj import urlparse_cached
 
 
-_fingerprint_cache = weakref.WeakKeyDictionary()
+_fingerprint_cache = weakref.WeakKeyDictionary()  # 临时指纹缓存，是一个弱引用型的字典
 def request_fingerprint(request, include_headers=None):
     """
     Return the request fingerprint.
@@ -46,19 +46,19 @@ def request_fingerprint(request, include_headers=None):
     if include_headers:
         include_headers = tuple(to_bytes(h.lower())
                                  for h in sorted(include_headers))
-    cache = _fingerprint_cache.setdefault(request, {})
+    cache = _fingerprint_cache.setdefault(request, {})  # testD = weakDict.setdefault(test, {}) 对一个class进行弱引用，构造字典类型
     if include_headers not in cache:
         fp = hashlib.sha1()
         fp.update(to_bytes(request.method))
         fp.update(to_bytes(canonicalize_url(request.url)))
-        fp.update(request.body or b'')
+        fp.update(request.body or b'')  # 请求的指纹为：请求方法+url+请求返回内容，用sha1构建指纹
         if include_headers:
             for hdr in include_headers:
                 if hdr in request.headers:
                     fp.update(hdr)
                     for v in request.headers.getlist(hdr):
                         fp.update(v)
-        cache[include_headers] = fp.hexdigest()
+        cache[include_headers] = fp.hexdigest()  # None居然可以当做key，神奇
     return cache[include_headers]
 
 

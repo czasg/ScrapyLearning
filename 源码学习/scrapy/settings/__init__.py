@@ -265,7 +265,7 @@ class BaseSettings(MutableMapping):  # 定义了一票基础方法
         else:
             self.attributes[name].set(value, priority)
 
-    def setdict(self, values, priority='project'):
+    def setdict(self, values, priority='project'):  # 这里传入的是一个字典，好像==
         self.update(values, priority)
 
     def setmodule(self, module, priority='project'):
@@ -320,7 +320,7 @@ class BaseSettings(MutableMapping):  # 定义了一票基础方法
                 for name, value in six.iteritems(values):  # 类似dict.items()，这个以生成器的形式返回，好处是当dict很大的时候不占内存
                     self.set(name, value, values.getpriority(name))
             else:
-                for name, value in six.iteritems(values):
+                for name, value in six.iteritems(values):  # 针对custom_setting，进行覆盖设置
                     self.set(name, value, priority)
 
     def delete(self, name, priority='project'):

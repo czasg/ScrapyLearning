@@ -30,8 +30,12 @@ urlencode 拼接元素使称为url后缀参数
 
 在命令行中定义log级别与指定日志文件，使用scrapy crawl spider -s LOG_FILE=file.log --loglevel=INFO 来启动
 --nolog表示不开启日志
+--loglevel=xxx  -s name=xxx
+
 
 如何加载setting模块，使用import_module然后再dir加载具体的内容
+
+self.crawler.settings.get('name')   可以获取中指令中加载的setting和原setting设置
 """
 
 

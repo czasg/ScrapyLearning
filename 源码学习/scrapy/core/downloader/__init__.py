@@ -81,10 +81,10 @@ class Downloader(object):
         self.slots = {}
         self.active = set()
         self.handlers = DownloadHandlers(crawler)
-        self.total_concurrency = self.settings.getint('CONCURRENT_REQUESTS')
-        self.domain_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_DOMAIN')
-        self.ip_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_IP')
-        self.randomize_delay = self.settings.getbool('RANDOMIZE_DOWNLOAD_DELAY')
+        self.total_concurrency = self.settings.getint('CONCURRENT_REQUESTS')  # 16
+        self.domain_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_DOMAIN')  # 8
+        self.ip_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_IP')  # 0
+        self.randomize_delay = self.settings.getbool('RANDOMIZE_DOWNLOAD_DELAY')  # True
         self.middleware = DownloaderMiddlewareManager.from_crawler(crawler)
         self._slot_gc_loop = task.LoopingCall(self._slot_gc)
         self._slot_gc_loop.start(60)

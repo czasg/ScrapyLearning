@@ -139,7 +139,7 @@ def execute(argv=None, settings=None):
     cmd = cmds[cmdname]
     parser.usage = "scrapy %s %s" % (cmdname, cmd.syntax())
     parser.description = cmd.long_desc()
-    settings.setdict(cmd.default_settings, priority='command')
+    settings.setdict(cmd.default_settings, priority='command')  # 这里貌似为空
     cmd.settings = settings
     cmd.add_options(parser)
     opts, args = parser.parse_args(args=argv[1:])

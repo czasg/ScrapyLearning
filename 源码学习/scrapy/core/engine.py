@@ -64,8 +64,8 @@ class ExecutionEngine(object):
         self.spider = None
         self.running = False
         self.paused = False
-        self.scheduler_cls = load_object(self.settings['SCHEDULER'])
-        downloader_cls = load_object(self.settings['DOWNLOADER'])
+        self.scheduler_cls = load_object(self.settings['SCHEDULER'])  # SCHEDULER = 'scrapy.core.scheduler.Scheduler'，仅仅获取对象，没做其他坏事
+        downloader_cls = load_object(self.settings['DOWNLOADER'])  # DOWNLOADER = 'scrapy.core.downloader.Downloader'
         self.downloader = downloader_cls(crawler)
         self.scraper = Scraper(crawler)
         self._spider_closed_callback = spider_closed_callback

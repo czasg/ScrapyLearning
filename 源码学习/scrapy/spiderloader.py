@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import
-from collections import defaultdict
+from collections import defaultdict  # 这个defaultdict太好用了吧，只要没有定义，就一定会返回你定义的类型，然后不需要考虑其他，list就可以直接append
 import traceback
 import warnings
 
@@ -18,11 +18,11 @@ class SpiderLoader(object):
     in a Scrapy project.
     """
     def __init__(self, settings):
-        self.spider_modules = settings.getlist('SPIDER_MODULES')
-        self.warn_only = settings.getbool('SPIDER_LOADER_WARN_ONLY')
+        self.spider_modules = settings.getlist('SPIDER_MODULES')  # SPIDER_MODULES = ['czaSpider.spiders'] , 自己定义的哦
+        self.warn_only = settings.getbool('SPIDER_LOADER_WARN_ONLY')  # False
         self._spiders = {}
-        self._found = defaultdict(list)
-        self._load_all_spiders()
+        self._found = defaultdict(list)  # 可以接受int str list set等类型，当访问不存在的时候不会报错么事默认返回一个实现定义好的值，0,'',[],()
+        self._load_all_spiders()  # 加载目录下所有的爬虫
 
     def _check_name_duplicates(self):
         dupes = ["\n".join("  {cls} named {name!r} (in {module})".format(
@@ -41,7 +41,7 @@ class SpiderLoader(object):
             self._found[spcls.name].append((module.__name__, spcls.__name__))
             self._spiders[spcls.name] = spcls
 
-    def _load_all_spiders(self):
+    def _load_all_spiders(self):  # 这笔第一步居然是加载所有的爬虫
         for name in self.spider_modules:
             try:
                 for module in walk_modules(name):

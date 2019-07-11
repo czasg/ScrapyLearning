@@ -22,7 +22,7 @@ class DownloaderMiddlewareManager(MiddlewareManager):
         return build_component_list(
             settings.getwithbase('DOWNLOADER_MIDDLEWARES'))
 
-    def _add_middleware(self, mw):
+    def _add_middleware(self, mw):  # 中间件的三个常用方法咯
         if hasattr(mw, 'process_request'):
             self.methods['process_request'].append(mw.process_request)
         if hasattr(mw, 'process_response'):

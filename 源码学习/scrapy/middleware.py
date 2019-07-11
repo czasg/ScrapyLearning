@@ -1,4 +1,4 @@
-from collections import defaultdict, deque
+from collections import defaultdict, deque  # deque可以构造一个固定大小的队列，当超过队列之后，会把前面的数据自动移除掉
 import logging
 import pprint
 
@@ -26,14 +26,14 @@ class MiddlewareManager(object):
 
     @classmethod
     def from_settings(cls, settings, crawler=None):
-        mwlist = cls._get_mwlist_from_settings(settings)
+        mwlist = cls._get_mwlist_from_settings(settings)  # 从setting中获取中间件列表，这里的设置被各个模块各自重载了，加载的不一样
         middlewares = []
         enabled = []
         for clspath in mwlist:
             try:
                 mwcls = load_object(clspath)
-                mw = create_instance(mwcls, settings, crawler)
-                middlewares.append(mw)
+                mw = create_instance(mwcls, settings, crawler)  # 执行中间件的from_crawler，没有就from_setting，最后还没有直接实例化
+                middlewares.append(mw)  # 中间件列表哦
                 enabled.append(clspath)
             except NotConfigured as e:
                 if e.args:

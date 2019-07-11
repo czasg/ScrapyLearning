@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import  # 绝对导入，导入系统路径下的文件，而非自己定义的文件
 from pydispatch import dispatcher
 from scrapy.utils import signal as _signal
 
@@ -10,7 +10,7 @@ class SignalManager(object):
 
     def connect(self, receiver, signal, **kwargs):
         """
-        Connect a receiver function to a signal.
+        Connect a receiver function to a signal.  链接一个回调函数到一个信号上面??
 
         The signal can be any object, although Scrapy comes with some
         predefined signals that are documented in the :ref:`topics-signals`

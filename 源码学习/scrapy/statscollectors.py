@@ -7,10 +7,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class StatsCollector(object):
+class StatsCollector(object): # spider.crawler.stats.inc_value("scanned/urls", count=urls) / spider.crawler.stats.inc_value("scanned/new_urls", count=new_urls)
 
-    def __init__(self, crawler):
-        self._dump = crawler.settings.getbool('STATS_DUMP')
+    def __init__(self, crawler): # 一个统计源码
+        self._dump = crawler.settings.getbool('STATS_DUMP')  # STATS_DUMP = True
         self._stats = {}
 
     def get_value(self, key, default=None, spider=None):
@@ -20,23 +20,23 @@ class StatsCollector(object):
         return self._stats
 
     def set_value(self, key, value, spider=None):
-        self._stats[key] = value
+        self._stats[key] = value  # 自定义设置初始值
 
-    def set_stats(self, stats, spider=None):
+    def set_stats(self, stats, spider=None):  # 自定义设置咯，估计是一个字典?
         self._stats = stats
 
-    def inc_value(self, key, count=1, start=0, spider=None):
+    def inc_value(self, key, count=1, start=0, spider=None):  # 用的是这个，对已有值进行累加把
         d = self._stats
-        d[key] = d.setdefault(key, start) + count
+        d[key] = d.setdefault(key, start) + count  # 又get新知识了，字典setdefault返回默认值，我的天呢
 
     def max_value(self, key, value, spider=None):
-        self._stats[key] = max(self._stats.setdefault(key, value), value)
+        self._stats[key] = max(self._stats.setdefault(key, value), value)  # 和已有值相比，保存最大的值
 
     def min_value(self, key, value, spider=None):
-        self._stats[key] = min(self._stats.setdefault(key, value), value)
+        self._stats[key] = min(self._stats.setdefault(key, value), value)  # 和已有值相比，保存最小的值
 
     def clear_stats(self, spider=None):
-        self._stats.clear()
+        self._stats.clear()  # 字典执行clear，直接再见
 
     def open_spider(self, spider):
         pass
@@ -58,7 +58,7 @@ class MemoryStatsCollector(StatsCollector):
         self.spider_stats = {}
 
     def _persist_stats(self, stats, spider):
-        self.spider_stats[spider.name] = stats
+        self.spider_stats[spider.name] = stats  # 把最终统计结果传到spider_stats里面嘛
 
 
 class DummyStatsCollector(StatsCollector):

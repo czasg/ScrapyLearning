@@ -32,15 +32,15 @@ class Crawler(object):
 
         self.spidercls = spidercls
         self.settings = settings.copy()
-        self.spidercls.update_settings(self.settings)
+        self.spidercls.update_settings(self.settings)  # 就是在这里执行了对custom_setting的设置嘛，可以很强，把爬虫里面的custom_setting更新到setting里面?好吧没事共同维护的一个setting对象，确实是直接更新到了setting里面
 
-        d = dict(overridden_settings(self.settings))
-        logger.info("Overridden settings: %(settings)r", {'settings': d})
+        d = dict(overridden_settings(self.settings))  # 找出相同的，取overridden里面的值
+        logger.info("Overridden settings: %(settings)r", {'settings': d})  # 这就是打印那句log的地方，打印出Overridden属性。现遍历默认属性，找出已有属性中对应的值，看那些有修改
 
         self.signals = SignalManager(self)
-        self.stats = load_object(self.settings['STATS_CLASS'])(self)
+        self.stats = load_object(self.settings['STATS_CLASS'])(self)  # STATS_CLASS = 'scrapy.statscollectors.MemoryStatsCollector' -- 统计机制
 
-        handler = LogCounterHandler(self, level=self.settings.get('LOG_LEVEL'))
+        handler = LogCounterHandler(self, level=self.settings.get('LOG_LEVEL'))  # LOG_LEVEL = 'DEBUG'
         logging.root.addHandler(handler)
         if get_scrapy_root_handler() is not None:
             # scrapy root handler already installed: update it with new settings
@@ -50,7 +50,7 @@ class Crawler(object):
         self.__remove_handler = lambda: logging.root.removeHandler(handler)
         self.signals.connect(self.__remove_handler, signals.engine_stopped)
 
-        lf_cls = load_object(self.settings['LOG_FORMATTER'])
+        lf_cls = load_object(self.settings['LOG_FORMATTER'])   # LOG_FORMATTER = 'scrapy.logformatter.LogFormatter'
         self.logformatter = lf_cls.from_crawler(self)
         self.extensions = ExtensionManager.from_crawler(self)
 
@@ -76,7 +76,7 @@ class Crawler(object):
         self.crawling = True
 
         try:
-            self.spider = self._create_spider(*args, **kwargs)
+            self.spider = self._create_spider(*args, **kwargs)  # 这个spider就是我们编写的爬虫，如MySpider
             self.engine = self._create_engine()
             start_requests = iter(self.spider.start_requests())  # Request / FormRequest
             yield self.engine.open_spider(self.spider, start_requests)
@@ -99,7 +99,7 @@ class Crawler(object):
             raise
 
     def _create_spider(self, *args, **kwargs):
-        return self.spidercls.from_crawler(self, *args, **kwargs)
+        return self.spidercls.from_crawler(self, *args, **kwargs)  # 找到了，在这里使用from_crawler进行实例化的
 
     def _create_engine(self):
         return ExecutionEngine(self, lambda _: self.stop())
@@ -128,13 +128,13 @@ class CrawlerRunner(object):
         lambda self: self._crawlers,
         doc="Set of :class:`crawlers <scrapy.crawler.Crawler>` started by "
             ":meth:`crawl` and managed by this class."
-    )
+    )  # 骚操作
 
     def __init__(self, settings=None):
         if isinstance(settings, dict) or settings is None:
             settings = Settings(settings)
         self.settings = settings
-        self.spider_loader = _get_spider_loader(settings)
+        self.spider_loader = _get_spider_loader(settings)  # self.spider_loader.load(spidercls) 加载所有爬虫，根据setting中定义的SPIDER_MODULES = ['czaSpider.spiders']
         self._crawlers = set()
         self._active = set()
         self.bootstrap_failed = False
@@ -201,7 +201,7 @@ class CrawlerRunner(object):
 
     def _create_crawler(self, spidercls):
         if isinstance(spidercls, six.string_types):
-            spidercls = self.spider_loader.load(spidercls)  # 首次传入的是spider name，通过load加载
+            spidercls = self.spider_loader.load(spidercls)  # 首次传入的是spider name，通过load加载。我去，首先会加载项目下所有爬虫，然后再单独加载某一爬虫嘛==僵硬啊
         return Crawler(spidercls, self.settings)
 
     def stop(self):
@@ -224,7 +224,7 @@ class CrawlerRunner(object):
             yield defer.DeferredList(self._active)
 
 
-class CrawlerProcess(CrawlerRunner):
+class CrawlerProcess(CrawlerRunner):  # 针对执行后的爬虫，在终端监控特殊指令，进而执行相对应的功能
     """
     A class to run multiple scrapy crawlers in a process simultaneously.
 
@@ -249,12 +249,12 @@ class CrawlerProcess(CrawlerRunner):
 
     def __init__(self, settings=None, install_root_handler=True):
         super(CrawlerProcess, self).__init__(settings)
-        install_shutdown_handlers(self._signal_shutdown)
+        install_shutdown_handlers(self._signal_shutdown)  # 监控键盘按键，然后发送signal.signal(相关指令)进行控制
         configure_logging(self.settings, install_root_handler)
         log_scrapy_info(self.settings)
 
     def _signal_shutdown(self, signum, _):
-        install_shutdown_handlers(self._signal_kill)
+        install_shutdown_handlers(self._signal_kill)  # 这一步安装的监控，都是和键盘指令相关的耶
         signame = signal_names[signum]
         logger.info("Received %(signame)s, shutting down gracefully. Send again to force ",
                     {'signame': signame})
@@ -324,7 +324,7 @@ def _get_spider_loader(settings):
             category=ScrapyDeprecationWarning, stacklevel=2
         )
     cls_path = settings.get('SPIDER_MANAGER_CLASS',
-                            settings.get('SPIDER_LOADER_CLASS'))
+                            settings.get('SPIDER_LOADER_CLASS'))  # SPIDER_LOADER_CLASS = 'scrapy.spiderloader.SpiderLoader'
     loader_cls = load_object(cls_path)
     try:
         verifyClass(ISpiderLoader, loader_cls)
