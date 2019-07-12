@@ -63,7 +63,6 @@ myChart1.setOption({
 myChart1.showLoading();
 $.get('/api/get/blogs/statistic').done(function(data){
     myChart1.hideLoading();
-    console.log(data)
     myChart1.setOption({
         xAxis: {
             data: data.times
@@ -97,18 +96,24 @@ myChart2.setOption({
     }]
 });
 myChart2.showLoading();
-$.get('/api/get/housePrice/statistic', {
-    dbName: 'housePrice',
-    collectionName: 'ziru'
+ajax_data = [
+    {'housePrice': 'ziru'},
+    {'job': 'boss'},
+    {'zufang': 'fangtx'}
+];
+$.get('/api/get/multi/statistic', {
+    dbNames_and_collectionNames: JSON.stringify(ajax_data)
 }).done(function(data){
     myChart2.hideLoading();
     myChart2.setOption({
         xAxis: {
             data: data.times
         },
-        series: [{
-            data: data.nums
-        }]
+        series: [
+            data.nums[0],
+            data.nums[1],
+            data.nums[2]
+        ]
     });
 })
 </script>

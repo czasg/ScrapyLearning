@@ -25,5 +25,6 @@ def jobPositionItem(spider, **kwargs):
     item["company_name"] = kwargs.pop('company_name', None)
     item["company_nature"] = kwargs.pop('company_nature', None)
     item["company_scale"] = kwargs.pop('company_scale', None)
-    item.update(process_base_item(**kwargs))
+    if not spider.clean_item:
+        item.update(process_base_item(**kwargs))
     return item

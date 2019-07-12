@@ -7,6 +7,7 @@ from datetime import timedelta
 from handler import get, post
 from tools import _RE_EMAIL, _RE_SHA1
 from tools import *
+from simengine import SimEngine
 
 client = AsyncIOMotorClient('127.0.0.1', 27017)
 logger = logging.getLogger(__name__)
@@ -137,7 +138,7 @@ async def api_register_user(*, name, email, passwd):
     uid = next_id()
     sha1_passwd = '%s:%s' % (uid, passwd)
     user = User(id=uid, name=name.strip(), email=email, passwd=hashlib.sha1(sha1_passwd.encode()).hexdigest(),
-                image='/static/img/user.png')  #  % hashlib.md5(email.encode('utf-8')).hexdigest() todo, 增加用户头像
+                image='/static/img/user.png')  # % hashlib.md5(email.encode('utf-8')).hexdigest() todo, 增加用户头像
     await user.save()
     webResponse = web.Response()
     webResponse.set_cookie(COOKIE_NAME, user2cookie(user, 86400), max_age=86400)
@@ -270,7 +271,6 @@ async def api_get_housePrice_statistic(*, dbName, collectionName, limit=7):
     return dict(nums=nums[::-1], times=times[::-1])
 
 
-
 @get('/api/get/blog/{id}')
 async def api_get_blog(*, id): return (await Blog.find(id))
 
@@ -303,6 +303,7 @@ async def api_edit_blog(id, *, name, summary, content):
     blog.name = name.strip()
     blog.summary = summary.strip()
     blog.content = content.strip()
+    blog.update_at = time.time()
     await blog.update_table()
     return blog
 
@@ -374,3 +375,43 @@ async def api_get_comments(*, page=1):
     for c in comments:
         c.html_content = text2html(c.content)
     return dict(page=p, comments=comments)
+
+
+@post('/api/find/blog/by/engine')
+async def api_find_blog_by_engine(*, user_input):
+    result = SimEngine.search(user_input)
+    if not result:
+        return dict(error='未查询到相关补给资源~')
+    results = re.sub('\[(.*)\]', '(\\1)', str(result))
+    blogs = await Blog.findAll(where='id in %s' % results, orderBy='created_at desc', limit=(0, 10))
+    return dict(blogs=blogs)
+
+
+@get('/api/get/multi/statistic')
+async def api_get_multi_statistic(*, dbNames_and_collectionNames, limit=7):
+    now_date = get_now_datetime()
+    res = {}
+    res_list = []
+    for di in json.loads(dbNames_and_collectionNames[0]):
+        _date = now_date
+        pre = None
+        nums = []
+        times = []
+        for dbName, collectionName in di.items():
+            collection = client[dbName][collectionName]
+            for i in range(limit):
+                query = process_commands(gte={"download_time": _date.timestamp()})
+                count = await collection.count_documents(query)
+                if i == 0:
+                    pre = count
+                    nums.append(count)
+                    times.append('%s.%s.%s' % (_date.year, _date.month, _date.day))
+                else:
+                    nums.append(count - pre)
+                    times.append('%s.%s.%s' % (_date.year, _date.month, _date.day))
+                    pre = count
+                _date = _date - timedelta(days=1)
+            res.setdefault('times', times[::-1])
+            res_list.append(dict(name=collectionName, data=nums[::-1], type='line'))
+    res.setdefault('nums', res_list)
+    return res
