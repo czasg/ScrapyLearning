@@ -18,9 +18,9 @@ class SpiderMiddlewareManager(MiddlewareManager):
 
     @classmethod
     def _get_mwlist_from_settings(cls, settings):
-        return build_component_list(settings.getwithbase('SPIDER_MIDDLEWARES'))
+        return build_component_list(settings.getwithbase('SPIDER_MIDDLEWARES'))  # 'scrapy.spidermiddlewares.httperror.HttpErrorMiddleware': 50,
 
-    def _add_middleware(self, mw):
+    def _add_middleware(self, mw):  # 中加载好的中间件中获取你所需要的模块
         super(SpiderMiddlewareManager, self)._add_middleware(mw)
         if hasattr(mw, 'process_spider_input'):
             self.methods['process_spider_input'].append(mw.process_spider_input)
@@ -67,10 +67,10 @@ class SpiderMiddlewareManager(MiddlewareManager):
                     (fname(method), type(result))
             return result
 
-        dfd = mustbe_deferred(process_spider_input, response)
+        dfd = mustbe_deferred(process_spider_input, response)  # 对进来的数据做一次处理???怎么还有这种操作
         dfd.addErrback(process_spider_exception)
         dfd.addCallback(process_spider_output)
         return dfd
 
-    def process_start_requests(self, start_requests, spider):
+    def process_start_requests(self, start_requests, spider):  # 这玩意早早的就执行了
         return self._process_chain('process_start_requests', start_requests, spider)

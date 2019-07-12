@@ -66,10 +66,10 @@ class Scraper(object):
 
     def __init__(self, crawler):
         self.slot = None
-        self.spidermw = SpiderMiddlewareManager.from_crawler(crawler)
-        itemproc_cls = load_object(crawler.settings['ITEM_PROCESSOR'])
-        self.itemproc = itemproc_cls.from_crawler(crawler)
-        self.concurrent_items = crawler.settings.getint('CONCURRENT_ITEMS')
+        self.spidermw = SpiderMiddlewareManager.from_crawler(crawler)  # 居然在scraper中实例化了一个爬虫中间件，神奇，实现了是哪个方法process_spider_input、process_spider_exception、process_spider_requests
+        itemproc_cls = load_object(crawler.settings['ITEM_PROCESSOR'])  # ITEM_PROCESSOR = 'scrapy.pipelines.ItemPipelineManager'
+        self.itemproc = itemproc_cls.from_crawler(crawler)  # 获取一个所有中间件管道管理对象
+        self.concurrent_items = crawler.settings.getint('CONCURRENT_ITEMS')  # 100
         self.crawler = crawler
         self.signals = crawler.signals
         self.logformatter = crawler.logformatter
@@ -78,7 +78,7 @@ class Scraper(object):
     def open_spider(self, spider):
         """Open the given spider for scraping and allocate resources for it"""
         self.slot = Slot()
-        yield self.itemproc.open_spider(spider)
+        yield self.itemproc.open_spider(spider)  # 打开所有中间件的open_spider
 
     def close_spider(self, spider):
         """Close a spider being scraped and release its resources"""
@@ -98,7 +98,7 @@ class Scraper(object):
 
     def enqueue_scrape(self, response, request, spider):
         slot = self.slot
-        dfd = slot.add_response_request(response, request)
+        dfd = slot.add_response_request(response, request)  # 把数据推到self.queue里面
         def finish_scraping(_):
             slot.finish_response(response, request)
             self._check_if_closing(spider, slot)
@@ -115,7 +115,7 @@ class Scraper(object):
 
     def _scrape_next(self, spider, slot):
         while slot.queue:
-            response, request, deferred = slot.next_response_request_deferred()
+            response, request, deferred = slot.next_response_request_deferred()  # 在这里取出self.queue里面的数据
             self._scrape(response, request, spider).chainDeferred(deferred)
 
     def _scrape(self, response, request, spider):

@@ -15,31 +15,31 @@ class Scheduler(object):
     def __init__(self, dupefilter, jobdir=None, dqclass=None, mqclass=None,
                  logunser=False, stats=None, pqclass=None):
         self.df = dupefilter
-        self.dqdir = self._dqdir(jobdir)
-        self.pqclass = pqclass
-        self.dqclass = dqclass
-        self.mqclass = mqclass
+        self.dqdir = self._dqdir(jobdir)  # 还支持把他写到文件里面咯，存的是json
+        self.pqclass = pqclass  # 优先级队列
+        self.dqclass = dqclass  # lifo队列，经过pickle序列化，但没有存储到文件哦
+        self.mqclass = mqclass  # 内存中，lifo队列，
         self.logunser = logunser
         self.stats = stats
 
     @classmethod
-    def from_crawler(cls, crawler):
+    def from_crawler(cls, crawler):  # 这里是真正的实例化入口
         settings = crawler.settings
-        dupefilter_cls = load_object(settings['DUPEFILTER_CLASS'])
-        dupefilter = create_instance(dupefilter_cls, settings, crawler)
-        pqclass = load_object(settings['SCHEDULER_PRIORITY_QUEUE'])
-        dqclass = load_object(settings['SCHEDULER_DISK_QUEUE'])
-        mqclass = load_object(settings['SCHEDULER_MEMORY_QUEUE'])
-        logunser = settings.getbool('LOG_UNSERIALIZABLE_REQUESTS', settings.getbool('SCHEDULER_DEBUG'))
+        dupefilter_cls = load_object(settings['DUPEFILTER_CLASS'])  # 'scrapy.dupefilters.RFPDupeFilter' 过滤的咯
+        dupefilter = create_instance(dupefilter_cls, settings, crawler)  # objcls.from_crawler(crawler, *args, **kwargs)执行from-settings实例化
+        pqclass = load_object(settings['SCHEDULER_PRIORITY_QUEUE'])  #  'queuelib.PriorityQueue'
+        dqclass = load_object(settings['SCHEDULER_DISK_QUEUE'])  # 'scrapy.squeues.PickleLifoDiskQueue'，先进先出，使用pickle模块序列化
+        mqclass = load_object(settings['SCHEDULER_MEMORY_QUEUE']) # 'scrapy.squeues.LifoMemoryQueue'，在内存先进先出队列中，没有序列化
+        logunser = settings.getbool('LOG_UNSERIALIZABLE_REQUESTS', settings.getbool('SCHEDULER_DEBUG'))  # ('LOG_UNSERIALIZABLE_REQUESTS', 'use SCHEDULER_DEBUG instead')
         return cls(dupefilter, jobdir=job_dir(settings), logunser=logunser,
                    stats=crawler.stats, pqclass=pqclass, dqclass=dqclass, mqclass=mqclass)
 
     def has_pending_requests(self):
         return len(self) > 0
 
-    def open(self, spider):
+    def open(self, spider):  # 首先执行了这个，
         self.spider = spider
-        self.mqs = self.pqclass(self._newmq)
+        self.mqs = self.pqclass(self._newmq)  # 在优先级队列面放了一个内存FIFO队列，这是什么操作
         self.dqs = self._dq() if self.dqdir else None
         return self.df.open()
 
@@ -50,7 +50,7 @@ class Scheduler(object):
                 json.dump(prios, f)
         return self.df.close(reason)
 
-    def enqueue_request(self, request):
+    def enqueue_request(self, request):  # 终于走到了这
         if not request.dont_filter and self.df.request_seen(request):
             self.df.log(request, self.spider)
             return False

@@ -80,12 +80,12 @@ class Downloader(object):
         self.signals = crawler.signals
         self.slots = {}
         self.active = set()
-        self.handlers = DownloadHandlers(crawler)
+        self.handlers = DownloadHandlers(crawler)  # 获取setting中定义的handler，具体的下载逻辑就在这里面
         self.total_concurrency = self.settings.getint('CONCURRENT_REQUESTS')  # 16
         self.domain_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_DOMAIN')  # 8
         self.ip_concurrency = self.settings.getint('CONCURRENT_REQUESTS_PER_IP')  # 0
         self.randomize_delay = self.settings.getbool('RANDOMIZE_DOWNLOAD_DELAY')  # True
-        self.middleware = DownloaderMiddlewareManager.from_crawler(crawler)
+        self.middleware = DownloaderMiddlewareManager.from_crawler(crawler)  # 这个中间是，装的都是process_处理逻辑，属于到下载器之间的中间件 # 'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': 500,
         self._slot_gc_loop = task.LoopingCall(self._slot_gc)
         self._slot_gc_loop.start(60)
 

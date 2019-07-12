@@ -3,6 +3,7 @@ from importlib import import_module
 from pkgutil import iter_modules
 import inspect
 import signal
+from pydispatch import dispatcher
 import sys
 import weakref; weakDict = weakref.WeakKeyDictionary()  # 弱引用
 def property_test():
@@ -14,25 +15,29 @@ def property_test():
         x = property(lambda self: self._x, doc='test')
     a = test(1)
     print(a.x)  # t这种写法还有点骚，直接用@property还好看一点
-def signal_test():
-    class test:
-        def __init__(self, x):
-            self._x = x
-            self.flag = False
-        def start(self):
-            signal.signal(signal.SIGTERM, self._term_handler)
-            signal.signal(signal.SIGINT, self._term_handler)
-            count = 0
-            while not self.flag:
-                import time
-                count += 1
-                print(count)
-                time.sleep(1)
-        def _term_handler(self, signal_num, frame):
-            print('get termnum is : ', signal_num, frame)
-            self.flag = True
-    a = test(2)
-    a.start()
+def signal_test(signal1, signal2, test2=True):
+    if test2:
+        dispatcher.connect(vars_dir_deff_test, signal=signal1)
+        dispatcher.connect(vars_dir_deff_test, signal=signal2)
+    else:
+        class test:
+            def __init__(self, x):
+                self._x = x
+                self.flag = False
+            def start(self):
+                signal.signal(signal.SIGTERM, self._term_handler)
+                signal.signal(signal.SIGINT, self._term_handler)
+                count = 0
+                while not self.flag:
+                    import time
+                    count += 1
+                    print(count)
+                    time.sleep(1)
+            def _term_handler(self, signal_num, frame):
+                print('get termnum is : ', signal_num, frame)
+                self.flag = True
+        a = test(2)
+        a.start()
 def walk_module_test():
     path = 'scrapy.commands'
     mod = import_module(path)

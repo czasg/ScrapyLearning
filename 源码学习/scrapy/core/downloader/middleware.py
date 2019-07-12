@@ -19,7 +19,7 @@ class DownloaderMiddlewareManager(MiddlewareManager):
 
     @classmethod
     def _get_mwlist_from_settings(cls, settings):
-        return build_component_list(
+        return build_component_list(  # 获取BASE中间件，这个厉害了
             settings.getwithbase('DOWNLOADER_MIDDLEWARES'))
 
     def _add_middleware(self, mw):  # 中间件的三个常用方法咯
@@ -37,7 +37,7 @@ class DownloaderMiddlewareManager(MiddlewareManager):
                 response = yield method(request=request, spider=spider)
                 assert response is None or isinstance(response, (Response, Request)), \
                         'Middleware %s.process_request must return None, Response or Request, got %s' % \
-                        (six.get_method_self(method).__class__.__name__, response.__class__.__name__)
+                        (six.get_method_self(method).__class__.__name__, response.__class__.__name__)  # 规定返回类型，None，response，request这三种
                 if response:
                     defer.returnValue(response)
             defer.returnValue((yield download_func(request=request,spider=spider)))
@@ -71,7 +71,7 @@ class DownloaderMiddlewareManager(MiddlewareManager):
                     defer.returnValue(response)
             defer.returnValue(_failure)
 
-        deferred = mustbe_deferred(process_request, request)
+        deferred = mustbe_deferred(process_request, request)  # 执行顺序，现执行request，再执行exception，最后才是response
         deferred.addErrback(process_exception)
         deferred.addCallback(process_response)
         return deferred

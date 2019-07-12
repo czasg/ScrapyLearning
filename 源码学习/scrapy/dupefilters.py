@@ -3,7 +3,7 @@ import os
 import logging
 
 from scrapy.utils.job import job_dir
-from scrapy.utils.request import referer_str, request_fingerprint
+from scrapy.utils.request import referer_str, request_fingerprint  # 这个是请求sha1指纹
 
 class BaseDupeFilter(object):
 
@@ -33,18 +33,18 @@ class RFPDupeFilter(BaseDupeFilter):
         self.logdupes = True
         self.debug = debug
         self.logger = logging.getLogger(__name__)
-        if path:
+        if path:  # 显然是没有path的把，有的话会把相关指纹写到这个文件里面
             self.file = open(os.path.join(path, 'requests.seen'), 'a+')
             self.file.seek(0)
             self.fingerprints.update(x.rstrip() for x in self.file)
 
     @classmethod
-    def from_settings(cls, settings):
+    def from_settings(cls, settings):  # 具体的实例化入口
         debug = settings.getbool('DUPEFILTER_DEBUG')
         return cls(job_dir(settings), debug)
 
     def request_seen(self, request):
-        fp = self.request_fingerprint(request)
+        fp = self.request_fingerprint(request)  # 对request获取指纹，为method+url+body，进行过滤
         if fp in self.fingerprints:
             return True
         self.fingerprints.add(fp)

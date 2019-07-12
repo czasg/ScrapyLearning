@@ -54,7 +54,26 @@ class Slot(object):
 
 
 class ExecutionEngine(object):
+    """
+    有三个重要的实例化
+    一、schedule
+        调度器，实例化了dupefilter过滤器，然后还初始化了三个队列。
+        dupefilter：过滤器，通过存储 method + url + response.body 生成sha1指纹，来进行过滤
+        pqclass：一个优先级队列queuelib.PriorityQueue
+        dqclass：一个FIFO队列，先进先出规则，并且通过pickle序列化了
+        mqclass：一个FIFO队列，先进先出规则，直接存储在内存中
 
+    二、downloader
+        实例化了Handler对象，还实例化了下载器中间件
+        Handler：具体的下载逻辑
+        DownloaderMiddlewareManager：收集所有的下载中间件，在收集其中的process_request、process_exception、process_response三种方法
+
+    三、scraper
+        实例化了爬虫中间件，还实例化了管道处理器
+        SpiderMiddlewareManager：实例化后获取process_spider_input、process_spider_output、process_spider_exception、process_start_requests
+        itemproc_cls：获取ItemPipelineManager，实例化其中的ITEM_PIPELINES，获取process_item
+
+    """
     def __init__(self, crawler, spider_closed_callback):
         self.crawler = crawler
         self.settings = crawler.settings
@@ -66,8 +85,8 @@ class ExecutionEngine(object):
         self.paused = False
         self.scheduler_cls = load_object(self.settings['SCHEDULER'])  # SCHEDULER = 'scrapy.core.scheduler.Scheduler'，仅仅获取对象，没做其他坏事
         downloader_cls = load_object(self.settings['DOWNLOADER'])  # DOWNLOADER = 'scrapy.core.downloader.Downloader'
-        self.downloader = downloader_cls(crawler)
-        self.scraper = Scraper(crawler)
+        self.downloader = downloader_cls(crawler)  # 这个下载器，里面实例化了handler处理器，和到下载器之间的process_处理逻辑。就是具体的下载功能和中间件功能都已经实现了
+        self.scraper = Scraper(crawler)  # 这里有定义有spidermw爬虫中间件和ITEM_pipeline管道对象，数据处理功能和存储功能都实现了
         self._spider_closed_callback = spider_closed_callback
 
     @defer.inlineCallbacks
@@ -118,8 +137,19 @@ class ExecutionEngine(object):
         if self.paused:
             return
 
-        while not self._needs_backout(spider):
+        while not self._needs_backout(spider):  # 什么时候才会出来呢??
+            """首次执行状态
+            True False False False
+            """
+            # 当爬虫running为True
+            # 心跳关闭slot.closing=True
+            # 下载器有active活跃数量大于16
+            # 刮擦有active活跃数量大于5000000
             if not self._next_request_from_scheduler(spider):
+                """
+                会一直递归获取所有的request，丢到下载器进行下载，最后一步为经历了scraper的润色
+                
+                """
                 break
 
         if slot.start_requests and not self._needs_backout(spider):
@@ -137,7 +167,7 @@ class ExecutionEngine(object):
         if self.spider_is_idle(spider) and slot.close_if_idle:
             self._spider_idle(spider)
 
-    def _needs_backout(self, spider):
+    def _needs_backout(self, spider): # len(self.active) >= self.total_concurrency # return self.active_size > self.max_active_size
         slot = self.slot
         return not self.running \
             or slot.closing \
@@ -146,7 +176,7 @@ class ExecutionEngine(object):
 
     def _next_request_from_scheduler(self, spider):
         slot = self.slot
-        request = slot.scheduler.next_request()
+        request = slot.scheduler.next_request()  # 从调度器中pop出一条request记录
         if not request:
             return
         d = self._download(request, spider)
@@ -167,11 +197,11 @@ class ExecutionEngine(object):
     def _handle_downloader_output(self, response, request, spider):
         assert isinstance(response, (Request, Response, Failure)), response
         # downloader middleware can return requests (for example, redirects)
-        if isinstance(response, Request):
+        if isinstance(response, Request): # 对于结果，如果是Request，则直接入队
             self.crawl(response, spider)
             return
         # response is a Response or Failure
-        d = self.scraper.enqueue_scrape(response, request, spider)
+        d = self.scraper.enqueue_scrape(response, request, spider)  # 如果是正确的response，对下载器输出的结果进行scraper
         d.addErrback(lambda f: logger.error('Error while enqueuing downloader output',
                                             exc_info=failure_to_exc_info(f),
                                             extra={'spider': spider}))
@@ -208,12 +238,12 @@ class ExecutionEngine(object):
         assert spider in self.open_spiders, \
             "Spider %r not opened when crawling: %s" % (spider.name, request)
         self.schedule(request, spider)
-        self.slot.nextcall.schedule()
+        self.slot.nextcall.schedule()  # 又执行一次
 
     def schedule(self, request, spider):
         self.signals.send_catch_log(signal=signals.request_scheduled,
                 request=request, spider=spider)
-        if not self.slot.scheduler.enqueue_request(request):
+        if not self.slot.scheduler.enqueue_request(request):  # 什么是否才会走到这里呢 - 请求指纹过滤，若没有过滤掉，则入队，self._dqpush(request)也就是push进队列
             self.signals.send_catch_log(signal=signals.request_dropped,
                                         request=request, spider=spider)
 
@@ -255,16 +285,17 @@ class ExecutionEngine(object):
             spider.name
         logger.info("Spider opened", extra={'spider': spider})
         nextcall = CallLaterOnce(self._next_request, spider)
-        scheduler = self.scheduler_cls.from_crawler(self.crawler)
-        start_requests = yield self.scraper.spidermw.process_start_requests(start_requests, spider)
+        scheduler = self.scheduler_cls.from_crawler(self.crawler)  # 对调度器进行实例化。实例化了dupefilter，还有三种队列。一种是优先级队列，还有来两个都是fifo先进先出队列，不过一个是直接存储在内存memory中，一个是通过pickle实例化了
+        start_requests = yield self.scraper.spidermw.process_start_requests(start_requests, spider)  # 第一步执行的居然是爬虫中间件里面的process_start_requests
         slot = Slot(start_requests, close_if_idle, nextcall, scheduler)
         self.slot = slot
         self.spider = spider
-        yield scheduler.open(spider)
-        yield self.scraper.open_spider(spider)
-        self.crawler.stats.open_spider(spider)
-        yield self.signals.send_catch_log_deferred(signals.spider_opened, spider=spider)
-        slot.nextcall.schedule()
+        yield scheduler.open(spider)  # 打开内存队列FIFO，优先级队列，并打开过滤器
+        yield self.scraper.open_spider(spider)  # 貌似没做啥事
+        self.crawler.stats.open_spider(spider)  # pass，也没做啥事
+        yield self.signals.send_catch_log_deferred(signals.spider_opened, spider=spider)  # 做了好多事啊，初始化日志，还有各种装啊提
+        slot.nextcall.schedule()  # 执行一次self._next_request
+        # 这鬼地方居然只会走一次，也就是初始化的走完这里，但是并不会执行里面的逻辑，应为这个schedule里面用的是reactor.callLater(delay, self)，所以是不会执行的，除非你start
         slot.heartbeat.start(5)
 
     def _spider_idle(self, spider):

@@ -62,7 +62,7 @@ class Spider(object_ref):  # 我想起来了，所有的爬虫都是派生与scr
         self._set_crawler(crawler)
 
     def _set_crawler(self, crawler):
-        self.crawler = crawler
+        self.crawler = crawler  # 所以self.settings和self.crawler.settings有啥区别嘛，没得啊
         self.settings = crawler.settings
         crawler.signals.connect(self.close, signals.spider_closed)  # 传入了一个crawler对象，里面还有signals
 

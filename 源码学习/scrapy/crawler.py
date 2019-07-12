@@ -99,7 +99,7 @@ class Crawler(object):
             raise
 
     def _create_spider(self, *args, **kwargs):
-        return self.spidercls.from_crawler(self, *args, **kwargs)  # 找到了，在这里使用from_crawler进行实例化的
+        return self.spidercls.from_crawler(self, *args, **kwargs)  # 找到了，在这里使用from_crawler进行实例化的，实例化一个Spider类，主要是初始化crawler和setting
 
     def _create_engine(self):
         return ExecutionEngine(self, lambda _: self.stop())

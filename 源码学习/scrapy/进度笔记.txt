@@ -3,3 +3,6 @@
 加载所有的commands指令，通过遍历scrapy.commands目录，加载所有的指令，到cmds的一个list里面，就是不听的import_module，iter_modules，进行一些逻辑上的判断，是否是子模块
 解析从sys.argv系统环境获取的输入参数，检查是否符合规则，也就是指令是否正确，此时通过输入的指令，我们就可以定位一个确切的scrapy-command指令，还通过optparse包，获取其余参数，准备好执行环境
 通过实例化一个CrawlerProcess对象，进行爬虫管理，然后执行command.run启动指令
+
+
+第一个接触到start_requests的居然是爬虫中间件的process_start_requests函数，但是scrapy自身是没有实现任何处理的，他允许开发人员自己定义，会在所有scrapy函数优先级之上

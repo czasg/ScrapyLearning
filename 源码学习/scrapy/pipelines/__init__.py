@@ -18,7 +18,7 @@ class ItemPipelineManager(MiddlewareManager):
     def _add_middleware(self, pipe):
         super(ItemPipelineManager, self)._add_middleware(pipe)
         if hasattr(pipe, 'process_item'):
-            self.methods['process_item'].append(pipe.process_item)
+            self.methods['process_item'].append(pipe.process_item)  # 只需要ITEM中间件中process_item就行了
 
     def process_item(self, item, spider):
         return self._process_chain('process_item', item, spider)

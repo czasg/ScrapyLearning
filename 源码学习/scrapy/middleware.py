@@ -21,11 +21,11 @@ class MiddlewareManager(object):
             self._add_middleware(mw)
 
     @classmethod
-    def _get_mwlist_from_settings(cls, settings):
+    def _get_mwlist_from_settings(cls, settings):  # 从settings中获取定义好的中间件配置
         raise NotImplementedError
 
     @classmethod
-    def from_settings(cls, settings, crawler=None):
+    def from_settings(cls, settings, crawler=None):  # 实例化中间件，是一个公用方法
         mwlist = cls._get_mwlist_from_settings(settings)  # 从setting中获取中间件列表，这里的设置被各个模块各自重载了，加载的不一样
         middlewares = []
         enabled = []
@@ -52,7 +52,7 @@ class MiddlewareManager(object):
     def from_crawler(cls, crawler):
         return cls.from_settings(crawler.settings, crawler)
 
-    def _add_middleware(self, mw):
+    def _add_middleware(self, mw):  # 加载中间件中的所需要的方法
         if hasattr(mw, 'open_spider'):
             self.methods['open_spider'].append(mw.open_spider)
         if hasattr(mw, 'close_spider'):

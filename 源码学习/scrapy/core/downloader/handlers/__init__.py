@@ -17,12 +17,12 @@ class DownloadHandlers(object):
 
     def __init__(self, crawler):
         self._crawler = crawler
-        self._schemes = {}  # stores acceptable schemes on instancing
-        self._handlers = {}  # stores instanced handlers for schemes
+        self._schemes = {}  # stores acceptable schemes on instancing  存储方案的，http及方案路径
+        self._handlers = {}  # stores instanced handlers for schemes  存储所有的handler对象，都是load_obj之后的
         self._notconfigured = {}  # remembers failed handlers
         handlers = without_none_values(
-            crawler.settings.getwithbase('DOWNLOAD_HANDLERS'))
-        for scheme, clspath in six.iteritems(handlers):
+            crawler.settings.getwithbase('DOWNLOAD_HANDLERS'))  # 获取BASE设置
+        for scheme, clspath in six.iteritems(handlers):  # 'http'和'https': 'scrapy.core.downloader.handlers.http.HTTPDownloadHandler',
             self._schemes[scheme] = clspath
             self._load_handler(scheme, skip_lazy=True)
 
@@ -43,7 +43,7 @@ class DownloadHandlers(object):
         return self._load_handler(scheme)
 
     def _load_handler(self, scheme, skip_lazy=False):
-        path = self._schemes[scheme]
+        path = self._schemes[scheme]  # 刚存进去，又立马放出来==
         try:
             dhcls = load_object(path)
             if skip_lazy and getattr(dhcls, 'lazy', True):
