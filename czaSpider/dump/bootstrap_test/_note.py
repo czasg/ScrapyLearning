@@ -36,10 +36,22 @@ $('#myTabs a:first').tab('show')
 
 nav nav-sidebar
 
+"""
 
 
 
+"""echarts note
+title: { // 图的标题
+    text: '补给站'
+},
 
+legend: { // 图的说明栏，可以定义在左边或右边
+    orient: 'vertical',
+    x: 'left',
+    data:['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+},
 
 
 """
+
+

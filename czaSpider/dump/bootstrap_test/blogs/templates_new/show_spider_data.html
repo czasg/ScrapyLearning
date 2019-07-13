@@ -1,0 +1,172 @@
+{% extends '_顶部_左侧_.html' %}
+
+{% block title %}show spider data{% endblock %}
+
+
+
+{% block base2_content %}
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="index-canvas1" style="height: 400px;"></div>
+    </div>
+</div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="index-canvas2" style="height: 400px;"></div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block base2_footer %}
+<style>
+    body {
+        background-color: #EEEEEE;
+    }
+</style>
+<script>
+var dom = document.getElementById("index-canvas1");
+var myChart1 = echarts.init(dom);
+myChart1.setOption({
+    title: {
+        text: 'boss直招python岗',
+        x:'center'
+    },
+    legend: {
+        orient: 'vertical',
+        x: 'left'
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: "{a} <br/>{b}: {c} ({d}%)"
+    }
+})
+myChart1.showLoading();
+$.get('/api/get/boss/salary/statistic').done(function(_data){
+    myChart1.hideLoading();
+    myChart1.setOption({
+        series: [
+        {
+            name:'薪资',
+            type:'pie',
+            radius: ['50%', '70%'],
+            avoidLabelOverlap: false,
+            label: {
+                normal: {
+                    show: false,
+                    position: 'center'
+                },
+                emphasis: {
+                    show: true,
+                    textStyle: {
+                        fontSize: '30',
+                        fontWeight: 'bold'
+                    }
+                }
+            },
+            labelLine: {
+                normal: {
+                    show: false
+                }
+            },
+            data:[
+                _data.boss[0],
+                _data.boss[1],
+                _data.boss[2],
+                _data.boss[3],
+                _data.boss[4]
+            ]
+        }]
+    });
+})
+</script>
+<script>
+var dom = document.getElementById("index-canvas2");
+var myChart2 = echarts.init(dom);
+myChart2.setOption({
+    title: {
+        text: '房价',
+        x:'center'
+    },
+    legend: {
+        orient: 'vertical',
+        x: 'left'
+    },
+    tooltip: {}
+})
+myChart2.showLoading();
+$.get('/api/get/zufang/price/statistic').done(function(_data){
+    myChart2.hideLoading();
+    myChart2.setOption({
+        series: [
+            {
+                name: '房天下',
+                type: 'pie',
+                radius : ['40%', '60%'],
+                center: ['25%', '50%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '30',
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data:[
+                    _data.ziru[0],
+                    _data.ziru[1],
+                    _data.ziru[2],
+                    _data.ziru[3],
+                    _data.ziru[4]
+                ]
+            },
+            {
+                name: '自如',
+                type: 'pie',
+                radius: ['40%', '60%'],
+                center: ['75%', '50%'],
+                avoidLabelOverlap: false,
+                label: {
+                    normal: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        show: true,
+                        textStyle: {
+                            fontSize: '30',
+                            fontWeight: 'bold'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data: [
+                    _data.fangtx[0],
+                    _data.fangtx[1],
+                    _data.fangtx[2],
+                    _data.fangtx[3],
+                    _data.fangtx[4]
+                ]
+            }
+        ]
+    });
+})
+</script>
+{% endblock %}
+
+

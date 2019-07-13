@@ -1,0 +1,92 @@
+{% extends '_顶部_左侧_.html' %}
+
+{% block title %}博客编辑{% endblock %}
+
+{% block beforeScript %}
+<link rel="stylesheet" href="/static/css/wangEditor.min.css">
+{% endblock %}
+
+{% block beforehead %}
+<script src="/static/js/wangEditor.min.js"></script>
+{% endblock %}
+
+{% block base2_content %}
+<form id="blog_editor">
+    <div class="form-group">
+        <label>文章标题:</label>
+        <input class="form-control" v-model="blog.name">
+    </div>
+    <div class="form-group">
+        <label>文章摘要:</label>
+        <textarea class="form-control" rows="2" v-model="blog.summary"></textarea>
+    </div>
+    <div class="form-group">
+        <label>文章内容:</label>
+       <div id="editor"></div>
+    </div>
+    <button class="btn btn-info pull-right" @click="submit">保存</button>
+</form>
+{% endblock %}
+
+{% block base2_footer %}
+<script>
+    function initBlog (blog) {
+            blog_editor.blog = blog
+            var E = window.wangEditor;
+            editor = new E('#editor');
+            editor.customConfig.uploadImgShowBase64 = true
+            editor.customConfig.zIndex = 100; // 感动到哭，终于找到了
+            editor.create();
+            editor.txt.html(blog.content)
+        }
+    var
+        blog_id = '{{ id }}',
+        blog_api = '{{ api }}',
+        blog = {
+            name: '',
+            summary: '',
+            content: ''
+        };
+    var
+        blog_editor = new Vue({
+            el: '#blog_editor',
+            data: {
+                blog: blog
+            },
+            methods: {
+                submit: function(event){
+                    event.preventDefault();
+                    var opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: blog_api,
+                        contentType: 'application/json'
+                    };
+                    this.$data.blog.content = editor.txt.html();
+                    opt.data = JSON.stringify(this.$data.blog || {});
+                    $.ajax(opt).done(function(r){
+                        if (r && r.error) {
+                            alert(r.error)
+                            return
+                        } else {
+                            location.assign('/blogs/blog/'+r.id);
+                        }
+                    });
+                }
+            }
+        });
+    $(function(){
+        if (blog_id) {
+            $.getJSON('/api/get/blog/'+blog_id, {}).done(function(data) {
+                initBlog(data);
+            });
+        } else {
+            initBlog({
+                name: '',
+                summery: '',
+                content: ''
+            });
+        }
+    })
+</script>
+{% endblock %}

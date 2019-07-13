@@ -1,0 +1,194 @@
+{% extends '_顶部_左侧_.html' %}
+
+{% block title %}博客管理{% endblock %}
+
+{% block beforehead %}
+<script>
+    function initManageBlog(data) {
+        if (data.blogs && data.blogs.length) {
+            console.log(data)
+            manageBlogs.blogs = data.blogs
+            manageBlogs.page = data.page
+            page_count = data.page.page_count
+        } else {
+            $('#manageBlogs').hide();
+            $('#temp-for-no-blog').show();
+        }
+    }
+    $(function() {
+        $('#temp-for-no-blog').hide();
+        $.get('/api/get/blogs', {
+            page: {{ page_index }},
+            page_size: 10,
+            user_id: '{{ __user__.id }}'
+        }, function (results, status) {
+            if (status==='success'){
+                $('#loading').hide();
+                initManageBlog(results);
+            }else{
+                alert(results);
+            }
+        });
+    })
+</script>
+{% endblock %}
+
+{% block base2_content %}
+<div id="loading" class="progress">
+    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+        正在加载
+    </div>
+</div>
+<div id="temp-for-no-blog">暂无博客</div>
+<div id="manageBlogs">
+    <table class="table">
+        <caption>博客管理:</caption>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>标题</th>
+                <th>摘要</th>
+                <th>作者</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(blog, index) in blogs">
+
+                <th scope="row" v-text="index"></th>
+                <td>
+                    <span v-text="blog.name"></span>
+                </td>
+                <td>
+                    <span v-text="blog.summary"></span>
+                </td>
+                <td>
+                    <a href="#" v-text="blog.user_name"></a>
+                </td>
+                <td>
+                    <span v-text="blog.created_at.toDateTime()"></span>
+                </td>
+                <td>
+                    <a href="#" @click="showBlog(blog)"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></a>
+                    <a href="#" @click="drop_blog(blog)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block base2_footer %}
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <ul class="pager" style="margin:10px;" id="nav-pager-footer">
+            <li class="previous"><a href="#" id="prePage"><span aria-hidden="true">&larr;</span> Pre</a></li>
+            <li class="active"><a href="#" id="footer_page_index">1 <span class="sr-only"></span></a></li>
+            <li class="next"><a href="#" id="nextPage">Next <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
+    </div>
+</nav>
+<script>
+    function refresh() {
+        var
+            t = new Date().getTime(),
+            url = location.pathname;
+        if (location.search) {
+            url = url + location.search + '&t=' + t;
+        } else {
+            url = url + '?t=' + t;
+        }
+        location.assign(url);
+    }
+
+    $(function(){
+        var
+            nextPage = $('#nextPage'),
+            prePage = $('#prePage');
+        nextPage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) + 1,
+                res = '';
+            if (nextPage > page_count) {
+                alert('已经是末页')
+                return
+            }
+            $.get('/api/get/blogs', {
+                page: nextPage,
+                page_size: 10,
+                user_id: '{{ __user__.id }}'
+            }, function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    manageBlogs.blogs = results.blogs
+                    manageBlogs.page = results.page
+                    page_index.text(results.page.page_index)
+                    Vue.nextTick()
+                }
+            })
+        })
+        prePage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) - 1,
+                res = '';
+            if (nextPage < 1) {
+                alert('已经是首页')
+                return
+            }
+            $.get('/api/get/blogs', {
+                page: nextPage,
+                page_size: 10,
+                user_id: '{{ __user__.id }}'
+            }, function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    manageBlogs.blogs = results.blogs
+                    manageBlogs.page = results.page
+                    page_index.text(results.page.page_index)
+                    Vue.nextTick()
+                }
+            })
+        })
+    })
+    //定义manageUsers对象
+    var manageBlogs = new Vue({
+        el: '#manageBlogs',
+        data: {
+            blogs: '',
+            page: ''
+        },
+        methods: {
+            edit_blog: function (blog) {
+                location.assign('/edit/blog/' + blog.id);
+            },
+            drop_blog: function (blog) {
+                if (confirm('确认要删除“' + blog.name + '”？删除后不可恢复！')) {
+                    var opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/api/drop/blog/' + blog.id,
+                        data: JSON.stringify({}),
+                        contentType: 'application/json'
+                    };
+                    $.ajax(opt).done(function(r) {
+                        if (r && r.error) {
+                            alert(r.error)
+                            return
+                        } else {
+                            refresh();
+                        }
+                    }).fail(function (jqXHR, textStatus) {
+                        alert(textStatus);
+                    })
+                }
+            },
+            showBlog: function (blog) {
+                location.assign('/blogs/blog/' + blog.id);
+            }
+        }
+    })
+</script>
+{% endblock %}

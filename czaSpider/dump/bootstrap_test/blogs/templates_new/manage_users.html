@@ -1,0 +1,206 @@
+{% extends '_顶部_左侧_.html' %}
+
+{% block title %}用户管理{% endblock %}
+
+{% block beforehead %}
+<script>
+    //首次刷新
+    function initManageUser(data) {
+        manageUsers.users = data.users
+        manageUsers.page = data.page
+        page_count = data.page.page_count
+    }
+    $(function() {
+        $.get('/api/get/users', {
+            page: {{ page_index }}
+        }, function (results, status) {
+            if (status==='success'){
+                $('#loading').hide();
+                initManageUser(results);
+            }else{
+                alert(results);
+            }
+        })
+    })
+</script>
+{% endblock %}
+
+{% block base2_content %}
+<div id="loading" class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">
+    正在加载
+  </div>
+</div>
+<div id="manageUsers">
+    <table class="table">
+        <caption>用户管理:</caption>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>名字</th>
+                <th>电子邮件</th>
+                <th>注册时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(user, index) in users">
+                <th scope="row" v-text="index"></th>
+                <td>
+                    <span v-text="user.name"></span>
+                    <span v-if="user.admin" style="color:#d05">管理员</span>
+                </td>
+                <td>
+                    <a href="#" v-text="user.email"></a>
+                </td>
+                <td>
+                    <span v-text="user.created_at.toDateTime()"></span>
+                </td>
+                {% if __user__.admin %}
+                <td>
+                    <a href="#" @click="show_user(user)" type="button" data-toggle="modal" data-target="#SHOW-USER-INFO"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></a>
+                    <a href="#" @click="drop_user(user)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>
+                </td>
+                {% else %}
+                <td>
+                    <a href="#" v-text="user.name"></a>
+                    <a href="#" v-text="user.name"></a>
+                </td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="SHOW-USER-INFO">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">用户信息</h4>
+            </div>
+            <div class="modal-body">
+                <p>用户名称: <strong v-text="user.name"></strong></p>
+                <p>用户邮箱: <strong v-text="user.email"></strong></p>
+                <p>注册时间: <strong v-text="user.created_at.toDateTime()"></strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock %}
+
+{% block base2_footer %}
+<nav class="navbar navbar-inverse navbar-fixed-bottom">
+    <div class="container">
+        <ul class="pager" style="margin:10px;" id="nav-pager-footer">
+            <li class="previous"><a href="#" id="prePage"><span aria-hidden="true">&larr;</span> Pre</a></li>
+            <li class="active"><a href="#" id="footer_page_index">1 <span class="sr-only"></span></a></li>
+            <li class="next"><a href="#" id="nextPage">Next <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
+    </div>
+</nav>
+<script>
+    function refresh () {
+        var
+            t = new Date().getTime(),
+            url = location.pathname;
+        if (location.search) {
+            url = url + location.search + '&t=' + t;
+        } else {
+            url = url + '?t=' + t;
+        }
+        location.assign(url);
+    }
+    $(function(){
+        var
+            nextPage = $('#nextPage'),
+            prePage = $('#prePage');
+        nextPage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) + 1,
+                res = '';
+            if (nextPage > page_count) {
+                alert('已经是末页')
+                return
+            }
+            $.get('/api/get/users', {
+                page: nextPage
+            }, function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    manageUsers.users = results.users
+                    manageUsers.page = results.page
+                    page_index.text(results.page.page_index)
+                    Vue.nextTick()
+                }
+            })
+        })
+        prePage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) - 1,
+                res = '';
+            if (nextPage < 1) {
+                alert('已经是首页')
+                return
+            }
+            $.get('/api/get/users', {
+                page: nextPage
+            }, function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    manageUsers.users = results.users
+                    manageUsers.page = results.page
+                    page_index.text(results.page.page_index)
+                    Vue.nextTick()
+                }
+            })
+        })
+    })
+    //定义manageUsers对象
+    var manageUsers = new Vue({
+        el: '#manageUsers',
+        data: {
+            users: '',
+            page: ''
+        },
+        methods: {
+            drop_user: function (user) {
+                if (confirm('确认要删除“' + user.name + '”?删除后不可恢复！')) {
+                    var opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/api/drop/user',
+                        data: JSON.stringify({
+                            id: user.id
+                        }),
+                        contentType: 'application/json'
+                    };
+                    $.ajax(opt).done(function (r) {
+                        if (r && r.error) {
+                            alert(r.error)
+                            return
+                        } else {
+                            alert('操作成功')
+                            refresh();
+                        }
+                    })
+                }
+            },
+            show_user: function (user) {
+                showUserInfo.user = user;
+            }
+        }
+    })
+
+    var showUserInfo = new Vue({
+        el: '#SHOW-USER-INFO',
+        data: {
+            user: '',
+        }
+    })
+</script>
+{% endblock %}

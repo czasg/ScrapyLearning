@@ -31,6 +31,14 @@ async def root_register(): return {'__template__': 'register.html', 'register_ur
 async def blogs(): return {'__template__': 'show_blogs_all.html'}
 
 
+@get('/resume')
+async def resume(): return {'__template__': 'resume.html'}
+
+
+@get('/show/spider/data')
+async def show_spider_data(): return {'__template__': 'show_spider_data.html'}
+
+
 @get('/root/manage/users')
 async def root_manage_users(request, *, page='1'):
     check_admin(request)
@@ -414,4 +422,116 @@ async def api_get_multi_statistic(*, dbNames_and_collectionNames, limit=7):
             res.setdefault('times', times[::-1])
             res_list.append(dict(name=collectionName, data=nums[::-1], type='line'))
     res.setdefault('nums', res_list)
+    return res
+
+
+@get('/api/get/ziru/price/statistic')
+async def api_get_ziru_price_statistic():
+    res = {}
+    dbNames_and_collectionNames = [{'housePrice':'ziru'}]
+    column = 'house_price'
+    for di in dbNames_and_collectionNames:
+        a, b, c, d, e = [0 for _ in range(5)]
+        for dbName, collectionName in di.items():
+            collection = client[dbName][collectionName]
+            documents = collection.find({}, {column: 1})
+            async for doc in documents:
+                if doc[column] < 800:
+                    a += 1
+                elif doc[column] < 1500:
+                    b += 1
+                elif doc[column] < 2000:
+                    c += 1
+                elif doc[column] < 3000:
+                    d += 1
+                else:
+                    e += 1
+        res_list = [
+            {'value': a, 'name': '0-800'},
+            {'value': b, 'name': '800-1500'},
+            {'value': c, 'name': '1500-2000'},
+            {'value': d, 'name': '2000-3000'},
+            {'value': e, 'name': '3000+'}
+        ]
+        res.setdefault('nums', res_list)
+    return res
+
+@get('/api/get/zufang/price/statistic')
+async def api_get_zufang_price_statistic():
+    res = {}
+    dbNames_and_collectionNames = [{'housePrice': 'ziru'}, {'zufang': 'fangtx'}]
+    for di in dbNames_and_collectionNames:
+        a, b, c, d, e = [0 for _ in range(5)]
+        collectionName = ''
+        for dbName, collectionName in di.items():
+            collection = client[dbName][collectionName]
+            column = 'house_price' if dbName == 'housePrice' else '租金'
+            documents = collection.find({}, {column: 1})
+            async for doc in documents:
+                try:
+                    price = int(doc[column])
+                except:
+                    continue
+                if price < 800:
+                    a += 1
+                elif price < 1500:
+                    b += 1
+                elif price < 2000:
+                    c += 1
+                elif price < 3000:
+                    d += 1
+                else:
+                    e += 1
+        res_list = [
+            {'value': a, 'name': '0-800'},
+            {'value': b, 'name': '800-1500'},
+            {'value': c, 'name': '1500-2000'},
+            {'value': d, 'name': '2000-3000'},
+            {'value': e, 'name': '3000+'}
+        ]
+        res.setdefault(collectionName, res_list)
+    return res
+
+def get_price(price):
+    res = re.search('(\d+)-(\d+)', price)
+    if res:
+        low, hig = map(int, res.groups())
+    else:
+        low, hig = (0, 0)
+    return (low + hig) // 2 * 1000
+
+@get('/api/get/boss/salary/statistic')
+async def api_get_boss_salary_statistic():
+    res = {}
+    dbNames_and_collectionNames = [{'job': 'boss'}]
+    for di in dbNames_and_collectionNames:
+        a, b, c, d, e = [0 for _ in range(5)]
+        collectionName = ''
+        for dbName, collectionName in di.items():
+            collection = client[dbName][collectionName]
+            column = 'job_salary'
+            documents = collection.find({}, {column: 1})
+            async for doc in documents:
+                try:
+                    price = get_price(doc[column])
+                except:
+                    continue
+                if price < 5000:
+                    a += 1
+                elif price < 10000:
+                    b += 1
+                elif price < 15000:
+                    c += 1
+                elif price < 20000:
+                    d += 1
+                else:
+                    e += 1
+        res_list = [
+            {'value': a, 'name': '0-5000'},
+            {'value': b, 'name': '5000-10000'},
+            {'value': c, 'name': '10000-15000'},
+            {'value': d, 'name': '15000-20000'},
+            {'value': e, 'name': '20000+'}
+        ]
+        res.setdefault(collectionName, res_list)
     return res
