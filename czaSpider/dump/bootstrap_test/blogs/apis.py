@@ -535,3 +535,9 @@ async def api_get_boss_salary_statistic():
         ]
         res.setdefault(collectionName, res_list)
     return res
+
+
+@get('/monitor')
+async def monitor():
+    r = web.HTTPFound('http://47.101.42.79:8000')
+    return r

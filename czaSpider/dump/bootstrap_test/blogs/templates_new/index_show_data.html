@@ -15,21 +15,39 @@
         <div id="index-canvas2" style="height: 400px;"></div>
     </div>
 </div>
+<div class="panel panel-default">
+    <table class="table table-bordered">
+        <tbody>
+            <tr>
+                <td><div class="text-center"><a href="/resume"><img class="img-responsive" src="/static/img/简介.jpg" style="width:240px; height: 120px;"></a></div></td>
+                <td><div class="text-center"><a href="/blogs"><img class="img-responsive" src="/static/img/补给站.png" style="width:240px; height: 120px;"></a></div></td>
+                <td><div class="text-center"><a href="/show/spider/data"><img class="img-responsive" src="/static/img/spider.png" style="width:240px; height: 120px;"></a></div></td>
+            </tr>
+            <tr>
+                <td><div class="text-center"><a href="/monitor"><img class="img-responsive" src="/static/img/ea1.png" style="width:240px; height: 120px;"></a></div></td>
+                <td><div class="text-center"><a href="javascript:void(0)"><img class="img-responsive" src="/static/img/ea2.png" style="width:240px; height: 120px;"></a></div></td>
+                <td><div class="text-center"><a href="javascript:void(0)"><img class="img-responsive" src="/static/img/ea3.png" style="width:240px; height: 120px;"></a></div></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-<table class="table table-bordered">
-    <tbody>
-        <tr>
-            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
-            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
-            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
-        </tr>
-        <tr>
-            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
-            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
-            <td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/user.png" style="width:240px; height: 120px;"></a></div></td>
-        </tr>
-    </tbody>
-</table>
+<!--<div class="container-flow">-->
+    <!--<table class="table table-bordered">-->
+    <!--<tbody>-->
+        <!--<tr>-->
+            <!--<td><div class="text-center"><a href="/resume"><img src="/static/img/简介.jpg" style="width:240px; height: 120px;"></a></div></td>-->
+            <!--<td><div class="text-center"><a href="/blogs"><img src="/static/img/补给站.png" style="width:240px; height: 120px;"></a></div></td>-->
+            <!--<td><div class="text-center"><a href="/show/spider/data"><img src="/static/img/spider.png" style="width:240px; height: 120px;"></a></div></td>-->
+        <!--</tr>-->
+        <!--<tr>-->
+            <!--<td><div class="text-center"><a href="/monitor"><img src="/static/img/ea1.png" style="width:240px; height: 120px;"></a></div></td>-->
+            <!--<td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/ea2.png" style="width:240px; height: 120px;"></a></div></td>-->
+            <!--<td><div class="text-center"><a href="javascript:void(0)"><img src="/static/img/es3.png" style="width:240px; height: 120px;"></a></div></td>-->
+        <!--</tr>-->
+    <!--</tbody>-->
+<!--</table>-->
+<!--</div>-->
 {% endblock %}
 
 {% block base2_footer %}
@@ -78,7 +96,11 @@ var dom = document.getElementById("index-canvas2");
 var myChart2 = echarts.init(dom);
 myChart2.setOption({
     title: {
-        text: '自如-武汉'
+        text: '在线爬虫'
+    },
+    legend: {
+        orient: 'horizontal',
+        x: 'right'
     },
     tooltip: {
         trigger: 'axis'
