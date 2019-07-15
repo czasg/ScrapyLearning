@@ -149,6 +149,9 @@ class ExecutionEngine(object):
                 """
                 会一直递归获取所有的request，丢到下载器进行下载，最后一步为经历了scraper的润色
                 
+                从调度器中pop出一个request请求
+                执行下载函数，获取结果，如果是request则继续入队，并递归心跳函数，否则继续往下走
+                执行对结果的处理
                 """
                 break
 
@@ -174,7 +177,7 @@ class ExecutionEngine(object):
             or self.downloader.needs_backout() \
             or self.scraper.slot.needs_backout()
 
-    def _next_request_from_scheduler(self, spider):
+    def _next_request_from_scheduler(self, spider):  # 怎么感觉这一个函数就可以把所有流程走完啊???????
         slot = self.slot
         request = slot.scheduler.next_request()  # 从调度器中pop出一条request记录
         if not request:
@@ -197,11 +200,11 @@ class ExecutionEngine(object):
     def _handle_downloader_output(self, response, request, spider):
         assert isinstance(response, (Request, Response, Failure)), response
         # downloader middleware can return requests (for example, redirects)
-        if isinstance(response, Request): # 对于结果，如果是Request，则直接入队
-            self.crawl(response, spider)
+        if isinstance(response, Request): # 对于结果，如果是Request，则直接入队，进入self.crawl
+            self.crawl(response, spider)  # 对request请求指纹过滤，没问题则入队，然后递归心跳处理
             return
         # response is a Response or Failure
-        d = self.scraper.enqueue_scrape(response, request, spider)  # 如果是正确的response，对下载器输出的结果进行scraper
+        d = self.scraper.enqueue_scrape(response, request, spider)  # 如果是正确的response，对下载器输出的结果进行scraper的三个处理函数，如果结果是request继续入队，如果是字典或者Item则调用process_item函数进行后续处理
         d.addErrback(lambda f: logger.error('Error while enqueuing downloader output',
                                             exc_info=failure_to_exc_info(f),
                                             extra={'spider': spider}))
@@ -234,7 +237,7 @@ class ExecutionEngine(object):
         """Does the engine have capacity to handle more spiders"""
         return not bool(self.slot)
 
-    def crawl(self, request, spider):
+    def crawl(self, request, spider):  # 将请求进行指纹过滤，没问题则入队，然后递归执行心跳
         assert spider in self.open_spiders, \
             "Spider %r not opened when crawling: %s" % (spider.name, request)
         self.schedule(request, spider)

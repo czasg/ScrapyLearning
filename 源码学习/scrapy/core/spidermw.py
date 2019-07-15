@@ -35,7 +35,11 @@ class SpiderMiddlewareManager(MiddlewareManager):
         fname = lambda f:'%s.%s' % (
                 six.get_method_self(f).__class__.__name__,
                 six.get_method_function(f).__name__)
-
+        """他会先执行完某一函数的所有回调情况，再往下走????whats???? 似乎每一个爬虫流程都会走一遍，whats
+        执行process_spider_input
+        执行call_spider
+        执行process_spider_output
+        """
         def process_spider_input(response):
             for method in self.methods['process_spider_input']:
                 try:

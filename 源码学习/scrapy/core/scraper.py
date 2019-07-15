@@ -96,7 +96,7 @@ class Scraper(object):
         if slot.closing and slot.is_idle():
             slot.closing.callback(spider)
 
-    def enqueue_scrape(self, response, request, spider):
+    def enqueue_scrape(self, response, request, spider):  # 执行process_spider_input、process_spider_exception、process_spider_output三个函数，然后还执行了process_item的管道处理函数
         slot = self.slot
         dfd = slot.add_response_request(response, request)  # 把数据推到self.queue里面
         def finish_scraping(_):
@@ -110,7 +110,7 @@ class Scraper(object):
                                    {'request': request},
                                    exc_info=failure_to_exc_info(f),
                                    extra={'spider': spider}))
-        self._scrape_next(spider, slot)
+        self._scrape_next(spider, slot)  # 主要是为了执行scrape_response，也就是scrape里面对response处理的函数
         return dfd
 
     def _scrape_next(self, spider, slot):
@@ -141,9 +141,9 @@ class Scraper(object):
                 self._log_download_errors, request_result, request, spider)
 
     def call_spider(self, result, request, spider):
-        result.request = request
+        result.request = request  # 执行完
         dfd = defer_result(result)
-        dfd.addCallbacks(request.callback or spider.parse, request.errback)
+        dfd.addCallbacks(request.callback or spider.parse, request.errback)  # 找到了，callback优先级高于parse，不写就默认为parse
         return dfd.addCallback(iterate_spider_output)
 
     def handle_spider_error(self, _failure, request, response, spider):
@@ -179,9 +179,9 @@ class Scraper(object):
         """Process each Request/Item (given in the output parameter) returned
         from the given spider
         """
-        if isinstance(output, Request):
+        if isinstance(output, Request):  # 如果是request，继续入队
             self.crawler.engine.crawl(request=output, spider=spider)
-        elif isinstance(output, (BaseItem, dict)):
+        elif isinstance(output, (BaseItem, dict)):  # 如果是字典或Item，则执行process_item函数进行处理，到这里应该也结束了吧
             self.slot.itemproc_size += 1
             dfd = self.itemproc.process_item(output, spider)
             dfd.addBoth(self._itemproc_finished, output, response, spider)

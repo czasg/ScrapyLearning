@@ -5,11 +5,12 @@ from czaSpider.czaTools import *
 class MySpider(IOCO):
     name = "world-test"
 
-    url = "http://xxgk.beihai.gov.cn/bhshjbhj/xzzfzl_84504/index.html"
+    url = "http://huyu.info/"
 
     def parse(self, response):
-        yield from traverse_urls(response, self, '//ul[@class="bhdh_List"]/li/a/@href', 'index_%d', jump=1,
-                                 next_page_without_new_urls=True)
+        print(response.text)
+        # yield from traverse_urls(response, self, '//ul[@class="bhdh_List"]/li/a/@href', 'index_%d', jump=1,
+        #                          next_page_without_new_urls=True)
 
 
 if __name__ == "__main__":

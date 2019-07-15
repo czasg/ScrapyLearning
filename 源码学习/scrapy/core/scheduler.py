@@ -50,7 +50,7 @@ class Scheduler(object):
                 json.dump(prios, f)
         return self.df.close(reason)
 
-    def enqueue_request(self, request):  # 终于走到了这
+    def enqueue_request(self, request):  # 终于走到了这，请求指纹过滤，如果没问题就把新的request请求push到队列中
         if not request.dont_filter and self.df.request_seen(request):
             self.df.log(request, self.spider)
             return False
