@@ -12,6 +12,8 @@ _COOKIE_KEY = configs.session.secret
 _RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
 _RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
 
+ANTI_COOKIE = 'anti_spider'
+
 
 def check_admin(request):
     if request.__user__ is None or not request.__user__.admin:
@@ -71,6 +73,10 @@ async def cookie2user(cookie_str):
         return user
     except:
         return None
+
+
+def check_anti_spider(anti_cookie):
+    return anti_cookie
 
 
 def process_commands(all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):

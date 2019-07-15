@@ -8,6 +8,15 @@ filters: {
 
 
 计算属性computed，不如使用methods
+methods，是函数调用，也就是调用的时候，需要实例化执行，如{{ method_fun() }}
+computed，是属性调用，也就是调用的时候，不需要实例化执行，{{ computed_fun }}
+第二最重要的一点是computed是带缓存的
+相比大家都知道HTTP缓存，其核心作用就是对一些服务端未更新的资源进行复用，避免一些无谓的请求，优化了用户的体验
+函数形式的调用，毫无疑问需要实例化多个对象，换句话来说就是你定义了多少个就需要执行多少遍
+所以，官方文档才反复强调对于任何复杂逻辑，你都应当使用计算属性
+computed依赖于data中的数据，只有在它的相关依赖数据发生改变时才会重新求值
+那个你无论调用多少次，拿到的就是一个返回值，不会重新进行计算
+
 
 
 监听属性watch  当监听的属性发生改变的时候，就会执行这个监控的函数
@@ -263,7 +272,7 @@ nav.contact .contact{
     <nav v-bind:class="active" v-on:click.prevent>
  
         <!-- 当菜单上的链接被点击时，我们调用了 makeActive 方法, 该方法在 Vue 实例中创建。 -->
- 
+
         <a href="#" class="home" v-on:click="makeActive('home')">Home</a>
         <a href="#" class="projects" v-on:click="makeActive('projects')">Projects</a>
         <a href="#" class="services" v-on:click="makeActive('services')">Services</a>
@@ -274,18 +283,18 @@ nav.contact .contact{
  
     <p>您选择了 <b>{{active}} 菜单</b></p>
 </div>
- 
+
 <script>
 // 创建一个新的 Vue 实例
 var demo = new Vue({
     // DOM 元素，挂载视图模型
     el: '#main',
- 
+
     // 定义属性，并设置初始值
     data: {
         active: 'home'
     },
- 
+
     // 点击菜单使用的函数
     methods: {
         makeActive: function(item){

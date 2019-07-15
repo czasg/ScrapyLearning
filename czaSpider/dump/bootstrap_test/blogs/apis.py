@@ -43,7 +43,7 @@ async def show_spider_data(): return {'__template__': 'show_spider_data.html'}
 async def root_manage_users(request, *, page='1'):
     check_admin(request)
     return {
-        '__template__': 'manage_users_root.html',
+        '__template__': 'manage_users.html',
         'page_index': get_page_index(page)
     }
 
@@ -52,7 +52,7 @@ async def root_manage_users(request, *, page='1'):
 async def root_manage_blogs(request, *, page='1'):
     check_admin(request)
     return {
-        '__template__': 'root_manage_blogs.html',
+        '__template__': 'manage_blogs_root.html',
         'page_index': get_page_index(page)
     }
 
@@ -541,3 +541,12 @@ async def api_get_boss_salary_statistic():
 async def monitor():
     r = web.HTTPFound('http://47.101.42.79:8000')
     return r
+
+
+@get('/get/init/anti/cookie')
+async def anti_sipder_dom(request):
+    webResponse = web.Response()
+    webResponse.set_cookie(ANTI_COOKIE, 'True', max_age=86400)
+    webResponse.content_type = 'application/json'
+    webResponse.body = json.dumps({'anti_spider': 'True'}, ensure_ascii=False).encode()
+    return webResponse

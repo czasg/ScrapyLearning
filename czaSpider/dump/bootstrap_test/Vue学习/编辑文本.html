@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+	<title></title>
+</head>
+<body>
+	<div id="main" @click="hide_bar" style="width: 500px; height: 500px; background-color: #E3F2FD;">
+		<div @click.stop v-if="show">
+			<input type="text" v-model="text">
+		</div>
+		<p @click.stop="toggle_bar">{{ text }}</p>
+	</div>
+<script type="text/javascript">
+	var vm = new Vue({
+		el: '#main',
+		data: {
+			show: false,
+			text: 'hello world'
+		},
+		methods: {
+			hide_bar: function(){
+				this.show = false
+			},
+			toggle_bar: function(){
+				this.show = !this.show
+			}
+		}
+	})
+</script>
+</body>
+</html>

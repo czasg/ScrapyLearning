@@ -38,6 +38,23 @@ def init_jinja2(app, **kwargs):
             env.filters[name] = f
     app['__templating__'] = env
 
+
+async def anti_spider(app, handler):
+    async def anti_spider_first(request):
+        anti_cookie = request.cookies.get(ANTI_COOKIE)
+        if not request.path.startswith('/get/init/anti/cookie'):
+            if anti_cookie:
+                anti = check_anti_spider(anti_cookie)
+                if anti == None:
+                    return web.HTTPFound('/get/init/anti/cookie')
+                elif anti == 'True':
+                    pass  # todo, add anti spider
+            else:
+                return web.HTTPFound('/get/init/anti/cookie')
+        return (await handler(request))
+    return anti_spider_first
+
+
 async def auth_factory(app, handler):
     async def auth(request):
         logger.info('check user: %s %s' % (request.method, request.path))
@@ -115,7 +132,7 @@ def datetime_filter(t):
 async def init(loop):
     await orm.init_pool(loop=loop, **configs.db)
     app = web.Application(loop=loop, middlewares=[
-        auth_factory, response_factory])
+        anti_spider, auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'apis')
     # add_routes(app, 'api')  # todo, 待转移到这边来，分类进行管理
