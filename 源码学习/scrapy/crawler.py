@@ -80,7 +80,7 @@ class Crawler(object):
             self.engine = self._create_engine()
             start_requests = iter(self.spider.start_requests())  # Request / FormRequest，第一步就在这里获取所有的start_requests函数逻辑
             yield self.engine.open_spider(self.spider, start_requests)
-            yield defer.maybeDeferred(self.engine.start)
+            yield defer.maybeDeferred(self.engine.start)  # todo, 在这列插入日志，看下到底是谁先执行，这个yield是不是可以随意设置啊
         except Exception:
             # In Python 2 reraising an exception after yield discards
             # the original traceback (see https://bugs.python.org/issue7563),
