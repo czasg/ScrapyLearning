@@ -545,8 +545,13 @@ async def monitor():
 
 @get('/get/init/anti/cookie')
 async def anti_sipder_dom(request):
-    webResponse = web.Response()
+    webResponse = web.HTTPFound('/anti_spider')
     webResponse.set_cookie(ANTI_COOKIE, 'True', max_age=86400)
     webResponse.content_type = 'application/json'
     webResponse.body = json.dumps({'anti_spider': 'True'}, ensure_ascii=False).encode()
     return webResponse
+
+
+@get('/anti_spider')
+async def anti_spider_dom(request):
+    return {'__template__': 'anti_spider.html'}
