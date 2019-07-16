@@ -78,7 +78,7 @@ class Crawler(object):
         try:
             self.spider = self._create_spider(*args, **kwargs)  # 这个spider就是我们编写的爬虫，如MySpider
             self.engine = self._create_engine()
-            start_requests = iter(self.spider.start_requests())  # Request / FormRequest
+            start_requests = iter(self.spider.start_requests())  # Request / FormRequest，第一步就在这里获取所有的start_requests函数逻辑
             yield self.engine.open_spider(self.spider, start_requests)
             yield defer.maybeDeferred(self.engine.start)
         except Exception:

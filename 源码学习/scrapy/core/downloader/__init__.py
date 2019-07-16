@@ -89,13 +89,13 @@ class Downloader(object):
         self._slot_gc_loop = task.LoopingCall(self._slot_gc)
         self._slot_gc_loop.start(60)
 
-    def fetch(self, request, spider):
+    def fetch(self, request, spider):  # 爬虫下载入口
         def _deactivate(response):
             self.active.remove(request)
             return response
 
         self.active.add(request)
-        dfd = self.middleware.download(self._enqueue_request, request, spider)
+        dfd = self.middleware.download(self._enqueue_request, request, spider)  # _enqueue_request是关键
         return dfd.addBoth(_deactivate)
 
     def needs_backout(self):

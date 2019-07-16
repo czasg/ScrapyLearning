@@ -50,9 +50,9 @@ class SpiderMiddlewareManager(MiddlewareManager):
                             % (fname(method), type(result))
                 except:
                     return scrape_func(Failure(), request, spider)
-            return scrape_func(response, request, spider)
+            return scrape_func(response, request, spider)  # 这里就是call_spider爬虫处理后的结果，是一个dfd，里面指定了下一级的回调函数
 
-        def process_spider_exception(_failure):
+        def process_spider_exception(_failure):  # 错了才会执行这里
             exception = _failure.value
             for method in self.methods['process_spider_exception']:
                 result = method(response=response, exception=exception, spider=spider)

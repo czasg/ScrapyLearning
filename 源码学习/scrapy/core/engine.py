@@ -145,19 +145,26 @@ class ExecutionEngine(object):
             # 心跳关闭slot.closing=True
             # 下载器有active活跃数量大于16
             # 刮擦有active活跃数量大于5000000
-            if not self._next_request_from_scheduler(spider):
+            if not self._next_request_from_scheduler(spider):  # 就是加入这里我放了10个函数呢
                 """
                 会一直递归获取所有的request，丢到下载器进行下载，最后一步为经历了scraper的润色
                 
                 从调度器中pop出一个request请求
                 执行下载函数，获取结果，如果是request则继续入队，并递归心跳函数，否则继续往下走
                 执行对结果的处理
+                
+                居然会在start_requests之前执行，不可思议，存在记录的话最少要走两次，一次走完，还有一次走结束
+                
+                执行_next_request_from_scheduler
+                Done!  首次直接走掉，应为队列里面一个数据都没有
+                
+                然后从start_requests里面next出一个数据，推到队列面去，所以数据怎么进去，居然是一个一个next出来推进去的，那个百度小哥着实牛逼
                 """
                 break
 
         if slot.start_requests and not self._needs_backout(spider):
             try:
-                request = next(slot.start_requests)
+                request = next(slot.start_requests)  # 数据就是从这里，一个一个的从start_requests调出来然后再推进去的，神奇的异步
             except StopIteration:
                 slot.start_requests = None
             except Exception:
@@ -165,6 +172,9 @@ class ExecutionEngine(object):
                 logger.error('Error while obtaining start requests',
                              exc_info=True, extra={'spider': spider})
             else:
+                """
+                所以我感觉现在的情况就很尴尬，我刚往里面push一个数据，然后继续调用时，又立马给我pop出来了，真是醉了
+                """
                 self.crawl(request, spider)
 
         if self.spider_is_idle(spider) and slot.close_if_idle:

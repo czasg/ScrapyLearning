@@ -30,7 +30,7 @@ class ResponseTypes(object):
         'application/x-javascript': 'scrapy.http.TextResponse',
         'text/xml': 'scrapy.http.XmlResponse',
         'text/*': 'scrapy.http.TextResponse',
-    }
+    }  # 不管是HTML还是XML，都是继承自TextResponse
 
     def __init__(self):
         self.classes = {}

@@ -32,7 +32,7 @@ class Scheduler(object):
         mqclass = load_object(settings['SCHEDULER_MEMORY_QUEUE']) # 'scrapy.squeues.LifoMemoryQueue'，在内存先进先出队列中，没有序列化
         logunser = settings.getbool('LOG_UNSERIALIZABLE_REQUESTS', settings.getbool('SCHEDULER_DEBUG'))  # ('LOG_UNSERIALIZABLE_REQUESTS', 'use SCHEDULER_DEBUG instead')
         return cls(dupefilter, jobdir=job_dir(settings), logunser=logunser,
-                   stats=crawler.stats, pqclass=pqclass, dqclass=dqclass, mqclass=mqclass)
+                   stats=crawler.stats, pqclass=pqclass, dqclass=dqclass, mqclass=mqclass)  # 初始化时队列为空，并没有往里面推数据
 
     def has_pending_requests(self):
         return len(self) > 0

@@ -133,17 +133,28 @@ class Scraper(object):
         Failure"""
         if not isinstance(request_result, Failure):
             return self.spidermw.scrape_response(
-                self.call_spider, request_result, request, spider)
+                self.call_spider, request_result, request, spider)  # 在执行里面input之后，就执行了call_spider函数
         else:
             # FIXME: don't ignore errors in spider middleware
             dfd = self.call_spider(request_result, request, spider)
             return dfd.addErrback(
                 self._log_download_errors, request_result, request, spider)
 
-    def call_spider(self, result, request, spider):
+    def call_spider(self, result, request, spider):  # result其实就是下载下载完成后的response类
         result.request = request  # 执行完
         dfd = defer_result(result)
+        # 这一步意义何在呢，感觉没有执行啊
+        """
+        入口url都是从starts_url开始，也就是说，下载器下载好后的response其实就是针对url而言，此时还没有使用回调函数呢
+        
+        这里的callback或者parse会不会是针对上一级来说的
+        针对start_requests函数，我们将获取到的结果执行parse函数
+        """
         dfd.addCallbacks(request.callback or spider.parse, request.errback)  # 找到了，callback优先级高于parse，不写就默认为parse
+        """ 好吧，我想多了，这里就是针对上一级的绑定，和我这一级是什么无关，除非我返回的是一个requests，那么下次才会走到这里来
+        这里添加回调函数callback作为其后续处理
+        就比如有五个首页入口，那爬虫会先把这个五个首页入口数据全记录，然后再进行翻页处理，怎么实现的呢
+        """
         return dfd.addCallback(iterate_spider_output)
 
     def handle_spider_error(self, _failure, request, response, spider):
@@ -175,15 +186,22 @@ class Scraper(object):
             self._process_spidermw_output, request, response, spider)
         return dfd
 
-    def _process_spidermw_output(self, output, request, response, spider):
+    def _process_spidermw_output(self, output, request, response, spider):  # 原来在这里，当前函数的执行结果是在这里进行处理的
         """Process each Request/Item (given in the output parameter) returned
         from the given spider
+        """
+        """
+        这里的output就是call_spider处理后的结果，但是有没有执行回调呢
+        这里的output是yield返回的产物
+        
+        看到一个好东西，在parse函数里面打印依据log，会先执行parse函数里面的log，然后再执行此函数里面的日志，说明parse是先比此函数执行的
+        这就完全说明，此函数所处理的output是parse的结果，也就是parse函数yield的产物
         """
         if isinstance(output, Request):  # 如果是request，继续入队
             self.crawler.engine.crawl(request=output, spider=spider)
         elif isinstance(output, (BaseItem, dict)):  # 如果是字典或Item，则执行process_item函数进行处理，到这里应该也结束了吧
             self.slot.itemproc_size += 1
-            dfd = self.itemproc.process_item(output, spider)
+            dfd = self.itemproc.process_item(output, spider)  # 调用管道的process_item进行最后的处理，再见吧宝贝儿
             dfd.addBoth(self._itemproc_finished, output, response, spider)
             return dfd
         elif output is None:
