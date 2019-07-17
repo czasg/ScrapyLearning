@@ -173,13 +173,11 @@ class Engine:
         self.slot.nextcall.schedule()  # 首次这里应该是不执行把???
 
     def _next_request(self, spider):
-        # print('??')
         slot = self.slot
         if not slot:
             return
 
         while not slot.scheduler.isEmpty():
-            # print('一次')
             if not self._next_request_from_scheduler(spider):
                 break
 
@@ -205,12 +203,15 @@ class Engine:
 
     def _handle_downloader_output(self, response, request, spider):  # 传进来的居然是一个None???
         print(response.url)
+        print(len(self.slot.inprogress))
+        d = defer.Deferred()
+        return d
 
 
 class MySPider(Spider):
     def start_requests(self):
         url = "http://fanyi.youdao.com/"
-        for i in range(10):
+        for i in range(3):
             yield Request(url, self.parse)
 
     def parse(self, response):
@@ -218,7 +219,16 @@ class MySPider(Spider):
 
 
 if __name__ == '__main__':  # todo, 怎么停下来，是一个问题
+    import time
+    start_time = time.time()
     o = CrawlerProcess()
     d = o.crawl(MySPider)
     d.addBoth(lambda _: reactor.stop())
     o.start()
+
+    # import requests
+    # for i in range(10):
+    #     print(requests.get("http://fanyi.youdao.com/").url)
+
+    end_time = time.time()
+    print(start_time - end_time)
