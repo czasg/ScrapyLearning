@@ -36,5 +36,9 @@
     })
 </script>
 {% endblock %}
+{% if this_is_index_blogs is defined %}
+{% include '__base1_左侧导航栏_首页_ajax_.html' %}
+{% else %}
 {% include '__base1_左侧导航栏_首页__.html' %}
+{% endif %}
 {% endblock %}

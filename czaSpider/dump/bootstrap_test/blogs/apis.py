@@ -28,7 +28,25 @@ async def root_register(): return {'__template__': 'register.html', 'register_ur
 
 
 @get('/blogs')
-async def blogs(): return {'__template__': 'show_blogs_all.html'}
+async def blogs():
+    return {
+        '__template__': 'show_blogs_all.html',
+        'api_for_blog': '/api/get/blogs',
+        'this_is_index_blogs': True
+    }
+
+
+@get('/blogs/{type}')
+async def blogs_type(*, type):
+    try:
+        blog_type = int(type)
+    except:
+        raise APIResourceError('无相关资源', 'No Such Resource!')
+    return {
+        '__template__': 'show_blogs_all.html',
+        'api_for_blog': '/api/get/blogs/%s' % blog_type,
+        'this_is_index_blogs': True
+    }
 
 
 @get('/resume')
@@ -236,6 +254,24 @@ async def api_get_blogs(*, page='1', page_size=None, user_id=None):
     return dict(page=p, blogs=blogs)
 
 
+@get('/api/get/blogs/{type}')
+async def api_get_blogs_type(*, type, page='1', page_size=None, user_id=None):
+    try:
+        blog_type = int(type)
+    except:
+        raise APIResourceError('无相关资源', 'No Such Resource!')
+    page_index = get_page_index(page)
+    num = await Blog.findNumber('count(id)', where='blog_type=?', args=[blog_type])
+    p = Pager(num, page_index, get_page_size(page_size)) if page_size else Pager(num, page_index)
+    if num == 0:
+        return dict(page=0, users=())
+    if user_id:
+        blogs = await Blog.findAll('user_id=?', [user_id], orderBy='created_at desc', limit=(p.offset, p.limit))
+    else:
+        blogs = await Blog.findAll(where='blog_type=?', args=[blog_type], orderBy='created_at desc', limit=(p.offset, p.limit))
+    return dict(page=p, blogs=blogs)
+
+
 @get('/api/get/blogs/statistic')
 async def api_get_blogs_statistic(*, limit=7):
     _date = get_now_datetime()
@@ -314,6 +350,21 @@ async def api_edit_blog(id, *, name, summary, content):
     blog.update_at = time.time()
     await blog.update_table()
     return blog
+
+
+@post('/api/choose/blog/{id}/type')
+async def api_choose_blog_type(id, request, *, current_type):
+    user = request.__user__
+    if user is None:
+        raise APIResourceError('请先登陆', 'No User')
+    blog = await Blog.find(id)
+    try:
+        blog_type = int(current_type)
+    except:
+        raise APIResourceError('error?', '??')
+    blog.blog_type = blog_type
+    await blog.update_table()
+    return {}
 
 
 @post('/api/drop/blog/{id}')

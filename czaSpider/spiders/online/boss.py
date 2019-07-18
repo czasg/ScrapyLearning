@@ -23,11 +23,17 @@ class MySpider(IOCO):
             item['job_name'] = data_from_xpath(job, './/div[@class="job-title"]/text()', first=True)
             item['job_salary'] = data_from_xpath(job, './/span[@class="red"]/text()', first=True)
             item['company_name'] = data_from_xpath(job, './/h3[@class="name"]/a/text()', join=True)
-            item['job_scale'] = data_from_xpath(job, './/h3[@class="name"]/following-sibling::p//text()', join=True, sep='|')
+            item['job_scale'] = data_from_xpath(job, './/h3[@class="name"]/following-sibling::p//text()', join=True,
+                                                sep='|')
             url = data_from_xpath(job, './/h3[@class="name"]/a/@href', url=True, source=response)
             urls.append(url)
             items.setdefault(url, item)
-        yield from traverse_urls(response, self, detail_urls=urls,items=items, next_page_format="page=%d",)
+        try:
+            yield from traverse_urls(response, self, detail_urls=urls, items=items,
+                                     next_page_format="page=%d",
+                                     next_page_without_new_urls=True)
+        except:
+            pass
 
 
 if __name__ == '__main__':

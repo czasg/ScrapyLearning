@@ -26,12 +26,27 @@
     </div>
     <button class="btn btn-info pull-right" @click="submit">保存</button>
 </form>
+<div class="btn-group dropup" id="blog_type">
+    <button type="button" class="btn btn-default" v-text="current_type_func"></button>
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+        <span class="sr-only">Toggle Dropdown</span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="#" @click.prevent="choose_type(1)">前端</a></li>
+        <li><a href="#" @click.prevent="choose_type(2)">后端</a></li>
+        <li><a href="#" @click.prevent="choose_type(3)">爬虫</a></li>
+        <li><a href="#" @click.prevent="choose_type(4)">生活</a></li>
+    </ul>
+</div>
 {% endblock %}
 
 {% block base2_footer %}
 <script>
+
     function initBlog (blog) {
-            blog_editor.blog = blog
+            blog_editor.blog = blog;
+            blog_type.current_type = blog.blog_type;
             var E = window.wangEditor;
             editor = new E('#editor');
             editor.customConfig.emotions = [{
@@ -293,6 +308,51 @@
                             location.assign('/blogs/blog/'+r.id);
                         }
                     });
+                }
+            }
+        }),
+        blog_type = new Vue({
+            el: '#blog_type',
+            data: {
+                current_type: ''
+            },
+            computed: {
+                current_type_func: function () {
+                    console.log(this.current_type)
+                    var bt = this.current_type
+                    if (bt === 0) {
+                        this.current_type = '未指定分类'
+                    } else if (bt === 1) {
+                        this.current_type = '前端'
+                    } else if (bt === 2) {
+                        this.current_type = '后端'
+                    } else if (bt === 3) {
+                        this.current_type = '爬虫'
+                    } else if (bt === 4) {
+                        this.current_type = '生活'
+                    }
+                    return this.current_type
+                }
+            },
+            methods: {
+                choose_type: function (type) {
+                        var that = this,
+                            opt = {
+                            type: 'POST',
+                            dataType: 'json',
+                            url: '/api/choose/blog/' + blog_id + '/type',
+                            contentType: 'application/json'
+                        };
+                        opt.data = JSON.stringify({current_type: type});
+                        $.ajax(opt).done(function(r){
+                            if (r && r.error) {
+                                alert(r.error)
+                                return
+                            } else {
+                                that.current_type = type
+                                alert('补给站类别更换成功!')
+                            }
+                        });
                 }
             }
         });

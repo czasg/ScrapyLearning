@@ -33,6 +33,7 @@ class Blog(Model):
     created_at = FloatField(default=time.time)
     count = IntegerField()
     update_at = FloatField(default=time.time)
+    blog_type = IntegerField()
 
 
 class Comment(Model):
@@ -46,6 +47,7 @@ class Comment(Model):
     content = TextField()
     created_at = FloatField(default=time.time)
 
+
 class SonComment(Model):
     __table__ = 'son_comments'
 
@@ -56,4 +58,3 @@ class SonComment(Model):
     user_name = StringField(ddl='varchar(50)')
     content = TextField()
     created_at = FloatField(default=time.time)
-

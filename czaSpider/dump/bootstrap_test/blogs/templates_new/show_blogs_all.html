@@ -16,7 +16,7 @@
     }
     $(function() {
         var page_count = 0;
-        $.get('/api/get/blogs', {},
+        $.get('{{ api_for_blog }}', {},
             function (results, status) {
                 if (status==='success'){
                     $('#loading').hide();
@@ -93,6 +93,28 @@
     </div>
 </nav>
 <script>
+    var nav_sidebar_nav = new Vue({
+        el: '#nav_sidebar_nav',
+        data: {
+            test: ''
+        },
+        methods: {
+            ajax_for_blogs: function (blog_type) {
+                $.get('/api/get/blogs/' + blog_type, {}, function (results, status) {
+                    if (status==='success'){
+                        if (!results.blogs) {
+                            alert('无相关补给内容')
+                            return
+                        }
+                        alert('获取数据成功')
+                        showBlogs.blogs = results.blogs
+                        showBlogs.page = results.page
+                        page_count = results.page.page_count
+                    }
+                })
+            }
+        }
+    })
     $(function(){
         var
             nextPage = $('#nextPage'),
@@ -106,7 +128,7 @@
                 alert('已经是末页')
                 return
             }
-            $.get('/api/get/blogs', {
+            $.get('{{ api_for_blog }}', {
                 page: nextPage
             }, function (results, status) {
                 if (status==='success'){
@@ -126,7 +148,7 @@
                 alert('已经是首页')
                 return
             }
-            $.get('/api/get/blogs', {
+            $.get('{{ api_for_blog }}', {
                 page: nextPage
             }, function (results, status) {
                 if (status==='success'){
