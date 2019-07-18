@@ -87,7 +87,7 @@ class ExecutionEngine(object):
         downloader_cls = load_object(self.settings['DOWNLOADER'])  # DOWNLOADER = 'scrapy.core.downloader.Downloader'
         self.downloader = downloader_cls(crawler)  # 这个下载器，里面实例化了handler处理器，和到下载器之间的process_处理逻辑。就是具体的下载功能和中间件功能都已经实现了
         self.scraper = Scraper(crawler)  # 这里有定义有spidermw爬虫中间件和ITEM_pipeline管道对象，数据处理功能和存储功能都实现了
-        self._spider_closed_callback = spider_closed_callback
+        self._spider_closed_callback = spider_closed_callback  # 这个回调很重要，关系到爬虫能不能停下来
 
     @defer.inlineCallbacks
     def start(self):
@@ -372,7 +372,7 @@ class ExecutionEngine(object):
         dfd.addBoth(lambda _: setattr(self, 'slot', None))
         dfd.addErrback(log_failure('Error while unassigning slot'))
 
-        dfd.addBoth(lambda _: setattr(self, 'spider', None))
+        dfd.addBoth(lambda _: setattr(self, 'spider', None))  # 这里有点意思
         dfd.addErrback(log_failure('Error while unassigning spider'))
 
         dfd.addBoth(lambda _: self._spider_closed_callback(spider))

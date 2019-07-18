@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta charset="utf-8">
@@ -178,7 +178,11 @@ html {
 <body>
 
 <script src="js/knockout-min.js"></script>
-<script src="js/clipboard.min.js"></script>
+<!--<script src="js/clipboard.min.js"></script>-->
+<script src="js/clipboard.js"></script>
+<!--<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>-->
+<!--<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>-->
 <div style="text-align:center;clear:both;">
 </div>
 <div class="container">
@@ -196,9 +200,9 @@ html {
                 <h2 class="color-palette-header" data-bind="text: color"></h2>
                 <ol class="color-palette" data-bind="foreach: variations">
                     <li id="clipboardItem" class="color-palette__item" data-bind="attr: { 'data-clipboard-text': hex }, style: { 'background-color': hex }">
-                        <span data-bind="text: weight"></span>
-                        <span data-bind="text: hex"></span>
-                        <span class="copied-indicator" data-bind="css: { 'js-copied': copiedHex() === hex }">Color copied!</span>
+                        <!--<span data-bind="text: weight"></span>-->
+                        <!--<span data-bind="text: hex"></span>-->
+                        <span class="copied-indicator" data-bind="css: { 'js-copied': copiedHex() === hex }">Copy Success!</span>
                     </li>
                 </ol>
             </div>
@@ -208,15 +212,16 @@ html {
 
 <script>
 var copiedHex = ko.observable();
-var clipboard = new Clipboard('#clipboardItem');
 
+var clipboard = new ClipboardJS('#clipboardItem');
+//var clipboard = new Clipboard('.color-palette__item');
 clipboard.on('success', function(el) {
     console.clear();
     console.info('Action:', el.action);
     console.info('Text:', el.text);
     console.info('Trigger:', el.trigger);
     el.clearSelection();
-    
+
     copiedHex(el.text);
 });
 

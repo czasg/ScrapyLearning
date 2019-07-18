@@ -47,17 +47,25 @@ class Schedule:
 
 
 class Downloader:
-    def __init__(self, request):
-        self.request = request
+    def __init__(self):
+        self.active = set()
 
     @classmethod
-    def from_crawler(cls, request):
-        return cls(request)
+    def from_crawler(cls):
+        return cls()
 
-    def start_download(self):
-        d = getPage(self.request.url.encode('utf-8'))
-        d.addBoth(self._process_content, self.request)
+    def start_download(self, request):
+        def _delActive(response):
+            self.active.remove(request)
+            return response
+        self.active.add(request)
+        d = getPage(request.url.encode('utf-8'))
+        d.addBoth(_delActive)
+        d.addBoth(self._process_content, request)
         return d
+
+    def isEmpyt(self):
+        return len(self.active) == 0
 
     def _process_content(self, content, request):
         return TextResponse(content, request)
@@ -134,6 +142,10 @@ class CallLaterOnce:
         if self._call is None:
             self._call = reactor.callLater(0, self)
 
+    def cancel(self):
+        if self._call:
+            self._call.cancel()
+
     def __call__(self, *args, **kwargs):
         self._call = None
         return self.func(*self.args, **self.kwargs)
@@ -141,7 +153,7 @@ class CallLaterOnce:
 
 class Slot:
     def __init__(self, start_requests, nextcall, scheduler):
-        self.start_requests = start_requests
+        self.start_requests = iter(start_requests)
         self.nextcall = nextcall
         self.scheduler = scheduler
         self.inprogress = []
@@ -153,14 +165,14 @@ class Engine:
         self.close = None
         self.max = 2
         self.slot = None
-        self.downloader = Downloader
+        self.downloader = Downloader.from_crawler()
 
     @classmethod
     def from_crawler(cls, crawler):
         return cls(crawler)
 
     @defer.inlineCallbacks
-    def start(self):
+    def start(self):  # 在结束的地方调用callback
         self.close = defer.Deferred()
         yield self.close
 
@@ -186,16 +198,19 @@ class Engine:
                 request = next(slot.start_requests)
                 slot.inprogress.append(request)
             except StopIteration:
-                pass
+                slot.start_requests = None
             else:
                 slot.scheduler.enqueue_request(request)
                 slot.nextcall.schedule()
+
+        if slot.start_requests is None and slot.scheduler.isEmpty() and self.downloader.isEmpyt():
+            self.close.callback(None)  # 原来是要回调啊
 
     def _next_request_from_scheduler(self, spider):
         request = self.slot.scheduler.next_request()
         if not request:
             return
-        dfd = self.downloader.from_crawler(request).start_download()
+        dfd = self.downloader.start_download(request)
         dfd.addBoth(self._handle_downloader_output, request, spider)
         dfd.addBoth(lambda _: self.slot.inprogress.remove(request))
         dfd.addBoth(lambda _: self.slot.nextcall.schedule())
@@ -205,13 +220,14 @@ class Engine:
         print(response.url)
         print(len(self.slot.inprogress))
         d = defer.Deferred()
+        d.callback(None)
         return d
 
 
-class MySPider(Spider):
+class MySpider(Spider):
     def start_requests(self):
         url = "http://fanyi.youdao.com/"
-        for i in range(3):
+        for i in range(10):
             yield Request(url, self.parse)
 
     def parse(self, response):
@@ -222,7 +238,7 @@ if __name__ == '__main__':  # todo, 怎么停下来，是一个问题
     import time
     start_time = time.time()
     o = CrawlerProcess()
-    d = o.crawl(MySPider)
+    d = o.crawl(MySpider)
     d.addBoth(lambda _: reactor.stop())
     o.start()
 
@@ -231,4 +247,4 @@ if __name__ == '__main__':  # todo, 怎么停下来，是一个问题
     #     print(requests.get("http://fanyi.youdao.com/").url)
 
     end_time = time.time()
-    print(start_time - end_time)
+    print(end_time - start_time)

@@ -1,14 +1,17 @@
+import _queue
+from queue import Queue
+
 from twisted.internet import reactor, defer
 from twisted.web.client import getPage
-from queue import Queue
-import _queue
 
 mq = Queue()
+
 
 class Request:
     def __init__(self, url, callback):
         self.url = url
         self.callback = callback
+
 
 class TextResponse:
     def __init__(self, content, request):
@@ -16,6 +19,7 @@ class TextResponse:
         self.request = request
         self.url = request.url
         self.text = str(content, encoding='utf-8')
+
 
 class Engine:
     def __init__(self):
@@ -68,6 +72,7 @@ class MySpider:
 
     def parse(self, response):
         print(response.url)
+
 
 if __name__ == '__main__':
     d = Engine().crawl(MySpider())

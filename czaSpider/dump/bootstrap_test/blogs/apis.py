@@ -368,6 +368,9 @@ async def api_drop_comment(id, request):
     c = await Comment.find(id)
     if c is None:
         raise APIResourceError('该评论状态异常', 'Comment Is Abnormal')
+    sons = await SonComment.findAll('comment_id=?', [c.id])
+    for son in sons:
+        await son.remove()
     await c.remove()
     return dict(id=id)
 
