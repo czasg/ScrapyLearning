@@ -4,6 +4,7 @@
 
 """
 
+
 def SelectSort(input_list):
     sorted_list = input_list
     length = len(input_list)
@@ -14,9 +15,10 @@ def SelectSort(input_list):
                 min_index = j
         if min_index == i:
             continue
-        min_value = sorted_list[min_index]
-        sorted_list[min_index] = sorted_list[i]
-        sorted_list[i] = min_value
+        # min_value = sorted_list[min_index]
+        # sorted_list[min_index] = sorted_list[i]
+        # sorted_list[i] = min_value
+        sorted_list[i], sorted_list[min_index] = sorted_list[min_index], sorted_list[i]
     return sorted_list
 
 
@@ -25,3 +27,12 @@ if __name__ == '__main__':
     print('排序前:', input_list)
     sorted_list = SelectSort(input_list)
     print('排序后:', sorted_list)
+
+"""
+for i in range(len):
+    mi = i
+    for j in range(i+1, len):
+        if l[mi] > l[j]:
+            mi = j
+     None if mi == i else 交换数据
+"""
