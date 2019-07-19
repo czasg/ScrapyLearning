@@ -8,6 +8,9 @@ __FILE__ = "Unfinished Schedule"
 2019.07.15 - 杨辉三角，找盘子问题，求素数。codepen  --- atom   前端不错的编辑器
 2019.07.16 - 各种后端知识，如缓存、优化之路，太多了，学不完啊都不会啊
 2019.07.18 - 反爬哪里似乎有点bug，误操可能导致无限回调??????
+2019.07.19 - 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware' 爬虫代理，我的天哪，我居然还不会，醉了。代理是个大问题啊！
+        url_list = ['http://www.xicidaili.com/nn/',  # 高匿 'http://www.xicidaili.com/nt/',  # 透明 ]
+        url_list = ['https://www.kuaidaili.com/free/inha/','https://www.kuaidaili.com/free/intr/']
 """
 
 """DONE!
