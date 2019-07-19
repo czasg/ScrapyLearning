@@ -11,6 +11,9 @@ __FILE__ = "Unfinished Schedule"
 2019.07.19 - 'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware' 爬虫代理，我的天哪，我居然还不会，醉了。代理是个大问题啊！
         url_list = ['http://www.xicidaili.com/nn/',  # 高匿 'http://www.xicidaili.com/nt/',  # 透明 ]
         url_list = ['https://www.kuaidaili.com/free/inha/','https://www.kuaidaili.com/free/intr/']
+2019.07.19 - Scrapy虽然说最基本的流程走通了，但是还有很多细节处理没有抓到，他的通用中间件是如何工作的，等等
+2019.07.19 - 能不能在数据统计图中加入像xs写的那样的数据过滤功能，感觉很不错的样子
+2019.07.19 - 二叉树的三种排序
 """
 
 """DONE!

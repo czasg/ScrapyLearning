@@ -185,15 +185,16 @@ html {
     <div class="material-color-picker">
         <div class="material-color-picker__left-panel">
             <ol class="color-selector">
-                <li v-for="materialColor in materialColors">
-                    <input name="material-color" type="radio" >
-                    <label v-text="materialColor.color"></label>
+                <li v-for="(materialColor, index) in materialColors">
+                    <input name="material-color" type="radio" :id="'materialColor' + index" :value="materialColor.color">
+                    <label :style="{'color': materialColor.variations[4].hex}"></label>
                 </li>
             </ol>
         </div>
 
         <div class="material-color-picker__right-panel">
             <div class="color-palette-wrapper"  v-for="materialColor in materialColors">
+                <h2 class="color-palette-header"></h2>
                 <ol class="color-palette">
                     <li id="clipboardItem" class="color-palette__item" v-for="materialCo in materialColor.variations" :style="{'background-color': materialCo.hex}">
                         <span class="copied-indicator" v-text="materialCo.hex"></span>
