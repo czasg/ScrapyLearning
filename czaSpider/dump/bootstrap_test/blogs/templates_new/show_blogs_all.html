@@ -43,29 +43,65 @@
     正在加载
   </div>
 </div>
+<style>
+body {
+  background-color: #F5F5F5;
+}
 
+img:hover {
+    transition: transform.4s ease-out;
+    transform: scale(1.2);
+}
+
+.blog-title h4 a{
+    color: #444;
+}
+
+.blog-title a:hover {
+    color:#0077DD;
+}
+
+
+</style>
 <div class="panel-group" id="show-blogs" role="tablist" aria-multiselectable="true">
-    <div v-for="(blog, index) in blogs">
-        <div class="panel panel-info">
-            <div class="panel-heading" role="tab">
-                <h4 class="panel-title">
-                    <a class="collapsed" role="button" data-toggle="collapse" data-parent="#show-blogs" :href="'#'+index" v-text="blog.name" aria-expanded="false"></a><span class="badge pull-right" v-text="blog.count"></span><span class="glyphicon glyphicon-flash pull-right"></span>
-                </h4>
+    <!--<div v-for="(blog, index) in blogs">-->
+
+    <div class="panel" v-for="(blog, index) in blogs" style="margin-bottom: 15px;">
+        <div class="panel-body">
+            <span style="float:left;width: 30%;overflow: hidden;margin-right: 20px;border-radius: 7px;"><img src="/static/img/test.jpg" class="img-responsive"></span>
+            <div class="blog-title" style="margin-top: -5px;overflow: hidden;text-overflow: ellipsis;"><h4 ><a :href="'/blogs/blog/'+blog.id" v-text="blog.name" style="text-decoration: none;"></a></h4></div>
+
+            <div class="blog-summary"><strong><span v-text="blog.summary"></span></strong></div>
+
+            <div style="width: 100%;top: 10px;text-align: right;display: inline-block;position: relative;">
+                <span class="glyphicon glyphicon-user"></span>&nbsp;<span v-text="blog.user_name" ></span>&nbsp;&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-time"></span>&nbsp;<span v-text="blog.created_at.toDateTime2()"></span>&nbsp;&nbsp;&nbsp;
+                <span class="badge pull-right" v-text="blog.count"></span><span class="glyphicon glyphicon-eye-open pull-right"></span>&nbsp;&nbsp;&nbsp;
             </div>
-            <div :id="index" class="panel-collapse collapse" role="tabpanel">
-                <div class="panel-body">
-                    <span v-text="'作者: '+blog.user_name"></span><br>
-                    <span v-text="'发表于: '+blog.created_at.toDateTime()"></span><br>
-                </div>
-            </div>
-            <div class="panel-footer">
-                <em>摘要:</em><br>
-                <strong><span v-text="blog.summary"></span></strong><br>
-                <br>
-                <a :href="'/blogs/blog/'+blog.id"><small>继续阅读</small></a>
-            </div>
+
         </div>
     </div>
+
+        <!--<div class="panel panel-info">-->
+            <!--<div class="panel-heading" role="tab">-->
+                <!--<h4 class="panel-title">-->
+                    <!--<a class="collapsed" role="button" data-toggle="collapse" data-parent="#show-blogs" :href="'#'+index" v-text="blog.name" aria-expanded="false"></a><span class="badge pull-right" v-text="blog.count"></span><span class="glyphicon glyphicon-flash pull-right"></span>-->
+                <!--</h4>-->
+            <!--</div>-->
+            <!--<div :id="index" class="panel-collapse collapse" role="tabpanel">-->
+                <!--<div class="panel-body">-->
+                    <!--<span v-text="'作者: '+blog.user_name"></span><br>-->
+                    <!--<span v-text="'发表于: '+blog.created_at.toDateTime()"></span><br>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class="panel-footer">-->
+                <!--<em>摘要:</em><br>-->
+                <!--<strong><span v-text="blog.summary"></span></strong><br>-->
+                <!--<br>-->
+                <!--<a :href="'/blogs/blog/'+blog.id"><small>继续阅读</small></a>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
 </div>
 {% endblock %}
 

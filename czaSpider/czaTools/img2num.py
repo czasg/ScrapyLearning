@@ -12,6 +12,7 @@ from czaSpider.czaTools.path_func import to_path
 class IMG(object):
     def __init__(self, pic, threshold=140, splitcoor=None):
         self.img = Image.open(pic)
+        self.img = self.img.resize((300, 30), Image.ANTIALIAS)
         self.imgList = []  # finally result
         self.img2gsi(threshold)
         self.splitImg(splitcoor)

@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<title>test</title>
+{% extends '_顶部_左侧_.html' %}
 
-</head>
-<body>
+{% block title %}调色板{% endblock %}
+
+
+{% block base2_content %}
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
 <style>
 html {
   box-sizing: border-box;
@@ -27,23 +26,13 @@ html {
   }
 }
 
-body {
-  height: 100%;
-}
-
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-html {
-  background-color: #b0bec5;
-  font-family: "Roboto", sans-serif;
-  font-weight: 500;
-}
-
 .container {
   padding: 1em;
+}
+
+
+body {
+  background-color: #F5F5F5;
 }
 
 .material-color-picker {
@@ -53,7 +42,6 @@ html {
   background-color: white;
   border: 1px solid #78909c;
   border-radius: 0.5em;
-  box-shadow: 0 1em 8em rgba(0, 0, 0, 0.35);
 }
 .material-color-picker__left-panel {
   z-index: 1;
@@ -175,17 +163,6 @@ html {
   opacity: 0.75;
 }
 </style>
-<!--<script src="js/knockout-min.js"></script>-->
-<script src="js/clipboard.js"></script>
-<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
-<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
-<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-<div style="text-align:center;clear:both;">
-</div>
-
-<!--<div class="alert">123</div>-->
 <style>
 .alert_cza {
 	display: none;
@@ -225,10 +202,8 @@ html {
     border-color: #ebccd1;
 }
 </style>
-
-
-
-<div class="container" id="tTest">
+<div class="container-fluid" style="">
+<div id="tTest">
     <div class="material-color-picker">
         <div class="material-color-picker__left-panel">
             <ol class="color-selector">
@@ -251,9 +226,7 @@ html {
         </div>
     </div>
 </div>
-
-
-
+</div>
 <script>
 var clipboard = new ClipboardJS('#clipboardItem');
 clipboard.on('success', function(el) {
@@ -315,7 +288,7 @@ var vm = new Vue({
             this.cza_color = color
         },
         choose_color2: function (color) {
-            success_prompt('Copy Success!', 500)
+            success_prompt('Copy Success!', 500);
             //this.cza_color2 = color
         }
     },
@@ -1183,5 +1156,4 @@ var vm = new Vue({
 });
 </script>
 
-</body>
-</html>
+{% endblock %}

@@ -19,19 +19,24 @@
     <table class="table table-bordered">
         <tbody>
             <tr>
-                <td><div class="text-center"><a href="/resume"><img class="img-responsive" src="/static/img/简介.jpg"></a></div></td>
-                <td><div class="text-center"><a href="/blogs"><img class="img-responsive" src="/static/img/补给站.png"></a></div></td>
-                <td><div class="text-center"><a href="/show/spider/data"><img class="img-responsive" src="/static/img/spider.png"></a></div></td>
+                <td><div class="text-center" style="overflow: hidden;"><a href="/resume"><img class="img-responsive" src="/static/img/简介.jpg"></a></div></td>
+                <td><div class="text-center" style="overflow: hidden;"><a href="/blogs"><img class="img-responsive" src="/static/img/补给站.png"></a></div></td>
+                <td><div class="text-center" style="overflow: hidden;"><a href="/show/spider/data"><img class="img-responsive" src="/static/img/spider.png"></a></div></td>
             </tr>
             <tr>
-                <td><div class="text-center"><a href="/monitor"><img class="img-responsive" src="/static/img/ea1.png"></a></div></td>
-                <td><div class="text-center"><a href="javascript:void(0)"><img class="img-responsive" src="/static/img/ea2.png"></a></div></td>
-                <td><div class="text-center"><a href="javascript:void(0)"><img class="img-responsive" src="/static/img/ea3.png"></a></div></td>
+                <td><div class="text-center" style="overflow: hidden;"><a href="/monitor"><img class="img-responsive" src="/static/img/ea1.png"></a></div></td>
+                <td><div class="text-center" style="overflow: hidden;"><a href="/color_choose"><img class="img-responsive" src="/static/img/ea2.png"></a></div></td>
+                <td><div class="text-center" style="overflow: hidden;"><a href="javascript:void(0)"><img class="img-responsive" src="/static/img/ea3.png"></a></div></td>
             </tr>
         </tbody>
     </table>
 </div>
-
+<style>
+img:hover {
+    transition: transform.4s ease-out;
+    transform: scale(1.2);
+}
+</style>
 <!--<div class="container-flow">-->
     <!--<table class="table table-bordered">-->
     <!--<tbody>-->
@@ -116,14 +121,14 @@ myChart2.setOption({
         {
             show: true,
             realtime: true,
-            start: 65,
-            end: 85
+            start: 5,
+            end: 95
         },
         {
             type: 'inside',
             realtime: true,
-            start: 65,
-            end: 85
+            start: 5,
+            end: 95
         }
     ],
     series: [{

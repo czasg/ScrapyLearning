@@ -103,6 +103,10 @@ def edit_blog(*, id):
     }
 
 
+@get('/color_choose')
+def color_choose(): return {'__template__': '调色板.html'}
+
+
 @get('/blogs/blog/{id}')
 async def detail_blog(id):
     blog = await Blog.find(id)
@@ -268,7 +272,8 @@ async def api_get_blogs_type(*, type, page='1', page_size=None, user_id=None):
     if user_id:
         blogs = await Blog.findAll('user_id=?', [user_id], orderBy='created_at desc', limit=(p.offset, p.limit))
     else:
-        blogs = await Blog.findAll(where='blog_type=?', args=[blog_type], orderBy='created_at desc', limit=(p.offset, p.limit))
+        blogs = await Blog.findAll(where='blog_type=?', args=[blog_type], orderBy='created_at desc',
+                                   limit=(p.offset, p.limit))
     return dict(page=p, blogs=blogs)
 
 
@@ -482,7 +487,7 @@ async def api_get_multi_statistic(*, dbNames_and_collectionNames, limit=7):
 @get('/api/get/ziru/price/statistic')
 async def api_get_ziru_price_statistic():
     res = {}
-    dbNames_and_collectionNames = [{'housePrice':'ziru'}]
+    dbNames_and_collectionNames = [{'housePrice': 'ziru'}]
     column = 'house_price'
     for di in dbNames_and_collectionNames:
         a, b, c, d, e = [0 for _ in range(5)]
@@ -509,6 +514,7 @@ async def api_get_ziru_price_statistic():
         ]
         res.setdefault('nums', res_list)
     return res
+
 
 @get('/api/get/zufang/price/statistic')
 async def api_get_zufang_price_statistic():
@@ -546,6 +552,7 @@ async def api_get_zufang_price_statistic():
         res.setdefault(collectionName, res_list)
     return res
 
+
 def get_price(price):
     res = re.search('(\d+)-(\d+)', price)
     if res:
@@ -553,6 +560,7 @@ def get_price(price):
     else:
         low, hig = (0, 0)
     return (low + hig) // 2 * 1000
+
 
 @get('/api/get/boss/salary/statistic')
 async def api_get_boss_salary_statistic():
