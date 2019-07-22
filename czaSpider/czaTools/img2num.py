@@ -63,6 +63,7 @@ class KNN(object):
 
     def classify(self, matData):
         trainMat, trainLabel = self.trainingSet
+        print(trainMat.shape)
         trainSetSize = trainMat.shape[0]
         diffMat = np.tile(matData, (trainSetSize, 1)) - trainMat
         squareDiff = diffMat ** 2
@@ -71,6 +72,7 @@ class KNN(object):
         sortedDistIndicies = distances.argsort()
         classCount = {}
         for i in range(self.k):
+            # print(sortedDistIndicies[i])
             kLabel = trainLabel[sortedDistIndicies[i]]
             classCount[kLabel] = classCount.get(kLabel, 0) + 1
         resSorted = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
@@ -121,3 +123,7 @@ def file_remove(fileUrl):
     if not os.path.exists(fileUrl):
         return True
     return file_remove(fileUrl)
+
+
+if __name__ == '__main__':
+    print(img2num(r'C:\Users\czaOrz\Desktop\gits\Scrapy\czaSpider\dump\bootstrap_test\算法\Knn\4983571602.png'))
