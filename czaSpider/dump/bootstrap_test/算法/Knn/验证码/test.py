@@ -4,7 +4,6 @@ from random import randint
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 from io import BytesIO
 
-
 current_path = os.path.dirname(os.path.abspath(__file__))
 
 
