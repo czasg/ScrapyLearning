@@ -1,8 +1,10 @@
 import os
+import cv2
 import numpy as np
 import operator
 
 from PIL import Image
+from io import BytesIO
 
 names = '4983571602'
 current_path = os.path.dirname(os.path.abspath(__file__))
@@ -63,14 +65,36 @@ def api_spilt_pic():
     file_save(cut_list)
 
 
+
+
+
 def training_mat():  # 三维数组
-    pic = os.path.join(current_path, '4983571602.png')
+    pic = os.path.join(current_path, '6666.png')
     pic = file_load(pic)
     pic = img2gsi(pic)
     cut_list = file_cutting(pic, (1, 10), array=True)
     cut_list = [box2vector(mat) for mat in cut_list]
     # print(cut_list[0].shape)
     np.save(names, cut_list)
+
+    # pic = os.path.join(current_path, '4983571602.png')
+    # pic = file_load(pic)
+    # pic = img2gsi(pic)
+    #
+    # cut_list = file_cutting(pic, (1, 10), array=False)
+    #
+    # lis = []
+    # for img in cut_list:
+    #     # temp_file = BytesIO()
+    #     img.save('temp.png', format='PNG')
+    #     img = cv2.imread('temp.png', cv2.IMREAD_GRAYSCALE)
+    #     lis.append(box2vector(img))
+    # np.save(names, lis)
+    # img = cv2.imdecode('', cv2.IMREAD_GRAYSCALE)
+
+    # cut_list = [box2vector(mat) for mat in cut_list]
+    # print(cut_list[0].shape)
+    # np.save(names, cut_list)
 
 
 def get_train_mat():
@@ -131,7 +155,6 @@ if __name__ == '__main__':
     cut_list = file_cutting(pic, (1, 10), array=True)
     print(cut_list[0].shape)
     print(KNN(cut_list).res)
-
 
     # training_mat()
 

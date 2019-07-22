@@ -25,12 +25,15 @@ class RandomMan:
 
 
 class IMG:
-    def __init__(self, mode='RGB', size=(240, 60), fontSyle_path='C:\Windows\Fonts\Arial.ttf', font_size=36,
-                 font_num=4):
+    def __init__(self, mode='RGB', size=(240, 60), font_size=36, font_num=4,
+                 fontSyle_path=os.path.join(current_path, 'Arial.ttf')):
         self.img = Image.new(mode, size, (255, 255, 255))
         self.width, self.height = size
         self.mode = mode
-        self.font = ImageFont.truetype(fontSyle_path, font_size)
+        try:
+            self.font = ImageFont.truetype('Arial.ttf', font_size)
+        except:
+            self.font = ImageFont.truetype(fontSyle_path, font_size)
         self.draw = ImageDraw.Draw(self.img)
         self.font_num = font_num
 
@@ -40,7 +43,7 @@ class IMGFactory:
         self.img = IMG
         self.randomMan = RandomMan
         self.blur = blur
-        self.res_img = []
+        self.res_img = None
 
     @classmethod
     def from_ir(cls, image, randomMan, blur=True):
@@ -54,11 +57,11 @@ class IMGFactory:
     def _fill_font(self):
         lis = []
         _width = self.img.width // self.img.font_num
-        _sep = self.img.height // self.img.font_num
         for t in range(self.img.font_num):
             font = self.randomMan.rndChar()[0]
             lis.append(font)
-            self.img.draw.text((_width * t, _sep), font, font=self.img.font, fill=self.randomMan.rndColor2())
+            self.img.draw.text((_width * t + _width // 4, self.img.height // 4), font,
+                               font=self.img.font, fill=self.randomMan.rndColor2())
         self.res_img = ''.join(lis)
 
     def _blur(self):
@@ -82,9 +85,18 @@ class IMGFactory:
         return self.res_img, self.save(filename, mode, byte)
 
 
+def get_random_pic(font_num=4, byte=True):
+    rm = RandomMan()
+    img = IMG(font_num=font_num)
+    handle = IMGFactory.from_ir(img, rm)
+    return handle.create_picture(byte=byte)
+
+
 if __name__ == '__main__':
     rm = RandomMan()
     img = IMG(font_num=4)
     handle = IMGFactory.from_ir(img, rm)
-    pic = handle.create_picture(byte=False)
+    pic = handle.create_picture(byte=True)
     print(pic)
+
+    # print(os.path.join(current_path, 'Arial.ttf'))
