@@ -455,7 +455,9 @@ async def api_find_blog_by_engine(*, user_input):
 
 
 @get('/api/get/multi/statistic')
+@miniCache()
 async def api_get_multi_statistic(*, dbNames_and_collectionNames, limit=7):
+    print('数据来自数据库')
     now_date = get_now_datetime()
     res = {}
     res_list = []
