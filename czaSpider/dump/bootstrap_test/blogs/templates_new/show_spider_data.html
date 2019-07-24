@@ -94,6 +94,14 @@ myChart2.setOption({
     },
     tooltip: {}
 })
+
+current_width = document.body.clientWidth
+if (current_width < 630) {
+    cza_list = ['20%', '40%']
+} else {
+    cza_list = ['40%', '60%']
+}
+
 myChart2.showLoading();
 $.get('/api/get/zufang/price/statistic').done(function(_data){
     myChart2.hideLoading();
@@ -102,7 +110,7 @@ $.get('/api/get/zufang/price/statistic').done(function(_data){
             {
                 name: '房天下',
                 type: 'pie',
-                radius : ['40%', '60%'],
+                radius : cza_list,
                 center: ['25%', '50%'],
                 avoidLabelOverlap: false,
                 label: {
@@ -134,7 +142,7 @@ $.get('/api/get/zufang/price/statistic').done(function(_data){
             {
                 name: '自如',
                 type: 'pie',
-                radius: ['40%', '60%'],
+                radius: cza_list,
                 center: ['75%', '50%'],
                 avoidLabelOverlap: false,
                 label: {
