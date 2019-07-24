@@ -75,6 +75,7 @@ class AntiJS:
                 yield from anti.anti_first()
                 print("Finished AntiJS...")
                 return
+            print(response.text)
             yield from func(spider, response)
 
         return wrapper

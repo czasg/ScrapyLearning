@@ -456,8 +456,8 @@ async def api_find_blog_by_engine(*, user_input):
 
 @get('/api/get/multi/statistic')
 @miniCache()
-async def api_get_multi_statistic(*, dbNames_and_collectionNames, limit=7):
-    print('数据来自数据库')
+async def api_get_multi_statistic(*, dbNames_and_collectionNames, limit=0):
+    limit = int(limit[0]) if isinstance(limit, list) else limit
     now_date = get_now_datetime()
     res = {}
     res_list = []
@@ -519,6 +519,7 @@ async def api_get_ziru_price_statistic():
 
 
 @get('/api/get/zufang/price/statistic')
+@miniCache()
 async def api_get_zufang_price_statistic():
     res = {}
     dbNames_and_collectionNames = [{'housePrice': 'ziru'}, {'zufang': 'fangtx'}]
