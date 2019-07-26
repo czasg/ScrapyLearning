@@ -52,15 +52,16 @@ class Redis:
 
     def all(self): return self.db.zrangebyscore(self.key, self.min_score, self.score)
 
+    def batch(self, start, stop):
+        return self.db.zrevrange(self.key, start, stop-1)
+
     def pipe_execute(self): return self.pipe.execute()
 
 
 if __name__ == '__main__':
     from setting import Setting as config
     redis = Redis.from_setting(config)
-    # pro = '47.101.42.79:8005'
     # print(redis.random())
-    # print(redis.decrease(pro))
-    # print(redis.exists(pro))
-    print(redis.count())
+    # print(redis.count())
     # print(redis.all())
+

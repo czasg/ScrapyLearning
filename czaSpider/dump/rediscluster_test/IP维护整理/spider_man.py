@@ -69,7 +69,7 @@ class Crawler(BaseSpiderFunc, metaclass=CrawlerMetaClass):
         # 解析部分
         all_tr = html.xpath('//table[@id="ip_list"]//tr[(./td)]')
         proxy = (self.get_proxy_from_xpath(tr, './td[2]/text()', './td[3]/text()') for tr in all_tr)
-        yield from proxy
+        yield from proxy  # 生成器，优化内存
 
     def spider_iphai(self):
         # 下载部分

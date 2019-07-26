@@ -6,6 +6,11 @@ class Setting:
     redis_min_score = 2
     redis_pool_size = 500
     redis_use_pipe = True
+    redis_batch_sep = 100
+
+    redis_test_url = 'http://fanyi.youdao.com/'
+
+    allow_status = [200, 302]
 
     @classmethod
     def get_redis_config(cls):
