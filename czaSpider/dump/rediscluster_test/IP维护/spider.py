@@ -1,7 +1,6 @@
 import json
 import re
 import requests
-from pyquery import PyQuery as pq
 
 
 class ProxyMetaclass(type):
