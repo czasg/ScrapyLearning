@@ -1,20 +1,38 @@
 ##### 前言
 
-github上代理获取的项目很多，此项目偏向于学习吧，
+github上代理获取的项目很多，作者写的可能也不是很好。此项目偏向于学习吧，
 若是有所收获，不妨 give me star ~
 
 ## 项目介绍
 
 通过爬虫，爬取免费IP代理来构建代理池。并定时check代理IP活性，进行打分删选与清除。
-最后通过flask编写简易api提供代理接口服务。
+最后通过flask编写简易api提供代理接口服务。并确保相关三方包已安装。
 
 ### 流程：
 
 爬虫获取数据 -> 数据入库 -> 检查数据活性 -> 接口服务
+***
+下载代码后，可使用pycharm打开项目，将proxy_pool及父目录均加载为sources_root，不然可能会出现导包路径加载异常的问题。
+***
+* 执行指令顺序
+
+python command.py spider
+
+python command.py checker
+
+python command.py api
+
+spider为运行爬虫，checker为检查代理活性，api为启动接口
+
+若需要将日志输出到文件，可以追加 --log 参数，如：
+
+python command.py spider --log
+
+### 代码：
 
 ### 1、setting模块
 
-![Setting模块](img/setting.png)
+![Setting模块](proxy_pool/img/setting.png)
 
 setting中，包含对redis的基础设置，还有代理池的基本设置。
 其中我们允许的状态码有200和302。
@@ -23,7 +41,7 @@ setting中，包含对redis的基础设置，还有代理池的基本设置。
 
 ### 2、Redis模块
 
-![redis](img/redis.png)
+![redis](proxy_pool/img/redis.png)
 
 其实就是初始化redis数据库，然后自定一些基础方法，如插入数据、随机获取、数据减分等等。
 此处插入数据库使用了pipeline管道，插入速度应该会快一些。配置开关也可以在setting里面设置。
@@ -38,20 +56,20 @@ setting中，包含对redis的基础设置，还有代理池的基本设置。
 
 调用from_text函数，以requests返回的DOM文本作为输入，通过scrapy的Selector构建选择器。提供基本的xpath筛选功能。
 
-![html](img/html.png)
+![html](proxy_pool/img/html.png)
 
 * BaseSpiderFunc
 
 此类定义有主要的下载逻辑，也包含有spider的基础功能。
 
-![spiderFunc](img/baseSpiderFunc.png)
+![spiderFunc](proxy_pool/img/baseSpiderFunc.png)
 
 * CrawlerMetaClass
 
 爬虫元类，主要目的是用来扫描并收集所定义的爬虫。
 扫描的规则为：以"spider_"为开头命名的函数，为了优化内存，此函数定义为生成器。
 
-![metaClass](img/metaClass.png)
+![metaClass](proxy_pool/img/metaClass.png)
 
 * Crawler
 
@@ -59,14 +77,14 @@ setting中，包含对redis的基础设置，还有代理池的基本设置。
 下图中我们可以看到爬虫分为下载部分与解析部分。
 下载部分调用基础功能模块中的方法get获取DOM。解析部分则调用相关函数解析出代理proxy，此处是一个生成器。
 
-![spider](img/spider.png)
+![spider](proxy_pool/img/spider.png)
 
 * CrawlerProcess
 
 爬虫执行管理模块。初始化时即定义了redis类，在start函数中，判断是否超过设定代理池size，但是只有首次检测，后序插入数据若足够大，还是会超过设定大小的。emmmm，算了，感觉也行。其余就是一些插入功能了。
 但需要注意的是，在使用了pipeline时，执行self.redis.add函数，数据没有插入数据库，实际插入是在执行pipe_execute之后，才会一起插入。
 
-![spiderprocess](img/spiderprocess.png)
+![spiderprocess](proxy_pool/img/spiderprocess.png)
 
 
 ### 4、Check模块
@@ -115,4 +133,4 @@ class Checker:
 
 这个就没啥好说了，咱也不懂，咱就会用，还就那么一点=-=
 
-![api](img/api.png)
+![api](proxy_pool/img/api.png)
