@@ -52,8 +52,7 @@ class Redis:
 
     def all(self): return self.db.zrangebyscore(self.key, self.min_score, self.score)
 
-    def batch(self, start, stop):
-        return self.db.zrevrange(self.key, start, stop-1)
+    def batch(self, start, stop): return self.db.zrevrange(self.key, start, stop-1)
 
     def pipe_execute(self): return self.pipe.execute()
 

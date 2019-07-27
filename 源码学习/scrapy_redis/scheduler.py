@@ -107,7 +107,7 @@ class Scheduler(object):
         if isinstance(kwargs.get('serializer'), six.string_types):
             kwargs['serializer'] = importlib.import_module(kwargs['serializer'])
 
-        server = connection.from_settings(settings)
+        server = connection.from_settings(settings)  # 在此处执行redis连接服务
         # Ensure the connection is working.
         server.ping()
 
@@ -124,7 +124,7 @@ class Scheduler(object):
         self.spider = spider
 
         try:
-            self.queue = load_object(self.queue_cls)(
+            self.queue = load_object(self.queue_cls)(  # 在这里对scrapy的queue进行实例化
                 server=self.server,
                 spider=spider,
                 key=self.queue_key % {'spider': spider.name},

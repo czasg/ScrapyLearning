@@ -5,7 +5,7 @@ import asyncio
 from redis_man import Redis
 from setting import Setting as config
 
-sem = asyncio.Semaphore(10)
+sem = asyncio.Semaphore(config.async_sem)
 
 
 class Checker:
@@ -14,12 +14,14 @@ class Checker:
         self.setting = config
 
     async def check(self, proxy, flag=0):
-        async with sem:
+        async with sem:  # 设定异步并发大小
             conn = aiohttp.TCPConnector(ssl=False)
             async with aiohttp.ClientSession(connector=conn) as session:
                 try:
                     http_proxy = 'http://' + proxy.decode()
-                    async with session.get(self.setting.redis_test_url, timeout=1, allow_redirects=False,
+                    async with session.get(self.setting.proxy_test_url,
+                                           timeout=1,
+                                           allow_redirects=False,
                                            proxy=http_proxy) as response:
                         if response.status in self.setting.allow_status:
                             flag = 1
@@ -39,6 +41,7 @@ class Checker:
             proxy_pool = self.redis.batch(start, stop)
             tasks = [self.check(proxy) for proxy in proxy_pool]
             loop.run_until_complete(asyncio.wait(tasks))
+            start = stop
         loop.close()
 
 

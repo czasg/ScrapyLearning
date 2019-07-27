@@ -117,7 +117,7 @@ class PriorityQueue(Base):
             return self._decode_request(results[0])
 
 
-class LifoQueue(Base):
+class LifoQueue(Base):  # 后进先出
     """Per-spider LIFO queue."""
 
     def __len__(self):

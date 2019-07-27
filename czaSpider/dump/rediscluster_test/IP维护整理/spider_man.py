@@ -14,7 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 def xpath(response, xpath_rule, strip=False):
-    return response.xpath(xpath_rule).extract_first().strip() if strip else response.xpath(xpath_rule).extract_first()
+    result = response.xpath(xpath_rule).extract_first()
+    if strip:
+        result = result.strip()
+    return result
 
 
 class Html:
@@ -117,6 +120,8 @@ class CrawlerProcess(Crawler):
         logger.info('爬虫开始运行')
         if not self.is_overflow():
             for name, func in self.__spider_func__.items():
+                if not name.endswith(self.setting.allow_spider):
+                    continue
                 for proxy in func(self):
                     self.redis.add(proxy)
             self.redis.pipe_execute()
