@@ -5,7 +5,7 @@ import time
 
 from scrapy import Selector
 
-from proxy_pool.config.setting import Setting as config
+from proxy_pool.setting import Setting as config
 from proxy_pool.database.redis_man import Redis
 
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.6 Safari/537.36'

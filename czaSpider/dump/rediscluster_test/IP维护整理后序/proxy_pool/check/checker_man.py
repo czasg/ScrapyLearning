@@ -4,7 +4,7 @@ import asyncio
 import logging
 
 from proxy_pool.database.redis_man import Redis
-from proxy_pool.config.setting import Setting as config
+from proxy_pool.setting import Setting as config
 
 sem = asyncio.Semaphore(config.async_sem)
 logging.basicConfig(level=logging.INFO)

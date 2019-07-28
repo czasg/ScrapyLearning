@@ -13,6 +13,18 @@ github上代理获取的项目很多，作者写的可能也不是很好。此�
 爬虫获取数据 -> 数据入库 -> 检查数据活性 -> 接口服务
 ***
 下载代码后，可使用pycharm打开项目，将proxy_pool及父目录均加载为sources_root，不然可能会出现导包路径加载异常的问题。
+
+所需三方包：
+
+scrapy      >= 1.6.0
+
+requests    >= 2.21.0
+
+redis       >= 2.10.6
+
+flask       >= 1.0.2
+
+数据库： redis
 ***
 * 执行指令顺序
 
@@ -32,7 +44,7 @@ python command.py spider --log
 
 ### 1、setting模块
 
-![Setting模块](proxy_pool/img/setting.png)
+![Setting模块](img/setting.png)
 
 setting中，包含对redis的基础设置，还有代理池的基本设置。
 其中我们允许的状态码有200和302。
@@ -41,9 +53,10 @@ setting中，包含对redis的基础设置，还有代理池的基本设置。
 
 ### 2、Redis模块
 
-![redis](proxy_pool/img/redis.png)
+![redis](img/redis.png)
 
 其实就是初始化redis数据库，然后自定一些基础方法，如插入数据、随机获取、数据减分等等。
+
 此处插入数据库使用了pipeline管道，插入速度应该会快一些。配置开关也可以在setting里面设置。
 
 
@@ -56,35 +69,39 @@ setting中，包含对redis的基础设置，还有代理池的基本设置。
 
 调用from_text函数，以requests返回的DOM文本作为输入，通过scrapy的Selector构建选择器。提供基本的xpath筛选功能。
 
-![html](proxy_pool/img/html.png)
+![html](img/html.png)
 
 * BaseSpiderFunc
 
 此类定义有主要的下载逻辑，也包含有spider的基础功能。
 
-![spiderFunc](proxy_pool/img/baseSpiderFunc.png)
+![spiderFunc](img/baseSpiderFunc.png)
 
 * CrawlerMetaClass
 
 爬虫元类，主要目的是用来扫描并收集所定义的爬虫。
+
 扫描的规则为：以"spider_"为开头命名的函数，为了优化内存，此函数定义为生成器。
 
-![metaClass](proxy_pool/img/metaClass.png)
+![metaClass](img/metaClass.png)
 
 * Crawler
 
 爬虫模块，定义有目标爬虫。举两个例子。
+
 下图中我们可以看到爬虫分为下载部分与解析部分。
+
 下载部分调用基础功能模块中的方法get获取DOM。解析部分则调用相关函数解析出代理proxy，此处是一个生成器。
 
-![spider](proxy_pool/img/spider.png)
+![spider](img/spider.png)
 
 * CrawlerProcess
 
 爬虫执行管理模块。初始化时即定义了redis类，在start函数中，判断是否超过设定代理池size，但是只有首次检测，后序插入数据若足够大，还是会超过设定大小的。emmmm，算了，感觉也行。其余就是一些插入功能了。
+
 但需要注意的是，在使用了pipeline时，执行self.redis.add函数，数据没有插入数据库，实际插入是在执行pipe_execute之后，才会一起插入。
 
-![spiderprocess](proxy_pool/img/spiderprocess.png)
+![spiderprocess](img/spiderprocess.png)
 
 
 ### 4、Check模块
@@ -133,4 +150,4 @@ class Checker:
 
 这个就没啥好说了，咱也不懂，咱就会用，还就那么一点=-=
 
-![api](proxy_pool/img/api.png)
+![api](img/api.png)

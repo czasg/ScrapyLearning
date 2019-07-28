@@ -58,7 +58,7 @@ class Redis:
 
 
 if __name__ == '__main__':
-    from setting import Setting as config
+    from proxy_pool.setting import Setting as config
     redis = Redis.from_setting(config)
     # print(redis.random())
     # print(redis.count())

@@ -3,7 +3,7 @@
 from flask import Flask
 
 from proxy_pool.database.redis_man import Redis
-from proxy_pool.config.setting import Setting as config
+from proxy_pool.setting import Setting as config
 
 app = Flask(__name__)
 redis_client = Redis.from_setting(config)
