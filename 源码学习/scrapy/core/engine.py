@@ -306,7 +306,7 @@ class ExecutionEngine(object):
         yield scheduler.open(spider)  # 打开内存队列FIFO，优先级队列，并打开过滤器
         yield self.scraper.open_spider(spider)  # 貌似没做啥事
         self.crawler.stats.open_spider(spider)  # pass，也没做啥事
-        yield self.signals.send_catch_log_deferred(signals.spider_opened, spider=spider)  # 做了好多事啊，初始化日志，还有各种装啊提
+        yield self.signals.send_catch_log_deferred(signals.spider_opened, spider=spider)  # 做了好多事啊，初始化日志，还有各种装啊提，中间件似乎都实现了这个函数?
         slot.nextcall.schedule()  # 执行一次self._next_request
         # 这鬼地方居然只会走一次，也就是初始化的走完这里，但是并不会执行里面的逻辑，应为这个schedule里面用的是reactor.callLater(delay, self)，所以是不会执行的，除非你start
         slot.heartbeat.start(5)

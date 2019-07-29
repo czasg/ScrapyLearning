@@ -29,7 +29,7 @@ class CookiesMiddleware(object):
             return
 
         cookiejarkey = request.meta.get("cookiejar")
-        jar = self.jars[cookiejarkey]
+        jar = self.jars[cookiejarkey]  # 首次获取没有，则拿到CookieJar
         cookies = self._get_request_cookies(jar, request)
         for cookie in cookies:
             jar.set_cookie_if_ok(cookie, request)
