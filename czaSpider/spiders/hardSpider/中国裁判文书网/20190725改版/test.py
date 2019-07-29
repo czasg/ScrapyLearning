@@ -92,3 +92,27 @@ if __name__ == '__main__':
     # vjkl5 = '3ba71c93ffd53c08013f1870cdd5c300eb0d5f62'
     # vl5x, guid, number = anti_second.call('anti_second', vjkl5)
     # print(vl5x)
+
+
+"""
+Param: 案件类型:刑事案件
+Index: 1
+Page: 10
+Order: 法院层级
+Direction: asc
+vl5x: 939c6dbe5a152c4546905879
+number: wens
+guid: 7ef6725a-cae9-6a5c706a-4ee9a3b53beb
+
+Param: 案件类型:民事案件
+Index: 1
+Page: 10
+Order: 法院层级
+Direction: asc
+vl5x: 7c409f284a6e8e0f5c897140
+number: wens
+guid: 7b253255-1169-da631ccb-c1a114b1eee4
+
+不加参数居然不会有数据???? - 这是一个方向，明天可以考虑考虑
+案件类型:刑事案件、民事案件、行政案件、赔偿案件、执行案件
+"""

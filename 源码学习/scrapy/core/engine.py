@@ -220,24 +220,24 @@ class ExecutionEngine(object):
                                             extra={'spider': spider}))
         return d
 
-    def spider_is_idle(self, spider):
-        if not self.scraper.slot.is_idle():
+    def spider_is_idle(self, spider):  # 爬虫 闲置 状态 ??
+        if not self.scraper.slot.is_idle():  # scraper处于闲置
             # scraper is not idle
             return False
 
-        if self.downloader.active:
+        if self.downloader.active:  # 下载器处于闲置
             # downloader has pending requests
             return False
 
-        if self.slot.start_requests is not None:
+        if self.slot.start_requests is not None:  # 所有start_requests处于空
             # not all start requests are handled
             return False
 
-        if self.slot.scheduler.has_pending_requests():
+        if self.slot.scheduler.has_pending_requests():  # 调度器 所有等待任务 为空
             # scheduler has pending requests
             return False
 
-        return True
+        return True  # 判断闲置的四个条件：start_requests、调度器、下载器、scraper均闲置，才会判断爬虫处于闲置状态。
 
     @property
     def open_spiders(self):
@@ -265,10 +265,10 @@ class ExecutionEngine(object):
         d.addBoth(self._downloaded, self.slot, request, spider)
         return d
 
-    def _downloaded(self, response, slot, request, spider):
+    def _downloaded(self, response, slot, request, spider):  # 下载结束时，心跳中移除请求
         slot.remove_request(request)
         return self.download(response, spider) \
-                if isinstance(response, Request) else response
+                if isinstance(response, Request) else response  # 是Request则继续调用上面函数
 
     def _download(self, request, spider):
         slot = self.slot
@@ -287,7 +287,7 @@ class ExecutionEngine(object):
             slot.nextcall.schedule()
             return _
 
-        dwld = self.downloader.fetch(request, spider)
+        dwld = self.downloader.fetch(request, spider)  # 爬虫下载入口，调用middle进行下载，把真正的下载函数传递过滤，在middle中间进行回调的时候，处理第一个管道，没了再执行下载器进行处理
         dwld.addCallbacks(_on_success)
         dwld.addBoth(_on_complete)
         return dwld
