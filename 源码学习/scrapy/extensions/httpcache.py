@@ -212,16 +212,19 @@ class RFC2616Policy(object):
         return currentage
 
 
-class DbmCacheStorage(object):
+class DbmCacheStorage(object):  # 使用.db文件进行缓存
+    """
+    数据库缓存，对Request对象计算指纹，然后以指纹为key存储数据
 
+    """
     def __init__(self, settings):
         self.cachedir = data_path(settings['HTTPCACHE_DIR'], createdir=True)
         self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
-        self.dbmodule = import_module(settings['HTTPCACHE_DBM_MODULE'])
+        self.dbmodule = import_module(settings['HTTPCACHE_DBM_MODULE'])  # dbm，有这样的模块吗。数据存储，终究还是免不了I/O，open是必不可少的呀
         self.db = None
 
     def open_spider(self, spider):
-        dbpath = os.path.join(self.cachedir, '%s.db' % spider.name)
+        dbpath = os.path.join(self.cachedir, '%s.db' % spider.name)  # 路径为xxx.db文件
         self.db = self.dbmodule.open(dbpath, 'c')
 
         logger.debug("Using DBM cache storage in %(cachepath)s" % {'cachepath': dbpath}, extra={'spider': spider})
@@ -229,7 +232,7 @@ class DbmCacheStorage(object):
     def close_spider(self, spider):
         self.db.close()
 
-    def retrieve_response(self, spider, request):
+    def retrieve_response(self, spider, request):  # 检索结果，有则返回response对象，没有则返回
         data = self._read_data(spider, request)
         if data is None:
             return  # not cached
@@ -241,7 +244,7 @@ class DbmCacheStorage(object):
         response = respcls(url=url, headers=headers, status=status, body=body)
         return response
 
-    def store_response(self, spider, request, response):
+    def store_response(self, spider, request, response):  # 存储结果
         key = self._request_key(request)
         data = {
             'status': response.status,
@@ -249,7 +252,7 @@ class DbmCacheStorage(object):
             'headers': dict(response.headers),
             'body': response.body,
         }
-        self.db['%s_data' % key] = pickle.dumps(data, protocol=2)
+        self.db['%s_data' % key] = pickle.dumps(data, protocol=2)  # 卧槽，直接这样存结果吗，粗糙啊
         self.db['%s_time' % key] = str(time())
 
     def _read_data(self, spider, request):
@@ -270,7 +273,11 @@ class DbmCacheStorage(object):
 
 
 class FilesystemCacheStorage(object):
+    """
+    所谓的文件系统缓存，就是把数据存为一个一个的文件，这种形式吗
+    是个狼人
 
+    """
     def __init__(self, settings):
         self.cachedir = data_path(settings['HTTPCACHE_DIR'])
         self.expiration_secs = settings.getint('HTTPCACHE_EXPIRATION_SECS')
@@ -305,7 +312,7 @@ class FilesystemCacheStorage(object):
         """Store the given response in the cache."""
         rpath = self._get_request_path(spider, request)
         if not os.path.exists(rpath):
-            os.makedirs(rpath)
+            os.makedirs(rpath)  # 如果不存在，则创建文件路径
         metadata = {
             'url': request.url,
             'method': request.method,
@@ -313,7 +320,7 @@ class FilesystemCacheStorage(object):
             'response_url': response.url,
             'timestamp': time(),
         }
-        with self._open(os.path.join(rpath, 'meta'), 'wb') as f:
+        with self._open(os.path.join(rpath, 'meta'), 'wb') as f:  # 我日，是个狼人
             f.write(to_bytes(repr(metadata)))
         with self._open(os.path.join(rpath, 'pickled_meta'), 'wb') as f:
             pickle.dump(metadata, f, protocol=2)

@@ -22,7 +22,7 @@ class MemoryDebugger(object):
         if not crawler.settings.getbool('MEMDEBUG_ENABLED'):
             raise NotConfigured
         o = cls(crawler.stats)
-        crawler.signals.connect(o.spider_closed, signal=signals.spider_closed)
+        crawler.signals.connect(o.spider_closed, signal=signals.spider_closed)  # 信号可以在from_crawler中绑定，也可以在init中进行相关绑定
         return o
 
     def spider_closed(self, spider, reason):

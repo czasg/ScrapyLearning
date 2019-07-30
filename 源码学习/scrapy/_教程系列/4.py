@@ -1,8 +1,9 @@
 __title__ = '加入引擎管理'
 import _queue
 
-from twisted.internet import defer, task, reactor
+from twisted.internet import defer, reactor  # task, 这个task有点意思，task.LoopingCall循环执行任务
 from twisted.web.client import getPage
+# from treq import get as getPage
 from queue import Queue
 
 q = Queue()
@@ -19,22 +20,29 @@ class Engine:
         yield self._closewait
 
     def _handle_downloader_output(self, byte_content, request):
+        # def test(byte_content):  # 有一个大问题，怎么停下来，他也是一个defer对象，没有stop会卡主
+        #     response = Response(byte_content, request)
+        #     request.callback(response)
+        #     self.crawling.remove(request)
+        #     return
+        # response = byte_content.content().addCallback(test)
         response = Response(byte_content, request)
         request.callback(response)
         self.crawling.remove(request)
 
     def _next_request(self):
+        if len(self.crawling) < self.max_pool_size:
+            while True:
+                try:
+                    request = q.get(block=False)
+                    self.crawling.append(request)
+                    dfd = getPage(request.url.encode())
+                    dfd.addCallback(self._handle_downloader_output, request)
+                    dfd.addCallback(lambda _: reactor.callLater(0, self._next_request))
+                except _queue.Empty:
+                    break
         if q.qsize() == 0 and not self.crawling:
             self._closewait.callback(None)
-        if len(self.crawling) < self.max_pool_size:
-            try:
-                request = q.get(block=False)
-                self.crawling.append(request)
-                dfd = getPage(request.url.encode())
-                dfd.addCallback(self._handle_downloader_output, request)
-                dfd.addCallback(lambda _: reactor.callLater(0, self._next_request))
-            except _queue.Empty:
-                pass
 
     @defer.inlineCallbacks
     def open_spider(self, spider):
@@ -59,14 +67,15 @@ class Response:
 
 
 class MySpider:
-    start_urls = ['http://fanyi.youdao.com/', 'http://fanyi.youdao.com/',
-                  'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/']
+    start_urls = ['http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/',
+                  'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/']
 
     def start_requests(self):
         yield from (Request(url, self.parse) for url in self.start_urls)
 
     def parse(self, response):
         print(response.url)
+
 
 if __name__ == '__main__':
     @defer.inlineCallbacks
@@ -78,4 +87,3 @@ if __name__ == '__main__':
     d = crawl()
     d.addBoth(lambda _: reactor.stop())
     reactor.run()
-

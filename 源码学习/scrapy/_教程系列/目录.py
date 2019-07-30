@@ -26,3 +26,21 @@ __file__ = '目录'
 加入信号机制管理
 
 """
+
+if __name__ == '__main__':
+    from treq import get as getPage
+    from twisted.internet import reactor
+
+    from treq.response import _Response
+
+    def done(response):
+        # print(response, dir(response))
+        d = response.content()
+        def test(response):
+            print(response)
+        d.addBoth(test)
+        return d
+
+    d = getPage("http://www.baidu.com").addCallback(done)
+    d.addBoth(lambda _: reactor.stop())
+    reactor.run()

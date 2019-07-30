@@ -40,13 +40,13 @@ class CloseSpider(object):
         crawler.signals.connect(self.spider_closed, signal=signals.spider_closed)
 
     @classmethod
-    def from_crawler(cls, crawler):
+    def from_crawler(cls, crawler):  # from_crawler获取实例化对象
         return cls(crawler)
 
     def error_count(self, failure, response, spider):
         self.counter['errorcount'] += 1
         if self.counter['errorcount'] == self.close_on['errorcount']:
-            self.crawler.engine.close_spider(spider, 'closespider_errorcount')
+            self.crawler.engine.close_spider(spider, 'closespider_errorcount')  # 哦豁，直接就找到了，原来你就是直接调用的engine关闭爬虫的啊，看来zty也是copy的这里
 
     def page_count(self, response, request, spider):
         self.counter['pagecount'] += 1
@@ -56,7 +56,7 @@ class CloseSpider(object):
     def spider_opened(self, spider):
         self.task = reactor.callLater(self.close_on['timeout'], \
             self.crawler.engine.close_spider, spider, \
-            reason='closespider_timeout')
+            reason='closespider_timeout')  # 在spider_opened中，直接挂起一个延迟任务
 
     def item_scraped(self, item, spider):
         self.counter['itemcount'] += 1
@@ -64,6 +64,6 @@ class CloseSpider(object):
             self.crawler.engine.close_spider(spider, 'closespider_itemcount')
 
     def spider_closed(self, spider):
-        task = getattr(self, 'task', False)
+        task = getattr(self, 'task', False)  # 我戳，这个task是指的什么玩意啊。好吧，原来是一个reactor.callLater
         if task and task.active():
             task.cancel()
