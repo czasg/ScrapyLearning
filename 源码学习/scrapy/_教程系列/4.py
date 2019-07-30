@@ -3,7 +3,6 @@ import _queue
 
 from twisted.internet import defer, reactor  # task, 这个task有点意思，task.LoopingCall循环执行任务
 from twisted.web.client import getPage
-# from treq import get as getPage
 from queue import Queue
 
 q = Queue()
@@ -20,12 +19,6 @@ class Engine:
         yield self._closewait
 
     def _handle_downloader_output(self, byte_content, request):
-        # def test(byte_content):  # 有一个大问题，怎么停下来，他也是一个defer对象，没有stop会卡主
-        #     response = Response(byte_content, request)
-        #     request.callback(response)
-        #     self.crawling.remove(request)
-        #     return
-        # response = byte_content.content().addCallback(test)
         response = Response(byte_content, request)
         request.callback(response)
         self.crawling.remove(request)
