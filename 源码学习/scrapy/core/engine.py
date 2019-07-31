@@ -87,7 +87,7 @@ class ExecutionEngine(object):
         downloader_cls = load_object(self.settings['DOWNLOADER'])  # DOWNLOADER = 'scrapy.core.downloader.Downloader'
         self.downloader = downloader_cls(crawler)  # 这个下载器，里面实例化了handler处理器，和到下载器之间的process_处理逻辑。就是具体的下载功能和中间件功能都已经实现了
         self.scraper = Scraper(crawler)  # 这里有定义有spidermw爬虫中间件和ITEM_pipeline管道对象，数据处理功能和存储功能都实现了
-        self._spider_closed_callback = spider_closed_callback  # 这个回调很重要，关系到爬虫能不能停下来
+        self._spider_closed_callback = spider_closed_callback  # 这个回调很重要，关系到爬虫能不能停下来，是个匿名函数lambda _: self.stop()，最终还是执行engine的self.engine.stop
 
     @defer.inlineCallbacks
     def start(self):
@@ -207,7 +207,7 @@ class ExecutionEngine(object):
                                            extra={'spider': spider}))
         return d
 
-    def _handle_downloader_output(self, response, request, spider):
+    def _handle_downloader_output(self, response, request, spider):  # 这里链接到download下载后的response
         assert isinstance(response, (Request, Response, Failure)), response
         # downloader middleware can return requests (for example, redirects)
         if isinstance(response, Request): # 对于结果，如果是Request，则直接入队，进入self.crawl
@@ -273,7 +273,7 @@ class ExecutionEngine(object):
     def _download(self, request, spider):
         slot = self.slot
         slot.add_request(request)
-        def _on_success(response):
+        def _on_success(response):  # 如果是response，就是正常的response对象了，但是应该还没有进行回调处理吧
             assert isinstance(response, (Response, Request))
             if isinstance(response, Response):
                 response.request = request # tie request to response received

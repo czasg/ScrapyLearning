@@ -12,7 +12,7 @@ run_entry_point(100)
 
 """
 engine_started = object()               # 在引擎正式启动，也就是爬虫crawl里执行yield engine.start时发送此信号
-engine_stopped = object()
+engine_stopped = object()               # 引擎正式关闭，
 spider_opened = object()
 spider_idle = object()
 spider_closed = object()

@@ -1,4 +1,6 @@
-__title__ = '加入调度器管理'
+__title__ = '加入下载器中间件管理'
+# todo，中间件的话，应该是Scraper，再加上各种middleware
+
 from twisted.internet import defer, reactor
 from twisted.web.client import getPage
 from queue import Queue
@@ -45,6 +47,47 @@ class CallLaterOnce:
         return self.func(*self.args, **self.kwargs)
 
 
+class DownloaderMiddlewareManager:
+    def __init__(self):
+        pass
+
+    @classmethod
+    def from_crawler(cls):
+        return cls()
+
+    def download(self, download_func, request):
+        return
+
+class Downloader:
+    def __init__(self):
+        self.active = set()
+        self.middleware = DownloaderMiddlewareManager.from_crawler()
+
+    @classmethod
+    def from_crawler(cls):
+        return cls()
+
+    def fetch(self, request):
+        def _deactivate(response):
+            self.active.remove(request)
+            return response
+
+        self.active.add(request)
+        # dfd = getPage(request.url.encode())
+        dfd = self.middleware.download(self._enqueue_request, request)
+        dfd.addBoth(self._process_content, request)
+        return dfd.addBoth(_deactivate)
+
+    def isEmpyt(self):
+        return len(self.active) == 0
+
+    def _process_content(self, response, request):
+        return Response(response, request)
+
+    def _enqueue_request(self, request):
+        return
+
+
 class Slot:
     def __init__(self, start_requests, nextcall, scheduler):
         self.start_requests = iter(start_requests)
@@ -59,6 +102,7 @@ class Engine:
         self.crawling = []
         self.slot = None
         self.running = True
+        self.downloader = Downloader.from_crawler()
 
     @defer.inlineCallbacks
     def start(self):
@@ -92,21 +136,37 @@ class Engine:
                 slot.scheduler.enqueue_request(request)
                 slot.nextcall.schedule()
 
-        if slot.start_requests is None and slot.scheduler.isEmpty() and not slot.inprogress:
+        if slot.start_requests is None and slot.scheduler.isEmpty() and not slot.inprogress and self.downloader.isEmpyt():
             self._closewait.callback(None)  # 原来是要回调啊
 
     def _next_request_from_scheduler(self, spider):
         request = self.slot.scheduler.next_request()
         if not request:
             return
-        dfd = getPage(request.url.encode())
+        dfd = self._download(request)
         dfd.addBoth(self._handle_downloader_output, request, spider)
         dfd.addBoth(lambda _: self.slot.inprogress.remove(request))
         dfd.addBoth(lambda _: self.slot.nextcall.schedule())
         return dfd
 
-    def _handle_downloader_output(self, byte_content, request, spider):
-        response = Response(byte_content, request)
+    def _download(self, request):
+        slot = self.slot
+        def _on_success(response):
+            assert isinstance(response, (Response, Request))
+            if isinstance(response, Response):
+                response.request = request
+            return response
+
+        def _on_complete(_):
+            slot.nextcall.schedule()
+            return _
+
+        dwld = self.downloader.fetch(request)
+        dwld.addCallbacks(_on_success)
+        dwld.addBoth(_on_complete)
+        return dwld
+
+    def _handle_downloader_output(self, response, request, spider):
         request.callback(response)
 
 

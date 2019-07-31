@@ -92,7 +92,7 @@ class Downloader(object):
     def fetch(self, request, spider):  # 爬虫下载入口
         def _deactivate(response):
             self.active.remove(request)
-            return response
+            return response  # 这里返回的response。是真的response对象
 
         self.active.add(request)
         dfd = self.middleware.download(self._enqueue_request, request, spider)  # _enqueue_request是关键
@@ -165,7 +165,7 @@ class Downloader(object):
         # The order is very important for the following deferreds. Do not change!
 
         # 1. Create the download deferred
-        dfd = mustbe_deferred(self.handlers.download_request, request, spider)
+        dfd = mustbe_deferred(self.handlers.download_request, request, spider)  # 通过handler下载后的，就是TextResponse对象
 
         # 2. Notify response_downloaded listeners about the recent download
         # before querying queue for next request
