@@ -1,4 +1,5 @@
 import psutil
+import time
 
 def get_cpu_info():
     print(psutil.cpu_count())  # CPU逻辑数量
@@ -20,9 +21,21 @@ def get_cpu_info():
         # if p.name() == 'mongod.exe':
         #     print(p.kill())
 
-if __name__ == '__main__':
-    get_cpu_info()
 
+def kill_pdf_process():
+    current_time = time.time()
+    pids = [psutil.Process(pid) for pid in psutil.pids()]
+    for p in pids:
+        if p.name() in ["FineExec.exe", "FineExec.exe", "FineReader.exe", "JSObjectAccessVB.exe"]:
+            if (current_time - p.create_time()) > 60 * 10:
+                p.kill()
+
+
+
+
+if __name__ == '__main__':
+    # get_cpu_info()
+    kill_pdf_process()
 """
 可以使用time.time和p.create_time进行对比，可以获取相关的时间
 调用p.kill可以杀死进程
