@@ -1,9 +1,22 @@
-__title__ = '加入下载器中间件管理'
-
+__title__ = '加入爬虫进程管理'
 
 from twisted.internet import defer, reactor
 from twisted.web.client import getPage
 from queue import Queue
+
+
+class Crawler:
+    def __init__(self):
+        pass
+
+
+class CrawlerRunner:
+    def __init__(self): pass
+
+
+class CrawlerProcess(CrawlerRunner):
+    def __init__(self):
+        super(CrawlerProcess, self).__init__()
 
 
 class Scheduler:
@@ -70,9 +83,11 @@ class DownloaderMiddlewareManager:
             for method in self.methods['process_response']:
                 response = yield method(request=request, response=response)
             defer.returnValue(response)
+
         deferred = process_request(request)
         deferred.addCallback(process_response)
         return deferred
+
 
 class Downloader:
     def __init__(self):
@@ -93,6 +108,7 @@ class Downloader:
         def _deactivate(response):
             self.active.remove(request)
             return response
+
         self.active.add(request)
         dfd = self.middleware.download(self._enqueue_request, request)
         dfd.addBoth(self._process_content, request)
@@ -171,6 +187,7 @@ class Engine:
 
     def _download(self, request):
         slot = self.slot
+
         def _on_success(response):
             assert isinstance(response, (Response, Request))
             if isinstance(response, Response):
@@ -205,8 +222,10 @@ class Response:
 
 
 class MySpider:
-    start_urls = ['http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/',
-                  'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/']
+    start_urls = ['http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/',
+                  'http://fanyi.youdao.com/',
+                  'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/',
+                  'http://fanyi.youdao.com/']
 
     def start_requests(self):
         yield from (Request(url, self.parse) for url in self.start_urls)
@@ -222,6 +241,8 @@ if __name__ == '__main__':
         engine = Engine()
         yield engine.open_spider(spider, spider.start_requests())
         yield engine.start()
+
+
     d = crawl()
     d.addBoth(lambda _: reactor.stop())
     reactor.run()
