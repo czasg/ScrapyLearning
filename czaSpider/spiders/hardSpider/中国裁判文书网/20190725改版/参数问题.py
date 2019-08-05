@@ -22,9 +22,9 @@ def refresh_formData(page, vl5x, number, guid):
         # "Param": "全文检索:合同",
         "Param": "案件类型:刑事案件,法院名称:玉林市福绵区人民法院",  # 卧槽，还真和这个有强关联
         "Index": str(page),
-        "Page": "10",
-        "Order": "法院层级",
-        "Direction": "asc",
+        "Page": "5",
+        "Order": "裁判日期",
+        "Direction": "desc",
         "vl5x": str(vl5x),
         "number": str(number),
         "guid": str(guid),
