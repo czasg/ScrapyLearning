@@ -260,6 +260,14 @@ In [44]: tags = Tag.objects.all().extra(select={'tag_name': 'name'})
 
 """
 
+"""通用视图（类视图）
+from django.views.generic import View
+
+
+
+"""
+
+
 def main0():
     from functools import lru_cache
 
