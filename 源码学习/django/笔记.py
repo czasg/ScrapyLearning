@@ -261,13 +261,110 @@ In [44]: tags = Tag.objects.all().extra(select={'tag_name': 'name'})
 """
 
 """通用视图（类视图）
+# 通用类的基类
+from django.http import HttpResponse
 from django.views.generic import View
+class MyView(View):
+    def get(self, request, *args, **kwargs):
+        return HttpResponse('Hello World')
 
+
+from django.views.generic.base import TemplateView
+from models import Article
+class HomePageView(TemplateView):
+    template_name = 'home.html'
+    def get_content_data(self, **kwargs):
+        context = super(HomePageView, self).get_context_data(**kwargs)
+        context['latest_articles'] = Article.object.all()[:5]  # 获取所有数据的前5???
+
+
+from django.conf.urls import patterns, url
+from django.views.generic.base import RedirectView
+urlpatterns = patterns(
+    path('', RedirectView.as_view(url='www.czasg.xyz'), name='cza')
+)
+
+
+from django.views.generic.detail import DetailView
+from django.utils import timezone
+from models import Article
+class ArticleDetailView(DetailView):
+    model = Article  # 要显示详情内容的类
+    template_name = 'article_detail.html'
+    def get_context_data(self, **kwargs):  # 在 get_context_data()函数中可以用于传递一些额外的内容到网页
+        context = super(ArticleDetailView, self).get_context_data(**kwargs)
+        context['now'] = timezone.new()
+        return context
+<html>
+    <h1>标题：{{ object.title }}</h1>
+    <p>内容：{{ object.content }}</p>
+    <p>发表人: {{ object.reporter }}</p>
+    <p>发表于: {{ object.pub_date|date }}</p>
+    <p>日期: {{ now|date }}</p>
+</html>
+
+
+from django.views.generic.list import ListView
+class ArticleListView(ListView):
+    model = Article
+    def get_context_data(self, **kwargs):
+        context = super(ArticleListView, self).get_context_data(**kwargs)
+        context['now'] = timezone.now()
+        return context
+<html>
+    <h1>文章列表</h1>
+    <ul>
+    {% for article in object_list %}
+        <li>{{ article.pub_date|date }} - {{ article.headline }}</li>
+    {% empty %}
+        <li>抱歉，目前还没有文章。</li>
+    {% endfor %}
+    </ul>
+</html>
 
 
 """
 
+"""上下文渲染器
+有时候我们想让一些内容在多个模板中都要有，比如导航内容，我们又不想每个视图函数都写一次这些变量内容，怎么办呢？
+在模板中加入通用视图的意思嘛
+context_processor.py
+from django.conf import settings as original_settings
+def settings(request):
+    return {'settings': original_settings}
+def ip_address(request):
+    return {'ip_address': request.META['REMOTE_ADDR']}
+"""
 
+"""中间件
+每一个请求都先通过中间件的process_request函数，该函数返回None或者HttpResponse对象。前者继续处理中间件，后者则直接返回
+还有 process_view, process_exception 和 process_template_response 函数。
+class CommonMiddleware:
+    def process_request(self, request):
+        return None
+    def process_response(self, request, response):
+        return response
+
+
+class BlockedIpMiddleware:
+    def process_request(self, request):
+        if request.META['REMOTE_ADD'] = in getattr(settings, 'BLOCK_IP', []):
+            return http.HttpResponseForbidden('<h1>Forbidden</h1>')
+# 从上往下依次执行process_request函数，然后再倒叙依次执行process_response函数
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+]
+
+
+import sys
+from django.views.debug import technical_500_response
+from django.conf import settings
+class UserBaseExceptionMiddleware:
+    def process_exception(self, request, exception):
+        if request.user.is_superuser or request.META.get('REMOTE_ADDRESS') in settings.INTERNAL_IP:
+            return technical_500_response(request, *sys.exc_info())
+
+"""
 def main0():
     from functools import lru_cache
 
