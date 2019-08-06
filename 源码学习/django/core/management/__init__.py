@@ -37,7 +37,7 @@ def load_command_class(app_name, name):
     return module.Command()
 
 
-@functools.lru_cache(maxsize=None)
+@functools.lru_cache(maxsize=None)  #这玩意是缓存的意思把
 def get_commands():
     """
     Return a dictionary mapping command names to their callback applications.
@@ -304,7 +304,7 @@ class ManagementUtility:
         run, create a parser appropriate to that command, and run it.
         """
         try:
-            subcommand = self.argv[1]
+            subcommand = self.argv[1]  # 获取参数，没得就默认为'help'
         except IndexError:
             subcommand = 'help'  # Display help if no arguments were given.
 
