@@ -56,7 +56,11 @@ class MySpider(spider.Spider):
     name = 'spider_name'
     start_urls = ['www.czasg.xyz']
     
-    def parse(response):
+    def start_requests(self):
+        for url in self.start_urls:
+            yield Request(url, self.parse)
+    
+    def parse(self, response):
         print(response.url)
 
 以上代码是Scrapy框架中的爬虫文件，在我个人接触的爬虫中，使用较多的还有pipeline管道、middleware中间件。而调度器和引擎基本没怎么接触。

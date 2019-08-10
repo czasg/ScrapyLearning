@@ -125,8 +125,8 @@ class Response:
 
 
 class MySpider:
-    start_urls = ['http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/',
-                  'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/', 'http://fanyi.youdao.com/']
+    start_urls = ['http://www.czasg.xyz', 'http://www.czasg.xyz', 'http://www.czasg.xyz', 'http://www.czasg.xyz',
+                  'http://www.czasg.xyz', 'http://www.czasg.xyz', 'http://www.czasg.xyz', 'http://www.czasg.xyz']
 
     def start_requests(self):
         yield from (Request(url, self.parse) for url in self.start_urls)
@@ -145,3 +145,42 @@ if __name__ == '__main__':
     d = crawl()
     d.addBoth(lambda _: reactor.stop())
     reactor.run()
+
+
+class Scheduler:...
+
+
+class CallLaterOnce:...
+
+
+class Slot:...
+
+
+class Engine:...
+
+
+class Request:...
+
+
+class Response:...
+
+
+class MySpider:...
+
+
+
+
+class Engine:
+    def __init__(self):...
+
+    @defer.inlineCallbacks
+    def start(self):...
+
+    @defer.inlineCallbacks
+    def open_spider(self, spider, start_requests):...
+
+    def _next_request(self, spider):...
+
+    def _next_request_from_scheduler(self, spider):...
+
+    def _handle_downloader_output(self, byte_content, request, spider):...
