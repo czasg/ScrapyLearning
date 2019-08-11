@@ -16,7 +16,7 @@ class Shard {
     }
     draw() {
         ctx2.fillStyle = `hsl(${this.hue}, 100%, ${this.lightness}%)`;
-        ctx2.beginPath();
+        ctx2.beginPath(); // 调用beginPath和closePath，就是为了填充这个圆吗 -- 不对
         ctx2.arc(this.x, this.y, this.size, 0, 2 * Math.PI);  // 画圆，也就是爆炸碎片
         ctx2.closePath();
         ctx2.fill();  // 针对每一个碎片对象，画一个圆出来咯
@@ -68,8 +68,8 @@ class Shard {
 class Rocket {
     constructor() {
         const quarterW = c2.width / 4;  // 四分之一的屏宽
-        this.x = quarterW + Math.random() * (c2.width - quarterW);  // 火箭出现的位置，x轴
-        this.y = c2.height - 15;  // 火箭出来的位子，高度
+        this.x = quarterW + Math.random() * (c2.width - quarterW);  // 火箭出现的位置，x轴，位置随机
+        this.y = c2.height - 15;  // 火箭出来的位子，高度，高度固定
         this.angle = Math.random() * Math.PI / 4 - Math.PI / 6; // 方向，出现的角度  10*Math.PI/180 ， 这列写90度就会直接炸， 90度就是水平的意思， 0就是垂直向上
         this.blastSpeed = 6 + Math.random() * 7;  // 火箭出现的速度
         this.shardCount = 15 + Math.floor(Math.random() * 15);
@@ -80,7 +80,7 @@ class Rocket {
     }
     draw() {
         ctx2.save();
-        ctx2.translate(this.x, this.y);
+        ctx2.translate(this.x, this.y);  // translate() 方法重新映射画布上的 (0,0) 位置。相当于移动下标的意思
         ctx2.rotate(Math.atan2(this.ySpeed, this.xSpeed) + Math.PI / 2);  // 根据xy轴的速度，计算角度，牛逼  //  + Math.PI / 2 后面这段也非常重要，因为射出去的是一个矩阵，所以需要再旋转90度
         ctx2.fillStyle = `hsl(${this.hue}, 100%, 50%)`;
         ctx2.fillRect(0, 0, 5, 15);
@@ -126,7 +126,7 @@ c1.width = textWidth;  // 又操作DOM，定义其宽度为文本的宽度
 c1.height = fontSize * 1.5;  // 高度为字体宽度的1.5倍
 ctx1.font = `900 ${fontSize}px Arial`; // 这个时候变成了199把
 ctx1.fillText(text, 0, fontSize);
-const imgData = ctx1.getImageData(0, 0, c1.width, c1.height);
+const imgData = ctx1.getImageData(0, 0, c1.width, c1.height);  // 复制画布上指定矩形的像素数据
 for (let i = 0, max = imgData.data.length; i < max; i += 4) {
     const alpha = imgData.data[i + 3];
     const x = Math.floor(i / 4) % imgData.width;
