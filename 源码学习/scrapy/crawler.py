@@ -30,10 +30,10 @@ class Crawler(object):
         if isinstance(settings, dict) or settings is None:
             settings = Settings(settings)
 
-        self.spidercls = spidercls
+        self.spidercls = spidercls  # 获取了爬虫对象，，但是还是没有实例化  # 所以流程就是获取爬虫对象，在实例化之前，执行了一次update_settings，就是针对custom setting的一次操作嘛
         self.settings = settings.copy()
         self.spidercls.update_settings(self.settings)  # 就是在这里执行了对custom_setting的设置嘛，可以很强，把爬虫里面的custom_setting更新到setting里面?好吧没事共同维护的一个setting对象，确实是直接更新到了setting里面
-
+        # 所以在实例化之前，他只是更新了settings而已，你写在__init__其实一点用都得的，根本就没有执行到哪一步
         d = dict(overridden_settings(self.settings))  # 找出相同的，取overridden里面的值
         logger.info("Overridden settings: %(settings)r", {'settings': d})  # 这就是打印那句log的地方，打印出Overridden属性。现遍历默认属性，找出已有属性中对应的值，看那些有修改
 
@@ -68,14 +68,14 @@ class Crawler(object):
                           "settings.",
                           category=ScrapyDeprecationWarning, stacklevel=2)
             self._spiders = _get_spider_loader(self.settings.frozencopy())
-        return self._spiders
+        return self._spiders  # SpiderLoader类，还不是直接的爬虫类
 
     @defer.inlineCallbacks
     def crawl(self, *args, **kwargs):
         assert not self.crawling, "Crawling already taking place"
         self.crawling = True
 
-        try:
+        try:  # 终于实例化了啊
             self.spider = self._create_spider(*args, **kwargs)  # 这个spider就是我们编写的爬虫，如MySpider
             self.engine = self._create_engine()
             start_requests = iter(self.spider.start_requests())  # Request / FormRequest，第一步就在这里获取所有的start_requests函数逻辑
@@ -202,7 +202,7 @@ class CrawlerRunner(object):
     def _create_crawler(self, spidercls):
         if isinstance(spidercls, six.string_types):
             spidercls = self.spider_loader.load(spidercls)  # 首次传入的是spider name，通过load加载。我去，首先会加载项目下所有爬虫，然后再单独加载某一爬虫嘛==僵硬啊
-        return Crawler(spidercls, self.settings)
+        return Crawler(spidercls, self.settings)  # 这里的spidercls，装的就是指定的爬虫吗
 
     def stop(self):
         """
@@ -335,4 +335,4 @@ def _get_spider_loader(settings):
             'Please add all missing methods to avoid unexpected runtime errors.',
             category=ScrapyDeprecationWarning, stacklevel=2
         )
-    return loader_cls.from_settings(settings.frozencopy())
+    return loader_cls.from_settings(settings.frozencopy())  # 这是一个SpiderLoader对象的实例化

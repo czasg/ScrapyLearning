@@ -28,10 +28,11 @@ __FILE__ = "Unfinished Schedule"
              Java代码，这个有必要看吗，可以尝试性看下吧，毕竟还是主看python
              文书网那反爬咋搞啊
 2019.08.12 - from scrapy.interfaces import ISpiderLoader - from zope.interface import implementer - @implementer(ISpiderLoader) - 这是个什么骚操作，接口吗?
-2019.08.12 - 爬虫是在哪一步被实例化的，什么时候会执行__init__初始化函数
+2019.08.12 - Mongodb的位算法是什么意思，位算法，感觉本来就很扯淡的样子
 """
 
 """DONE!
+2019.08.12 - 爬虫是在哪一步被实例化的，什么时候会执行__init__初始化函数。在init之前，执行了一次update_setting，对custom_setting进行了初始化，所以把custom_setting写在init里面是没有用的，但是把heartbeat写在init里面，这个倒是没有问题
 2019.07.27 - 创建mongodb用户
             db.createUser({user:'admin',pwd:'admin',roles:[{role:'userAdminAnyDatabase',db:'admin'}]})
             db.auth("user","password")
