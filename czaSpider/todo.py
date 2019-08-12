@@ -27,7 +27,8 @@ __FILE__ = "Unfinished Schedule"
              Django的官方文档，还没有吃完，只吃了一点点啊，这个还需要努力一把
              Java代码，这个有必要看吗，可以尝试性看下吧，毕竟还是主看python
              文书网那反爬咋搞啊
-
+2019.08.12 - from scrapy.interfaces import ISpiderLoader - from zope.interface import implementer - @implementer(ISpiderLoader) - 这是个什么骚操作，接口吗?
+2019.08.12 - 爬虫是在哪一步被实例化的，什么时候会执行__init__初始化函数
 """
 
 """DONE!
