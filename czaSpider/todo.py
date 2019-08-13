@@ -29,6 +29,9 @@ __FILE__ = "Unfinished Schedule"
              文书网那反爬咋搞啊
 2019.08.12 - from scrapy.interfaces import ISpiderLoader - from zope.interface import implementer - @implementer(ISpiderLoader) - 这是个什么骚操作，接口吗?
 2019.08.12 - Mongodb的位算法是什么意思，位算法，感觉本来就很扯淡的样子
+2019.08.13 - Scrapy中间件写的太少了，没有感觉，体会不到精髓
+2019.08.13 - self.stats.inc_value(key) - 这行代码有点眼熟啊，这是干啥作用的呢
+2019.08.13 - 可以搭建聊天的系统吗，这个好像超级掉的样子
 """
 
 """DONE!
