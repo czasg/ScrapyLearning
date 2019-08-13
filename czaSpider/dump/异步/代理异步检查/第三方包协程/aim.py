@@ -9,7 +9,7 @@ from tools.spiders import GetFreeProxy
 from tools.util_function import verify_proxy_format, valid_useful_proxy, get_redis
 
 FAIL_COUNT = 1  # 校验失败次数， 超过次数删除代理
-
+from concurrent.futures import ThreadPoolExecutor
 
 class ProxyManager:
     def __init__(self):
@@ -74,9 +74,22 @@ class ProxyManager:
                 if count >= FAIL_COUNT:
                     self.redis.hdel(self.raw_proxy_queue, raw_proxy)
                 else:
-                    self.redis.hset(self.raw_proxy_queue, raw_proxy, count)
+                    self.redis. (self.raw_proxy_queue, raw_proxy, count)
                 self.log.info('ProxyRefreshSchedule: %s validation fail' % raw_proxy)
         self.log.info('ProxyRefreshSchedule: %s validProxy complete' % time.ctime())
+
+    def callback(self, future, *args, **kwargs):
+        if future.result():
+            self.redis.hset(self.useful_proxy_queue, raw_proxy, 0)
+            self.redis.hdel(self.raw_proxy_queue, raw_proxy)
+            self.log.info('ProxyRefreshSchedule: %s validation pass' % raw_proxy)
+        else:
+            count += 1
+            if count >= FAIL_COUNT:
+                self.redis.hdel(self.raw_proxy_queue, raw_proxy)
+            else:
+                self.redis.hset(self.raw_proxy_queue, raw_proxy, count)
+            self.log.info('ProxyRefreshSchedule: %s validation fail' % raw_proxy)
 
     def drop_useless(self):
         # 验证成功一次减1直到0验证失败一次加1如果超限则删除
