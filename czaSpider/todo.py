@@ -32,9 +32,14 @@ __FILE__ = "Unfinished Schedule"
 2019.08.13 - self.stats.inc_value(key) - 这行代码有点眼熟啊，这是干啥作用的呢
 2019.08.13 - 可以搭建聊天的系统吗，这个好像超级掉的样子
 2019.08.14 - import socketserver / from http.server import HTTPServer, BaseHTTPRequestHandler 这来年各个有点神奇的库，应该可以直接处理socket
+2019.08.14 - 现在问题就集中在，如何对Mongodb数据进行分页，查询，获取对应的数据 
+            - SQL代码1：平均用时6.6秒 SELECT * FROM `cdb_posts` ORDER BY pid LIMIT 1000000 , 30 
+            - SQL代码2：平均用时0.6秒 SELECT * FROM `cdb_posts` WHERE pid >= (SELECT pid FROM 
+              `cdb_posts` ORDER BY pid LIMIT 1000000 , 1) LIMIT 30
 """
 
 """DONE!
+2019.08.14 - 看下如何使用redis设置时间，一定时间过后就删除对应的数据  -- 设计：redis存入时间为访问的时间，时间超过一个月没有二次访问就删除
 2019.08.12 - from scrapy.interfaces import ISpiderLoader - from zope.interface import implementer - @implementer(ISpiderLoader) - 这是个什么骚操作，接口吗?
 2019.08.12 - 爬虫是在哪一步被实例化的，什么时候会执行__init__初始化函数。在init之前，执行了一次update_setting，对custom_setting进行了初始化，所以把custom_setting写在init里面是没有用的，但是把heartbeat写在init里面，这个倒是没有问题
 2019.07.27 - 创建mongodb用户
