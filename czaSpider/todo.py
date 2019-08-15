@@ -36,6 +36,12 @@ __FILE__ = "Unfinished Schedule"
             - SQL代码1：平均用时6.6秒 SELECT * FROM `cdb_posts` ORDER BY pid LIMIT 1000000 , 30 
             - SQL代码2：平均用时0.6秒 SELECT * FROM `cdb_posts` WHERE pid >= (SELECT pid FROM 
               `cdb_posts` ORDER BY pid LIMIT 1000000 , 1) LIMIT 30
+              
+http://192.168.0.52:8000/pdfhtml/test2
+换为：http://192.168.0.110:8102/pdfhtml/query/info
+
+http://192.168.0.52:8000/pdfhtml/errs
+换为：http://192.168.0.110:8102/pdfhtml/query/errs
 """
 
 """DONE!
