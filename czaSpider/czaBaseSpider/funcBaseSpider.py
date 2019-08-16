@@ -42,7 +42,8 @@ class SpiderMetaClass(type):
 
         # dynamic loading
         collName, dbName = name.split('-', 1)
-        custom_settings = attrs.get("custom_settings", None)
+        custom_settings = attrs.get("custom_settings", {})
+        # custom_settings.setdefault('DOWNLOADER_MIDDLEWARES', None)
         parse_item = attrs.get("parse_item", False)
         attrs["collName"] = collName
         attrs["dbName"] = dbName

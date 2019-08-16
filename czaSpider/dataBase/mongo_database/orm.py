@@ -2,7 +2,7 @@ import logging
 
 import pymongo
 
-from motor.motor_asyncio import AsyncIOMotorClient
+# from motor.motor_asyncio import AsyncIOMotorClient
 
 from czaSpider.dataBase.config import MONGO_INFO
 
@@ -53,7 +53,7 @@ class BaseMongodb(object):
         self.dbName = dbName
         self.collName = collName
         self.client = get_mongo_client()
-        self.async_client = AsyncIOMotorClient('127.0.0.1', 27017)
+        # self.async_client = AsyncIOMotorClient('127.0.0.1', 27017)
         self.database = self.client[dbName]
         self.collection = self.database[collName]
         self._docs = self.collection.count()

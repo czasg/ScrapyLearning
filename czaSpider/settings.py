@@ -44,9 +44,10 @@ DEFAULT_REQUEST_HEADERS = {
 
 # Enable or disable downloader middlewares
 # See https://doc.scrapy.org/en/latest/topics/downloader-middleware.html
-DOWNLOADER_MIDDLEWARES = {
-    'czaSpider.middlewares.user_agent.baseUserAgentMiddleware': 543,
-}
+# DOWNLOADER_MIDDLEWARES = {
+#     'czaSpider.middlewares.user_agent.baseUserAgentMiddleware': 543,
+#     'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None
+# }
 
 # Enable or disable extensions
 # See https://doc.scrapy.org/en/latest/topics/extensions.html
