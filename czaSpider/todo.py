@@ -11,40 +11,34 @@ __FILE__ = "Unfinished Schedule"
 2019.07.14 - 逐渐构造散乱的知识点，是否可以联合起来（bootstrap、Vue、js、css、eCharts），进行一次自我突破?????主要是前端知识，后端也很多都是零散的知识点
 2019.07.15 - 杨辉三角，找盘子问题，求素数。codepen  --- atom   前端不错的编辑器
 2019.07.16 - 各种后端知识，如缓存、优化之路，太多了，学不完啊都不会啊
-2019.07.18 - 反爬哪里似乎有点bug，误操可能导致无限回调??????
 2019.07.19 - Scrapy虽然说最基本的流程走通了，但是还有很多细节处理没有抓到，他的通用中间件是如何工作的，等等
 2019.07.19 - 能不能在数据统计图中加入像xs写的那样的数据过滤功能，感觉很不错的样子
 2019.07.20 - 理下最近思路。爬虫：就是scrapy框架问题。后端：Django源码尝试看看。前端：特效部分不谈，太坑了。
 2019.07.22 - KNN整理下
 2019.07.23 - socket维护分布式队列，
 2019.07.28 - 技能Http协议，还有数据库，我的天呢，都是坑，还多不知道，面试咋搞啊
-2019.07.29 - scrapy什么时候发送各种信号，signal.spider_open，有几种，分别什么时候发送，这个应该了解下
 2019.07.29 - Scrapy系列教程应该出了。模仿源码：基本的Request或Response对象管理|实现异步下载|加入引擎管理|加入调度器管理|加入下载器管理|
 2019.07.31 - 廖雪峰老师的java，有点掉啊
 2019.08.01 - blog注册页似乎有点问题，那个点
-2019.08.02 - 周末应该干点啥：
-             scrapy爬虫的流程，要自觉点搞出来，只要把这个搞出来了，那干啥基本都好说。
-             Django的官方文档，还没有吃完，只吃了一点点啊，这个还需要努力一把
-             Java代码，这个有必要看吗，可以尝试性看下吧，毕竟还是主看python
-             文书网那反爬咋搞啊
 2019.08.12 - Mongodb的位算法是什么意思，位算法，感觉本来就很扯淡的样子
 2019.08.13 - Scrapy中间件写的太少了，没有感觉，体会不到精髓
 2019.08.13 - self.stats.inc_value(key) - 这行代码有点眼熟啊，这是干啥作用的呢
 2019.08.13 - 可以搭建聊天的系统吗，这个好像超级掉的样子
 2019.08.14 - import socketserver / from http.server import HTTPServer, BaseHTTPRequestHandler 这来年各个有点神奇的库，应该可以直接处理socket
+"""
+
+"""DONE!
+2019.08.02 - 周末应该干点啥：
+             scrapy爬虫的流程，要自觉点搞出来，只要把这个搞出来了，那干啥基本都好说。
+             Django的官方文档，还没有吃完，只吃了一点点啊，这个还需要努力一把
+             Java代码，这个有必要看吗，可以尝试性看下吧，毕竟还是主看python
+             文书网那反爬咋搞啊
+2019.07.29 - scrapy什么时候发送各种信号，signal.spider_open，有几种，分别什么时候发送，这个应该了解下
+2019.07.18 - 反爬哪里似乎有点bug，误操可能导致无限回调??????
 2019.08.14 - 现在问题就集中在，如何对Mongodb数据进行分页，查询，获取对应的数据 
             - SQL代码1：平均用时6.6秒 SELECT * FROM `cdb_posts` ORDER BY pid LIMIT 1000000 , 30 
             - SQL代码2：平均用时0.6秒 SELECT * FROM `cdb_posts` WHERE pid >= (SELECT pid FROM 
               `cdb_posts` ORDER BY pid LIMIT 1000000 , 1) LIMIT 30
-              
-http://192.168.0.52:8000/pdfhtml/test2
-换为：http://192.168.0.110:8102/pdfhtml/query/info
-
-http://192.168.0.52:8000/pdfhtml/errs
-换为：http://192.168.0.110:8102/pdfhtml/query/errs
-"""
-
-"""DONE!
 2019.08.14 - 看下如何使用redis设置时间，一定时间过后就删除对应的数据  -- 设计：redis存入时间为访问的时间，时间超过一个月没有二次访问就删除
 2019.08.12 - from scrapy.interfaces import ISpiderLoader - from zope.interface import implementer - @implementer(ISpiderLoader) - 这是个什么骚操作，接口吗?
 2019.08.12 - 爬虫是在哪一步被实例化的，什么时候会执行__init__初始化函数。在init之前，执行了一次update_setting，对custom_setting进行了初始化，所以把custom_setting写在init里面是没有用的，但是把heartbeat写在init里面，这个倒是没有问题
