@@ -568,7 +568,7 @@ class Flask(_PackageBoundObject):
         #: provided by Flask itself and can be overridden.
         #:
         #: This is an instance of a :class:`click.Group` object.
-        self.cli = cli.AppGroup(self.name)
+        self.cli = cli.AppGroup(self.name)  # 这里应该是一个小关键点，暂时有点复杂，看不懂
 
     @locked_cached_property
     def name(self):

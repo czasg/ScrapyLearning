@@ -26,6 +26,10 @@ __FILE__ = "Unfinished Schedule"
 2019.08.13 - 可以搭建聊天的系统吗，这个好像超级掉的样子
 2019.08.14 - import socketserver / from http.server import HTTPServer, BaseHTTPRequestHandler 这来年各个有点神奇的库，应该可以直接处理socket
 2019.08.17 - mysql数据类型有哪些，什么组电选择什么类型，类型字节大小、限制条件。索引问题。
+2019.08.18 - flask部署，参考官方文档http://www.pythondoc.com/flask/deploying/  ，或者这货的似乎也不错https://www.cnblogs.com/xmxj0707/p/8452881.html
+             command=gunicorn -c gunc.py hello:app    ; supervisor启动命令
+             supervisord -c supervisor.conf
+             supervisorctl reload :修改完配置文件后重新启动supervisor
 """
 
 """DONE!
