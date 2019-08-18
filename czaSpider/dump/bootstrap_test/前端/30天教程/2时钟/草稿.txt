@@ -1,0 +1,156 @@
+function left() {
+    const secondHand = document.querySelector('');
+    const minHand = document.querySelector();
+    const hourHand = document.querySelector();
+
+    function update() {
+        const now = new Date();
+
+        const seconds = now.getSeconds();
+        const secondsDegrees = seconds * 6;
+        secondHand.style.transform = `rotate(${secondsDegrees}deg)`;
+
+        const min = new.getMinutes();
+        const minDegrees = min * 6 + (seconds / 60) * 6;
+        minHand.style.transform = `rotate(${minDegrees}deg)`;
+
+        const hours = new.getHours();
+        const hourDegrees = (hours - 12) * 30 + (min / 60) * 30;
+        hourHand.style.transform = `rotate(${hourDegrees})`;
+    }
+
+    update();
+    setInterval(update, 1000);
+}
+
+function right() {
+    const date = document.querySelector();
+    const week = document.querySelector();
+    const time = document.querySelector();
+
+    function showDate() {
+        const now = new Date();
+        const weekList = ["星期一","星期二","星期三","星期四","星期五","星期六","星期日"];
+        const str = now.getFullYear()+"-"+now.getMonth()+"-"+now.getDay();
+        date.innerHTML = str;
+        week.innerHTML = weekList[new.getDay()];
+    }
+
+    showDate();
+    setInterval(showDate, 24 * 3600);
+
+    function zero(x) {
+        if (x >= 10) {
+            return x;
+        } else {
+            return "0" + x;
+        }
+    }
+
+    function showSecond() {
+        const now = new Date();
+        const str = now.getHours()+":"+zero(now.getMinutes())+":"+zero(now.getSeconds());
+        time.innerHTML = str;
+    }
+    showSecond();
+    setInterval(showSecond, 1000);
+}
+
+left();
+right();
+
+
+就js代码而言，逻辑也都还好，就是css那些着实是有一些恶心人了啊
+document.querySelector().style.transform = `rotate`
+document.querySelector().innerHtml = 'hello world'
+
+
+
+
+
+
+
+
+<div class="clock">
+    <div class="clock-face">
+        <div class="hand hour-hand"></div>
+        <div class="hand min-hand"></div>
+        <div class="hand second-hand"></div>
+    </div>
+</div>
+<div class="dateblock">
+    <div class="date"></div>
+    <div class="week"></div>
+    <div class="time"></div>
+</div>
+----------------------dom
+就dom结构而言，其实感觉也很清晰，左边放的是时钟，右边放的是数字之类的
+---------------------------
+
+html {
+    font-size: 625%; // 字体大小的
+    background: url();  // 指定背景图片
+    background-size: cover;
+}
+
+html, body {
+    margin: 0px;  外边距把
+    padding: 0px;   这个应该是内边距
+    display: flex;  这句话表示使用的是弹性布局
+    min-height: 100vh;  最小高度
+    justify-content: center;   轴线居中
+    align-items: center;  靠左轴线居中
+}
+
+.clock {
+    position: relative;  相对布局
+    width: 3rem;
+    height: 3rem;  这是一个正方形嘛
+    border: 0.2 solid white;   定义边的样式
+    margin: 0.5 auto;  外边距
+    padding: 0.2rem;  内边距
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    box-shadow:
+}
+
+.clock-face {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.clock-face::after {
+    content: '';
+    display: block;  阻塞布局是何道理
+    width:
+    height:
+    background-color:
+    position: absolute;
+    left:
+    top:
+    transform: translate(-50, -50);
+    border-radius: 50%
+}
+
+.hand {
+    background:
+    position: absolute;
+    bottom:
+    left:
+    transformL rotate()
+    transform-orgin: 50% 100%;
+    box-shadow
+}
+
+.hour-hand {
+    height
+    width
+    margin-left
+}
+
+
+
+
+
+
