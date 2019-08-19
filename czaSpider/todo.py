@@ -30,6 +30,7 @@ __FILE__ = "Unfinished Schedule"
              command=gunicorn -c gunc.py hello:app    ; supervisor启动命令
              supervisord -c supervisor.conf
              supervisorctl reload :修改完配置文件后重新启动supervisor
+2019.08.19 - rabbitmq怎么玩啊，各种exchange还有key，晒意思  https://www.cnblogs.com/huanggy/p/9695712.html
 """
 
 """DONE!
