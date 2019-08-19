@@ -1,0 +1,28 @@
+声明全局（:root）的 CSS 变量  --- :root 伪类, 这个伪元素匹配的是文档的根元素，也就是 <html> 标签。
+所以常用于声明全局的 CSS 变量：
+:root {
+  --color: #fff;
+}
+在使用时：
+img {
+  background: var(--base);
+}
+
+将变量应用到页面中对应元素 <img>
+处理标题的 CSS 值
+
+
+inline（行内元素）:
+使元素变成行内元素，拥有行内元素的特性，即可以与其他行内元素共享一行，不会独占一行.
+不能更改元素的height，width的值，大小由内容撑开.
+可以使用padding上下左右都有效，margin只有left和right产生边距效果，但是top和bottom就不行.
+block（块级元素）:
+使元素变成块级元素，独占一行，在不设置自己的宽度的情况下，块级元素会默认填满父级元素的宽度.
+能够改变元素的height，width的值.
+可以设置padding，margin的各个属性值，top，left，bottom，right都能够产生边距效果.
+ inline-block（融合行内于块级）:
+结合了inline与block的一些特点，结合了上述inline的第1个特点和block的第2,3个特点.
+
+
+for="spacing"  for一个id，然后该节点的value就指向了这个ID的值
+
