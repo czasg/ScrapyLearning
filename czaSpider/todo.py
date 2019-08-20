@@ -27,6 +27,7 @@ __FILE__ = "Unfinished Schedule"
 2019.08.14 - import socketserver / from http.server import HTTPServer, BaseHTTPRequestHandler 这来年各个有点神奇的库，应该可以直接处理socket
 2019.08.17 - mysql数据类型有哪些，什么组电选择什么类型，类型字节大小、限制条件。索引问题。
 2019.08.19 - rabbitmq怎么玩啊，各种exchange还有key，晒意思  https://www.cnblogs.com/huanggy/p/9695712.html
+2019.08.20 - css动态图https://www.jianshu.com/p/3a0fb1e30ec5     https://www.zhangxinxu.com/wordpress/2010/11/css3-transitions-transforms-animation-introduction/
 """
 
 """DONE!
