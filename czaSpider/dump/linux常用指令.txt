@@ -41,3 +41,5 @@ sudo service cron restart
 sudo apt-get install postfix
 sudo service postfix start
 sudo service postfix stop  -- 邮件模块
+
+cd /va/mail  查看邮件
