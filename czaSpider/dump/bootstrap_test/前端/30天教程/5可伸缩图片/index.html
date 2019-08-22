@@ -38,10 +38,10 @@ body {
   font-size: 20px;
   background-size:cover;
   background-position:center;
-  flex: 1;
-  justify-content: center;
+  flex: 1;  /* 规定图片为原本尺寸大小 */
+  justify-content: center;  /* 这些都是一些对齐方式 */
   display: flex;
-  flex-direction: column;
+  flex-direction: column;  /* 纵向对齐 */
 }
 
 
@@ -55,31 +55,31 @@ body {
 .panel > * {
   margin:0;
   width: 100%;
-  transition:transform 0.5s;
+  transition:transform 0.5s;   /* 这个似乎值关系到上下文字的出现 */
   flex: 1 0 auto;
   display:flex;
   justify-content: center;
   align-items: center;
 }
-
+/* 从这开始，就是要定义一些可以执行的动作了 */
 .panel > *:first-child { transform: translateY(-100%); }
 .panel.open-active > *:first-child { transform: translateY(0); }
 .panel > *:last-child { transform: translateY(100%); }
 .panel.open-active > *:last-child { transform: translateY(0); }
 
 .panel p {
-  text-transform: uppercase;
+  text-transform: uppercase;  /* 全部大写 */
   font-family: 'Amatic SC', cursive;
   text-shadow:0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
-  font-size: 2em;
+  font-size: 1em;
 }
 .panel p:nth-child(2) {
-  font-size: 4em;
+  font-size: 3em;  /* 这两个数据都输初始化的时候的状态把 */
 }
-
+/* 这个是定义的动画之后的终点属性 */
 .panel.open {
-  flex: 5;
-  font-size:40px;
+  flex: 5;  /* 果然，这个元素就是控制着图片的大小，可以按照某种比例进行放缩，不错 */
+  font-size:30px;  /* 中间那个字，点击之后会变大 */
 }
 
 </style>
