@@ -1,0 +1,57 @@
+box-sizing: 规定两个并排的带边框的框 设为Flex布局以后，子元素的float、clear和vertical-align属性将失效。
+            content-box;  宽度和高度分别应用到元素的内容框。 在宽度和高度之外绘制元素的内边距和边框。
+            border-box;  为元素设定的宽度和高度决定了元素的边框盒 就是说，为元素指定的任何内边距和边框都将在已设定的宽度和高度内进行绘制。 通过从已设定的宽度和高度分别减去边框和内边距才能得到内容的宽度和高度。
+            inherit;  从父元素继承 box-sizing 属性的值
+
+设为Flex布局以后，子元素的float、clear和vertical-align属性将失效。
+vertical-align 属性设置元素的垂直对齐方式
+clear 属性规定元素的哪一侧不允许其他浮动元素。
+float 属性定义元素在哪个方向浮动。
+
+
+flex-direction:  容器内元素的排列方向(默认横向排列)
+                row; 沿水平主轴让元素从左向右排列  1-2-3
+                column; 让元素沿垂直主轴从上到下垂直排列  1|2|3
+                row-reverse;沿水平主轴让元素从右向左排列  3-2-1
+flex-wrap: 容器内元素的换行(默认不换行)
+                nowrap; (默认)元素不换行,比如：一个div宽度100%，设置此属性，2个div宽度就自动变成各50%；
+                wrap; 元素换行,比如：一个div宽度100%，设置此属性，第二个div就在第二行了；
+justify-content: 元素在主轴（页面）上的排列
+                center;元素在主轴（页面）上居中排列  - -1-2-3- -  这里的空格表示居中
+                flex-start;元素在主轴（页面）上由左或者上开始排列  1-2-3----
+                flex-end;元素在主轴（页面）上由右或者下开始排列   ----1-2-3
+                space-between;元素在主轴（页面）上左右两端或者上下两端开始排列  1- -2- -3
+                space-around;每个元素两侧的间隔相等。所以，元素之间的间隔比元素与边框的间隔大一倍。- -1- -2- -3- -
+align-items 元素在主轴（页面）当前行的横轴（纵轴）方向上的对齐方式
+                flex-start; 弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴起始边界（靠上对齐）。123---上
+                flex-end; 弹性盒子元素的侧轴（纵轴）起始位置的边界紧靠住该行的侧轴结束边界。（靠下对齐）  123---下
+                center; 弹性盒子元素在该行的侧轴（纵轴）上居中放置。（居中对齐）   123---中
+                baseline; 如弹性盒子元素的行内轴与侧轴为同一条，则该值与'flex-start'等效。其它情况下，该值将参与基线对齐。（靠上对齐）
+align-content 在弹性容器内的元素没有占用交叉轴上所有可用的空间时对齐容器内的各项（垂直）
+                flex-start; 元素位于容器的开头。各行向弹性盒容器的起始位置堆叠。 1|2|3---  从上往下
+                flex-end; 元素位于容器的结尾。各行向弹性盒容器的结尾位置堆叠。   ---1|2|3  从下往上
+                stretch; 元素位于容器的中心。各行向弹性盒容器的中间位置堆叠。  - 1|2|3 -
+                center; 默认值。元素被拉伸以适应容器。各行将会伸展以占用剩余的空间。如果剩余的空间是负数，该值等效于'flex-start'。 1|- -2- -|3 --
+                space-between;元素位于各行之间留有空白的容器内。各行在弹性盒容器中平均分布。1|- -2- -|3
+                space-around;元素位于各行之前、之间、之后都留有空白的容器内。各行在弹性盒容器中平均分布，两端保留子元素与子元素之间间距大小的一半。如果剩余的空间是负数或弹性盒容器中只有一行，该值等效于'center'。 上下全都是等距的意思咯
+
+
+justify-content: center; :居中排列
+justify-content: flex-start; /* 从行首起始位置开始排列 /
+justify-content: flex-end; / 从行尾位置开始排列 */
+
+background:url(img_flwr.gif);
+background-size:80px 60px;  属性规定背景图像的尺寸。cover把背景图像扩展至足够大，以使背景图像完全覆盖背景区域。
+background-repeat:no-repeat;
+
+flex 属性是 flex-grow、flex-shrink 和 flex-basis 属性的简写属性。
+默认值：	0 1 auto
+flex: flex-grow flex-shrink flex-basis|auto|initial|inherit;
+flex-grow	一个数字，规定项目将相对于其他灵活的项目进行扩展的量。
+flex-shrink	一个数字，规定项目将相对于其他灵活的项目进行收缩的量。
+flex-basis	项目的长度。合法值："auto"、"inherit" 或一个后跟 "%"、"px"、"em" 或任何其他长度单位的数字。
+auto	与 1 1 auto 相同。
+none	与 0 0 auto 相同。
+
+
+
