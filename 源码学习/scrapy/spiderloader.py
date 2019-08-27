@@ -57,7 +57,7 @@ class SpiderLoader(object):
         self._check_name_duplicates()
 
     @classmethod
-    def from_settings(cls, settings):
+    def from_settings(cls, settings):  # 首先from_settings创建实例
         return cls(settings)
 
     def load(self, spider_name):
