@@ -57,8 +57,11 @@ class FuncBaseSpider(PropBaseSpider, metaclass=SpiderMetaClass):
     # 执行指令 #
 
     @classmethod
-    def cza_run_spider(cls):  # todo, subprocess packages?
-        os.system("scrapy crawl {}".format(cls.name))
+    def cza_run_spider(cls, s=None):  # todo, subprocess packages?
+        command = "scrapy crawl {}".format(cls.name)
+        if s and isinstance(s, dict):
+            command += "".join([" -s {}={} ".format(key, value) for key, value in s.items()])
+        os.system(command)
 
     @classmethod
     def mongodb2csv(cls, source=False, resolver=False):
