@@ -88,3 +88,27 @@ position:absolute 绝对定位：实际上是普通定位模型中的一部分�
 因此行边框围绕浮动框。阻止这种行为可以使用clear属性，他表示那些边不应该挨着浮动框
 
 当我们想把一张图片和一段文字装在另一个具有背景颜色和边框的元素中。我们可以对图片和文本使用浮动元素，一个左一个右，但是这样会出现问题，因为浮动元素不占据空间。此时父类div会是一行空，无法显示出浮动效果。此时我们可以在对吼一行添加空元素，然后使用clear对它进行清理即可。
+
+
+
+### 背景图片如何使用：###
+background-image: url(/img/test.gif)  # 默认浏览器会水平和垂直的重复显示背景图像，让图像平铺在整个页面上。我们可以选择垂直、水平平铺，或者根本不平铺
+background-repeat: repeat-x  # 在页面上应用垂直渐变，创建一个很高很窄的渐变图片?
+background-color:
+background-position: left center  /  0 50%
+background: color url repeat x y
+
+:link  未被访问的
+:visited  已被访问的
+:hover  :focus  :active
+默认是有下划线的
+text-decoration: none;
+text-decoration: underline;
+
+box-reflect
+
+
+固定宽度、流式、弹性布局
+所有宽度都以像素为单位，称为固定宽度的布局
+
+
