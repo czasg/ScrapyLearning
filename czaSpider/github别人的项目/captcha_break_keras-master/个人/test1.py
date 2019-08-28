@@ -1,3 +1,6 @@
+import os
+os.environ['KERAS_BACKEND']='theano'
+
 from keras.layers import Input, Dense
 from keras.models import Model
 
