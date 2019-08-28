@@ -31,6 +31,8 @@ __FILE__ = "Unfinished Schedule"
 2019.08.22 - scrapy如何做持久化数据的保存，有待研究哦
 2019.08.27 - 微信爬虫和展示可以提上进程了，对于如何重新架构也可以提上进程了，还是以aiohttp为主，flask和django为辅，进行web开发。前端倒是一个需要好好构造的地方
 2019.08.27 - 学习mysql不错的计划教程：https://blog.csdn.net/hw478983/article/details/78813938
+2019.08.28 - https://github.com/FanhuaandLuomu 这个人的爬虫确实可以啊
+2019.08.28 - https://keras-cn.readthedocs.io/en/latest/  不错的中文学习文档
 """
 
 """DONE!
