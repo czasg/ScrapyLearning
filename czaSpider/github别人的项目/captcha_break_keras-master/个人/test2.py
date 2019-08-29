@@ -1,5 +1,5 @@
-import os
-os.environ['KERAS_BACKEND']='theano'
+# import os
+# os.environ['KERAS_BACKEND']='theano'
 
 import numpy as np
 np.random.seed(1337)  # for reproducibility

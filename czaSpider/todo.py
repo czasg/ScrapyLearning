@@ -33,6 +33,7 @@ __FILE__ = "Unfinished Schedule"
 2019.08.27 - 学习mysql不错的计划教程：https://blog.csdn.net/hw478983/article/details/78813938
 2019.08.28 - https://github.com/FanhuaandLuomu 这个人的爬虫确实可以啊
 2019.08.28 - https://keras-cn.readthedocs.io/en/latest/  不错的中文学习文档
+2019.08.29 - 计算随后薪水的接口实现一个，放在网页上，这个还是可以的。不错哦！这玩意还怎么用爬虫啊，这就很nice了啊
 """
 
 """DONE!
