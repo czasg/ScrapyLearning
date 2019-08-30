@@ -9,7 +9,7 @@ import os
 
 import string
 characters=string.digits+string.ascii_uppercase
-print characters
+print(characters)
 
 width,height,n_len,n_class=170,80,4,len(characters)
 

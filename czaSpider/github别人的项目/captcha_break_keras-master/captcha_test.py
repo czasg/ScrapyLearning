@@ -10,7 +10,8 @@ import numpy as np
 import random
 import os
 from PIL import Image
-
+# import os
+# os.environ['KERAS_BACKEND']='theano'
 import string
 # 验证码的字符来源
 characters=string.digits+string.ascii_uppercase
@@ -57,7 +58,9 @@ def decode(y):
 	return ''.join([characters[x] for x in y]) 
 
 # th (3,height,width)
-input_tensor=Input((3,height,width))
+# tf (height,width,3)
+# input_tensor=Input((3,height,width))
+input_tensor=Input((height,width,3))
 x=input_tensor
 for i in range(4):
 	x=Convolution2D(32*2**i,3,3,activation='relu')(x)
@@ -120,10 +123,10 @@ for fname in fnames:
 
 	if y_real!=y_pred:
 		err+=1
-		print y_real,y_pred
+		print(y_real,y_pred)
 
-print err
-print 'acc:',(len(fnames)-err)/len(fnames)
+print(err)
+print('acc:',(len(fnames)-err)/len(fnames))
 
 '''
 from tqdm import tqdm
