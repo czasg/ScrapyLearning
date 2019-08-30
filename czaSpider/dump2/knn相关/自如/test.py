@@ -7,7 +7,7 @@ class KNN:
     k = 3
     train_matrix = np.array([[1, 1, 1, 1, 1, 1], [2 for _ in range(6)], [3 for _ in range(6)],
                              [4 for _ in range(6)], [5 for _ in range(6)], [6 for _ in range(6)]])
-    train_labels = ['a', 'b', 'c', 'd', 'e', 'f']
+    train_labels = ['1', '2', '3', '4', '5', '6']
 
     @classmethod
     def matrix2vector(cls, matrix: np.ndarray):
@@ -27,14 +27,13 @@ class KNN:
         for index in range(cls.k):
             kLabel = cls.train_labels[distancesSortedIndex[index]]
             knn_pool[kLabel] = knn_pool.get(kLabel, 0) + 1
-        print(knn_pool)
         return sorted(knn_pool.items(), key=lambda x: x[1], reverse=True)[0][0]
 
 
 if __name__ == '__main__':
-    a = np.array([[1, 2, 3], [4, 5, 6]])
+    a = np.array([[3, 3, 3], [4, 4, 4]])
     a = KNN.matrix2vector(a)
-    b = np.array([[3, 4, 5], [6, 7, 8]])
+    b = np.array([[5, 5, 5], [5, 5, 5]])
     b = KNN.matrix2vector(b)
     c = np.array([[1, 1, 1], [1, 1, 1]])
     c = KNN.matrix2vector(c)
