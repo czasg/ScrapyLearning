@@ -63,18 +63,21 @@ class KNN(object):
 
     def classify(self, matData):
         trainMat, trainLabel = self.trainingSet
-        print(trainMat.shape)
+        # print(trainMat.shape)
         trainSetSize = trainMat.shape[0]
         diffMat = np.tile(matData, (trainSetSize, 1)) - trainMat
         squareDiff = diffMat ** 2
         squareDiffDistance = squareDiff.sum(axis=1)
         distances = squareDiffDistance ** 0.5
+        # print(distances)
         sortedDistIndicies = distances.argsort()
-        classCount = {}
+        from collections import OrderedDict
+        classCount = OrderedDict()
         for i in range(self.k):
             # print(sortedDistIndicies[i])
             kLabel = trainLabel[sortedDistIndicies[i]]
             classCount[kLabel] = classCount.get(kLabel, 0) + 1
+        # print(classCount)
         resSorted = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
         return resSorted[0][0]
 
@@ -82,6 +85,7 @@ class KNN(object):
         list = []
         for matData in self.matData:
             vector = self.box2vector(matData)
+            # print(vector)
             res = self.classify(vector)
             list.append(res)
         return list
@@ -126,4 +130,6 @@ def file_remove(fileUrl):
 
 
 if __name__ == '__main__':
-    print(img2num(r'C:\Users\czaOrz\Desktop\gits\Scrapy\czaSpider\dump\bootstrap_test\算法\Knn\4983571602.png'))
+    # print(img2num(r'C:\Users\czaOrz\Desktop\gits\Scrapy\czaSpider\dump\bootstrap_test\算法\Knn\4983571602.png'))
+    print(img2num('6948527301.png'))
+    # print(img2num_from_url('http://static8.ziroom.com/phoenix/pc/images/price/new-list/0f2d52da9106e522530305f1a1fa0788.png'))
