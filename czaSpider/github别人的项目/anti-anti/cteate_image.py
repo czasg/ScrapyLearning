@@ -33,7 +33,7 @@ def gen_captcha_text_and_image():
 
 if __name__ == '__main__':
 	count = 0
-	limit = 2
+	limit = 200
 	while count < limit:
 		text, image = gen_captcha_text_and_image()
 		f = plt.figure()

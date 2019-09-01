@@ -215,13 +215,13 @@ def crack_captcha(captcha_image):
 		return vec2text(vector)
 
 if __name__ == '__main__':
-	from PIL import Image
-	captcha_image = Image.open('FHjo.jpg')
-	captcha_image = np.array(captcha_image)
+	# from PIL import Image
+	# captcha_image = Image.open('FHjo.jpg')
+	# captcha_image = np.array(captcha_image)
 
-	# text, image = gen_captcha_text_and_image()
+	text, image = gen_captcha_text_and_image()
 
-	text, image = 'FHjo', captcha_image
+	# text, image = 'FHjo', captcha_image
 
 	image = convert2gray(image) #生成一张新图
 	image = image.flatten() / 255 # 将图片一维化

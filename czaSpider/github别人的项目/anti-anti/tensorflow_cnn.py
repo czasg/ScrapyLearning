@@ -33,7 +33,8 @@ np.pad(image【,((2,3),(2,2)), 'constant', constant_values=(255,))  # 在图像�
 
 # 文本转向量
 char_set = number + alphabet + ALPHABET + ['_']  # 如果验证码长度小于4, '_'用来补齐
-CHAR_SET_LEN = len(char_set)
+CHAR_SET_LEN = len(char_set)  # 63
+print(CHAR_SET_LEN, MAX_CAPTCHA)
 def text2vec(text):
 	text_len = len(text)
 	if text_len > MAX_CAPTCHA:
@@ -88,8 +89,8 @@ print(text)  # SFd5
 
 # 生成一个训练batch
 def get_next_batch(batch_size=128):
-	batch_x = np.zeros([batch_size, IMAGE_HEIGHT*IMAGE_WIDTH])
-	batch_y = np.zeros([batch_size, MAX_CAPTCHA*CHAR_SET_LEN])
+	batch_x = np.zeros([batch_size, IMAGE_HEIGHT*IMAGE_WIDTH])  # 60 * 160
+	batch_y = np.zeros([batch_size, MAX_CAPTCHA*CHAR_SET_LEN])  # 63 * 4
 
 	# 有时生成图像大小不是(60, 160, 3)
 	def wrap_gen_captcha_text_and_image():
@@ -100,7 +101,7 @@ def get_next_batch(batch_size=128):
 
 	for i in range(batch_size):
 		text, image = wrap_gen_captcha_text_and_image()
-		image = convert2gray(image)
+		image = convert2gray(image)  # 转化为灰度图
 
 		batch_x[i,:] = image.flatten() / 255 # (image.flatten()-128)/128  mean为0
 		batch_y[i,:] = text2vec(text)
@@ -126,6 +127,8 @@ def crack_captcha_cnn(w_alpha=0.01, b_alpha=0.1):
 	# 3 conv layer
 	w_c1 = tf.Variable(w_alpha*tf.random_normal([3, 3, 1, 32]))
 	b_c1 = tf.Variable(b_alpha*tf.random_normal([32]))
+	# tf.nn.conv2d函数是tensoflow里面的二维的卷积函数 x是图片的所有参数，W是此卷积层的权重 定义步长strides=[1,1,1,1]
+	# strides[0]和strides[3]的两个1是默认值，中间两个1代表padding时在x方向运动一步，y方向运动一步，padding采用的方式是SAME。
 	conv1 = tf.nn.relu(tf.nn.bias_add(tf.nn.conv2d(x, w_c1, strides=[1, 1, 1, 1], padding='SAME'), b_c1))
 	conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 	conv1 = tf.nn.dropout(conv1, keep_prob)
@@ -163,7 +166,7 @@ def train_crack_captcha_cnn():
 	loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=output, labels=Y))
 	# 最后一层用来分类的softmax和sigmoid有什么不同？
 	# optimizer 为了加快训练 learning_rate应该开始大，然后慢慢衰
-	optimizer = tf.train.AdamOptimizer(learning_rate=0.001).minimize(loss)
+	optimizer = tf.train.AdamOptimizer(learning_rate=0.001).minimize(loss)  # 机器学习的内容
 
 	predict = tf.reshape(output, [-1, MAX_CAPTCHA, CHAR_SET_LEN])
 	max_idx_p = tf.argmax(predict, 2)
@@ -178,6 +181,8 @@ def train_crack_captcha_cnn():
 		step = 0
 		while True:
 			batch_x, batch_y = get_next_batch(64)
+			#  run 每一次 training 的数据，逐步提升神经网络的预测准确性
+			# 需要使用feed_dict这个字典来指定输入。
 			_, loss_ = sess.run([optimizer, loss], feed_dict={X: batch_x, Y: batch_y, keep_prob: 0.75})
 			print(step, loss_)
 
@@ -187,7 +192,7 @@ def train_crack_captcha_cnn():
 				acc = sess.run(accuracy, feed_dict={X: batch_x_test, Y: batch_y_test, keep_prob: 1.})
 				print(step, acc)
 				# 如果准确率大于50%,保存模型,完成训练
-				if acc > 0.01:
+				if acc > 0.9:
 					saver.save(sess, "crack_capcha.model", global_step=step)
 					break
 			step += 1
