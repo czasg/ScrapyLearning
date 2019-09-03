@@ -7,11 +7,17 @@
 keep_prob=0.4 == rate=0.6
 rate=0.6表示要丢掉60%的数据咯
 """
-import tensorflow as tf
-rate = tf.compat.v1.placeholder(tf.float32)
-x = tf.Variable(tf.ones([10, 10]))
-y = tf.nn.dropout(x, rate=rate)
-sess = tf.compat.v1.Session()
-sess.run(tf.compat.v1.global_variables_initializer())
-print(sess.run(y, feed_dict = {rate: 0.6}))  # rate = 1 - keep_prob
+# import tensorflow as tf
+# rate = tf.compat.v1.placeholder(tf.float32)
+# x = tf.Variable(tf.ones([10, 10]))
+# y = tf.nn.dropout(x, rate=rate)
+# sess = tf.compat.v1.Session()
+# sess.run(tf.compat.v1.global_variables_initializer())
+# print(sess.run(y, feed_dict = {rate: 0.6}))  # rate = 1 - keep_prob
 
+"""
+产生截断正态分布随机数，取值范围为 [ mean - 2 * stddev, mean + 2 * stddev ]
+"""
+import tensorflow as tf
+initial = tf.truncated_normal(shape=[3,4], mean=0, stddev=0.1)  # [-2, 2]
+print(tf.Session().run(initial))

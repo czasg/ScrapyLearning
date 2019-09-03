@@ -1,9 +1,5 @@
 __FILE__ = "Unfinished Schedule"
 
-"""
-所有渴望别人理解的行为都是弱智的行为，人的强大第一步，要学会孤独，第二步，要学会不理解，第三步，用结果去碾压
-"""
-
 # todo
 """
 2019.07.03 - aiohttp中部分源码，还是可以了解下
@@ -181,10 +177,13 @@ JS                  https://github.com/SUNNERCMS/30daysJavascript
 爬虫写的很秀              https://github.com/FanhuaandLuomu
 """
 
-"""
-645948
+"""645948
 You Are An Apple In My Eyes
 Courage is not the absence of fear, but rather the judgment that something else is more important than fear.
+"""
+
+"""
+所有渴望别人理解的行为都是弱智的行为，人的强大第一步，要学会孤独，第二步，要学会不理解，第三步，用结果去碾压
 """
 
 #todo
@@ -194,7 +193,6 @@ Courage is not the absence of fear, but rather the judgment that something else 
 后端：等部署好了，要开始接触flask和Django了
 爬虫：scrapy需要逐渐写完总结，初步就可
 爬虫requests小模块是否有必要完善。
-有关自动化部署的selenium，博个可能也需要我完成一个自动抢票的玩具
 
 首先首页不能是现在这样的，首页应该是展示页，展示这里的内容，模块，功能，意义
 左上角可以跳转，或者展示页力可以跳转
@@ -203,7 +201,7 @@ Courage is not the absence of fear, but rather the judgment that something else 
 第一个作者没问题，怎么写这个就是个问题了。一片骚气的自我介绍哦？
 第二个改名叫知识工厂
 
-/ 可以指向作者，如果你前端写的够靓仔的话
+/ 可以指向展示页面，该页面包含作者的人物画像
 """
 
 # todo
@@ -324,7 +322,7 @@ Data_structure = (D, S)  // D是数据元素的有限集，S是D上关系的有�
 熟悉http协议，这句话有点难啊
 
 中软国际
-测试工程师
+软件开发工程师 - 华为测试软件 基于华为软件AreaAG开发python脚本，对大数据日志进行自动化分析。
 1、负责测试华为荣耀畅玩系列产品GPS、充电等模块功能完整性
 2、驱动开发接口人，对接各个开发员工，追踪日常舆情，及时
 
