@@ -16,13 +16,13 @@ MAX_CAPTCHA = len(text)  # 字体的个数嘛
 print("验证码文本最长字符数", MAX_CAPTCHA)   # 验证码最长4字符; 我全部固定为4,可以不固定. 如果验证码长度小于4，用'_'补齐
 
 # 把彩色图像转为灰度图像（色彩对识别验证码没有什么用）
-def convert2gray(img):
+def convert2gray(img):  # 这段转化为灰度图的代码我是表示怀疑的哦
 	if len(img.shape) > 2:
 		gray = np.mean(img, -1)  # 对每行求均值，把高度转化为1维的了
 		# 上面的转法较快，正规转法如下
 		# r, g, b = img[:,:,0], img[:,:,1], img[:,:,2]
 		# gray = 0.2989 * r + 0.5870 * g + 0.1140 * b
-		return gray
+		return gray  # （60, 160）
 	else:
 		return img
 
@@ -35,12 +35,13 @@ np.pad(image【,((2,3),(2,2)), 'constant', constant_values=(255,))  # 在图像�
 char_set = number + alphabet + ALPHABET + ['_']  # 如果验证码长度小于4, '_'用来补齐
 CHAR_SET_LEN = len(char_set)  # 63
 print(CHAR_SET_LEN, MAX_CAPTCHA)
+# 这段代码的作用就是维护一个所有数据的数组，初始化为1，然后查询是哪一个子串，就在对应的位置转化为1
 def text2vec(text):
 	text_len = len(text)
 	if text_len > MAX_CAPTCHA:
 		raise ValueError('验证码最长4个字符')
 
-	vector = np.zeros(MAX_CAPTCHA*CHAR_SET_LEN)
+	vector = np.zeros(MAX_CAPTCHA*CHAR_SET_LEN)  # 4 * 63
 	def char2pos(c):
 		if c =='_':
 			k = 62
@@ -53,11 +54,11 @@ def text2vec(text):
 				if k > 61:
 					raise ValueError('No Map')
 		return k
-	for i, c in enumerate(text):
-		idx = i * CHAR_SET_LEN + char2pos(c)
-		vector[idx] = 1
+	for i, c in enumerate(text):  # text就是目标，只有4个把
+		idx = i * CHAR_SET_LEN + char2pos(c)  # i * 63 +
+		vector[idx] = 1  # 这个转化有点眼熟，对所有维护一个数组，然后匹配待哪一个，就将之设置为1，这个nice呀
 	return vector
-# 向量转回文本
+# 向量转回文本，就是使用二进制码的一种高级用法，速度比我快一些而已，不好理解=0=
 def vec2text(vec):
 	char_pos = vec.nonzero()[0]
 	text=[]
@@ -88,7 +89,7 @@ print(text)  # SFd5
 """
 
 # 生成一个训练batch
-def get_next_batch(batch_size=128):
+def get_next_batch(batch_size=128):  # 生成128行的意思咯，第一个参数128，后面的居然不一样
 	batch_x = np.zeros([batch_size, IMAGE_HEIGHT*IMAGE_WIDTH])  # 60 * 160
 	batch_y = np.zeros([batch_size, MAX_CAPTCHA*CHAR_SET_LEN])  # 63 * 4
 
@@ -99,14 +100,14 @@ def get_next_batch(batch_size=128):
 			if image.shape == (60, 160, 3):
 				return text, image
 
-	for i in range(batch_size):
+	for i in range(batch_size):  # 每次训练生成128张图片咯，而且这些图片都撞到一个矩阵里面，可以台夸张了把
 		text, image = wrap_gen_captcha_text_and_image()
 		image = convert2gray(image)  # 转化为灰度图
-
+		# array.flatten() 将矩阵降到一维，这个就厉害了啊
 		batch_x[i,:] = image.flatten() / 255 # (image.flatten()-128)/128  mean为0
 		batch_y[i,:] = text2vec(text)
 
-	return batch_x, batch_y
+	return batch_x, batch_y  # 按这种情况来看，x是图片，y是对应的标签
 
 ####################################################################
 
@@ -115,7 +116,7 @@ Y = tf.placeholder(tf.float32, [None, MAX_CAPTCHA*CHAR_SET_LEN])
 keep_prob = tf.placeholder(tf.float32) # dropout
 
 # 定义CNN
-def crack_captcha_cnn(w_alpha=0.01, b_alpha=0.1):
+def crack_captcha_cnn(w_alpha=0.01, b_alpha=0.1):  # 这两个是定义初始时的值，比直接取0好一些
 	x = tf.reshape(X, shape=[-1, IMAGE_HEIGHT, IMAGE_WIDTH, 1])
 
 	#w_c1_alpha = np.sqrt(2.0/(IMAGE_HEIGHT*IMAGE_WIDTH)) #
@@ -125,7 +126,7 @@ def crack_captcha_cnn(w_alpha=0.01, b_alpha=0.1):
 	#out_alpha = np.sqrt(2.0/1024)
 
 	# 3 conv layer
-	w_c1 = tf.Variable(w_alpha*tf.random_normal([3, 3, 1, 32]))
+	w_c1 = tf.Variable(w_alpha*tf.random_normal([3, 3, 1, 32]))  # 产生一个随机的矩阵
 	b_c1 = tf.Variable(b_alpha*tf.random_normal([32]))
 	# tf.nn.conv2d函数是tensoflow里面的二维的卷积函数 x是图片的所有参数，W是此卷积层的权重 定义步长strides=[1,1,1,1]
 	# strides[0]和strides[3]的两个1是默认值，中间两个1代表padding时在x方向运动一步，y方向运动一步，padding采用的方式是SAME。
@@ -180,7 +181,7 @@ def train_crack_captcha_cnn():
 
 		step = 0
 		while True:
-			batch_x, batch_y = get_next_batch(64)
+			batch_x, batch_y = get_next_batch(64)  # 这里的64是一维
 			#  run 每一次 training 的数据，逐步提升神经网络的预测准确性
 			# 需要使用feed_dict这个字典来指定输入。
 			_, loss_ = sess.run([optimizer, loss], feed_dict={X: batch_x, Y: batch_y, keep_prob: 0.75})

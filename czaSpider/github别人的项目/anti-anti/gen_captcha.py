@@ -39,7 +39,7 @@ def gen_captcha_text_and_image():
 
     captcha_image = Image.open(captcha)
     captcha_image = np.array(captcha_image)  # 所以训练图片实际就是提供正确的文字还有就是图片的矩阵。还可以。
-    print(captcha_image.shape)
+    # print(captcha_image.shape)
     return captcha_text, captcha_image
 
 
@@ -56,6 +56,19 @@ def convert2gray(img):
         return img
 
 
+def char2pos(c):
+    if c == '_':
+        k = 62
+        return k
+    k = ord(c) - 48
+    if k > 9:
+        k = ord(c) - 55
+        if k > 35:
+            k = ord(c) - 61
+            if k > 61:
+                raise ValueError('No Map')
+    return k
+
 if __name__ == '__main__':
     # 测试
     # while (1):
@@ -71,12 +84,26 @@ if __name__ == '__main__':
 
     #  (60, 160) 转化之后的shape
     # print(convert2gray(gen_captcha_text_and_image()[1]))
-    test = np.array([[[1,2],[1,2],[1,2]],
-                    [[1,2],[1,2],[1,2]],
-                    [[1,2],[1,2],[1,8]],
-                     [[1,2],[1,2],[1,8]]])
-    print(test.shape)
-    print(np.mean(test))
-    print(np.mean(test, 0), np.mean(test, 0).shape)
-    print(np.mean(test, 1),np.mean(test, 1).shape)
-    print(np.mean(test, -1))
+    # test = np.array([[[1, 2], [1, 'a'], [1, 2]],
+    #                  [[1, 2], [1, 'b'], [1, 2]],
+    #                  [[1, 2], [1, 2], [1, 8]],
+    #                  [[1, 2], [1, 2], [1, 8]]])
+    # print(test.shape)
+    # print(np.mean(test))
+    # print(np.mean(test, 0), np.mean(test, 0).shape)
+    # print(np.mean(test, 1), np.mean(test, 1).shape)
+    # print(np.mean(test, -1))
+    # print(test.flatten())
+
+    # print(len(ALPHABET))
+    # print(char2pos('0'))
+    # print(char2pos('1'))
+    # print(char2pos('a'))
+    # print(char2pos('A'))
+
+    # print(np.zeros([2, 2 * 3]))
+
+    test = np.zeros([5, 3])
+    print(test[1,:])
+    test[1,:] = np.ones(1).flatten() / 0.5
+    print(test)
