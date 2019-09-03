@@ -8,17 +8,17 @@ import numpy as np
 import tensorflow as tf
 
 text, image = gen_captcha_text_and_image()
-print("验证码图像channel:", image.shape)  # (60, 160, 3)
+print("验证码图像channel:", image.shape)  # (60, 160, 3) 这里的image是一个numpy.array对象
 # 图像大小
 IMAGE_HEIGHT = 60
 IMAGE_WIDTH = 160
-MAX_CAPTCHA = len(text)
+MAX_CAPTCHA = len(text)  # 字体的个数嘛
 print("验证码文本最长字符数", MAX_CAPTCHA)   # 验证码最长4字符; 我全部固定为4,可以不固定. 如果验证码长度小于4，用'_'补齐
 
 # 把彩色图像转为灰度图像（色彩对识别验证码没有什么用）
 def convert2gray(img):
 	if len(img.shape) > 2:
-		gray = np.mean(img, -1)
+		gray = np.mean(img, -1)  # 对每行求均值，把高度转化为1维的了
 		# 上面的转法较快，正规转法如下
 		# r, g, b = img[:,:,0], img[:,:,1], img[:,:,2]
 		# gray = 0.2989 * r + 0.5870 * g + 0.1140 * b

@@ -18,6 +18,15 @@ rate=0.6表示要丢掉60%的数据咯
 """
 产生截断正态分布随机数，取值范围为 [ mean - 2 * stddev, mean + 2 * stddev ]
 """
-import tensorflow as tf
-initial = tf.truncated_normal(shape=[3,4], mean=0, stddev=0.1)  # [-2, 2]
-print(tf.Session().run(initial))
+# import tensorflow as tf
+# initial = tf.truncated_normal(shape=[3,4], mean=0, stddev=0.1)  # [-2, 2]
+# print(tf.Session().run(initial))
+
+
+import numpy as np
+a = np.array([[1, 2, 3], [3, 4, 5]])
+print(np.mean(a))  # 什么参数都不加的情况下，计算所有子项的和然后求平均值
+print(np.mean(a, axis=0))
+print(np.mean(a, axis=1))  # 计算每一行的均值
+print(np.mean(a, axis=-1))
+
