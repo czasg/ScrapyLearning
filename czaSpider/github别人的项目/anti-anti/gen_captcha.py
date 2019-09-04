@@ -14,7 +14,7 @@ ALPHABET = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N'
 
 
 # 验证码一般都无视大小写；验证码长度4个字符
-def random_captcha_text(char_set=number + alphabet + ALPHABET, captcha_size=4):
+def random_captcha_text(char_set=number + alphabet + ALPHABET, captcha_size=6):
     captcha_text = []
     for i in range(captcha_size):
         c = random.choice(char_set)
@@ -24,7 +24,8 @@ def random_captcha_text(char_set=number + alphabet + ALPHABET, captcha_size=4):
 
 # 生成字符对应的验证码
 def gen_captcha_text_and_image():
-    image = ImageCaptcha()
+    # image = ImageCaptcha(160, 60)
+    image = ImageCaptcha(200, 60)
 
     captcha_text = random_captcha_text()  # 获取四个随机
     captcha_text = ''.join(captcha_text)

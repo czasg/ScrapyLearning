@@ -11,7 +11,7 @@ text, image = gen_captcha_text_and_image()
 print("验证码图像channel:", image.shape)  # (60, 160, 3) 这里的image是一个numpy.array对象
 # 图像大小
 IMAGE_HEIGHT = 60
-IMAGE_WIDTH = 160
+IMAGE_WIDTH =  160  # 160
 MAX_CAPTCHA = len(text)  # 字体的个数嘛
 print("验证码文本最长字符数", MAX_CAPTCHA)   # 验证码最长4字符; 我全部固定为4,可以不固定. 如果验证码长度小于4，用'_'补齐
 
@@ -40,7 +40,7 @@ def text2vec(text):
 	text_len = len(text)
 	if text_len > MAX_CAPTCHA:
 		raise ValueError('验证码最长4个字符')
-
+	print(MAX_CAPTCHA, CHAR_SET_LEN, '????')  # 6 63
 	vector = np.zeros(MAX_CAPTCHA*CHAR_SET_LEN)  # 4 * 63
 	def char2pos(c):
 		if c =='_':
@@ -97,7 +97,7 @@ def get_next_batch(batch_size=128):  # 生成128行的意思咯，第一个参�
 	def wrap_gen_captcha_text_and_image():
 		while True:
 			text, image = gen_captcha_text_and_image()
-			if image.shape == (60, 160, 3):
+			if image.shape == (60, 160, 3):  # (60, 160, 3):
 				return text, image
 
 	for i in range(batch_size):  # 每次训练生成128张图片咯，而且这些图片都撞到一个矩阵里面，可以台夸张了把
@@ -105,8 +105,9 @@ def get_next_batch(batch_size=128):  # 生成128行的意思咯，第一个参�
 		image = convert2gray(image)  # 转化为灰度图
 		# array.flatten() 将矩阵降到一维，这个就厉害了啊
 		batch_x[i,:] = image.flatten() / 255 # (image.flatten()-128)/128  mean为0
+		print(text2vec(text).shape)
 		batch_y[i,:] = text2vec(text)
-
+	# print(batch_x, batch_y)
 	return batch_x, batch_y  # 按这种情况来看，x是图片，y是对应的标签
 
 ####################################################################
@@ -118,7 +119,6 @@ keep_prob = tf.placeholder(tf.float32) # dropout
 # 定义CNN
 def crack_captcha_cnn(w_alpha=0.01, b_alpha=0.1):  # 这两个是定义初始时的值，比直接取0好一些
 	x = tf.reshape(X, shape=[-1, IMAGE_HEIGHT, IMAGE_WIDTH, 1])
-
 	#w_c1_alpha = np.sqrt(2.0/(IMAGE_HEIGHT*IMAGE_WIDTH)) #
 	#w_c2_alpha = np.sqrt(2.0/(3*3*32))
 	#w_c3_alpha = np.sqrt(2.0/(3*3*64))
@@ -126,16 +126,16 @@ def crack_captcha_cnn(w_alpha=0.01, b_alpha=0.1):  # 这两个是定义初始时
 	#out_alpha = np.sqrt(2.0/1024)
 
 	# 3 conv layer
-	w_c1 = tf.Variable(w_alpha*tf.random_normal([3, 3, 1, 32]))  # 产生一个随机的矩阵
-	b_c1 = tf.Variable(b_alpha*tf.random_normal([32]))
+	w_c1 = tf.Variable(w_alpha*tf.random.normal([3, 3, 1, 32]))  # 产生一个随机的矩阵
+	b_c1 = tf.Variable(b_alpha*tf.random.normal([32]))
 	# tf.nn.conv2d函数是tensoflow里面的二维的卷积函数 x是图片的所有参数，W是此卷积层的权重 定义步长strides=[1,1,1,1]
 	# strides[0]和strides[3]的两个1是默认值，中间两个1代表padding时在x方向运动一步，y方向运动一步，padding采用的方式是SAME。
 	conv1 = tf.nn.relu(tf.nn.bias_add(tf.nn.conv2d(x, w_c1, strides=[1, 1, 1, 1], padding='SAME'), b_c1))
 	conv1 = tf.nn.max_pool(conv1, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 	conv1 = tf.nn.dropout(conv1, keep_prob)
 
-	w_c2 = tf.Variable(w_alpha*tf.random_normal([3, 3, 32, 64]))
-	b_c2 = tf.Variable(b_alpha*tf.random_normal([64]))
+	w_c2 = tf.Variable(w_alpha*tf.random.normal([3, 3, 32, 64]))
+	b_c2 = tf.Variable(b_alpha*tf.random.normal([64]))
 	conv2 = tf.nn.relu(tf.nn.bias_add(tf.nn.conv2d(conv1, w_c2, strides=[1, 1, 1, 1], padding='SAME'), b_c2))
 	conv2 = tf.nn.max_pool(conv2, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME')
 	conv2 = tf.nn.dropout(conv2, keep_prob)
@@ -164,6 +164,7 @@ def train_crack_captcha_cnn():
 	output = crack_captcha_cnn()  # 定义CNN
 	# loss
 	#loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(output, Y))
+	print(output, Y)
 	loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=output, labels=Y))
 	# 最后一层用来分类的softmax和sigmoid有什么不同？
 	# optimizer 为了加快训练 learning_rate应该开始大，然后慢慢衰
@@ -182,6 +183,7 @@ def train_crack_captcha_cnn():
 		step = 0
 		while True:
 			batch_x, batch_y = get_next_batch(64)  # 这里的64是一维
+			print(batch_x.shape, batch_y.shape)  # (64, 9600) (64, 378)
 			#  run 每一次 training 的数据，逐步提升神经网络的预测准确性
 			# 需要使用feed_dict这个字典来指定输入。
 			_, loss_ = sess.run([optimizer, loss], feed_dict={X: batch_x, Y: batch_y, keep_prob: 0.75})
