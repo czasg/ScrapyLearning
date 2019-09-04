@@ -158,6 +158,11 @@ def crack_captcha_cnn(w_alpha=0.01, b_alpha=0.1):  # 这两个是定义初始时
     dense = tf.nn.relu(tf.add(tf.matmul(dense, w_d), b_d))
     dense = tf.nn.dropout(dense, keep_prob)
 
+    # w_d = tf.Variable(w_alpha * tf.random_normal([8 * 20 * 64, 1024]))
+    # b_d = tf.Variable(b_alpha * tf.random_normal([1024]))
+    # prediction = tf.nn.softmax(tf.matmul(dense, w_d) + b_d)
+    # dense = tf.reduce_mean(-tf.reduce_sum(Y * tf.math.log(prediction), reduction_indices=[1]))
+
     # w_out = tf.Variable(w_alpha*tf.random_normal([1024, MAX_CAPTCHA*CHAR_SET_LEN]))
     # b_out = tf.Variable(b_alpha*tf.random_normal([MAX_CAPTCHA*CHAR_SET_LEN]))
     # out = tf.add(tf.matmul(dense, w_out), b_out)
@@ -181,12 +186,16 @@ def train_crack_captcha_cnn():
     # Tensor("Add_1:0", shape=(?, 378), dtype=float32) Tensor("Placeholder_1:0", shape=(?, 378), dtype=float32)
     # Tensor("Add_1:0", shape=(?, 378), dtype=float32) Tensor("Placeholder_1:0", shape=(?, 378), dtype=float32)
 
-    w_fc2 = tf.Variable(tf.truncated_normal([1024, 378], stddev=0.1))  # 输入是1024，最后的输出是10个
-    b_fc2 = tf.Variable(tf.constant(0.1, shape=[378]))
-    print(output.shape)  # (?, 1024)
-    prediction = tf.nn.softmax(tf.matmul(output, w_fc2) + b_fc2)
+    # w_fc2 = tf.Variable(tf.truncated_normal([1024, 378], stddev=0.1))  # 输入是1024，最后的输出是10个
+    # b_fc2 = tf.Variable(tf.constant(0.1, shape=[378]))
+    # print(output.shape)  # (?, 1024)
+    w_d = tf.Variable(0.01 * tf.random_normal([1024, 378]))
+    b_d = tf.Variable(0.1 * tf.random_normal([378]))
+    prediction = tf.nn.softmax(tf.matmul(output, w_d) + b_d)
     loss = tf.reduce_mean(-tf.reduce_sum(Y * tf.math.log(prediction), reduction_indices=[1]))
-    print('!!!!!')
+    # prediction = tf.nn.softmax(tf.matmul(output, w_fc2) + b_fc2)
+    # loss = tf.reduce_mean(-tf.reduce_sum(Y * tf.math.log(prediction), reduction_indices=[1]))
+    # print('!!!!!')
     # loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=output, labels=Y))  # todo，这里挂了
     # 最后一层用来分类的softmax和sigmoid有什么不同？
     # optimizer 为了加快训练 learning_rate应该开始大，然后慢慢衰
