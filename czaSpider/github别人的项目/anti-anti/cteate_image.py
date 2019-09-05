@@ -22,7 +22,7 @@ def gen_captcha_text_and_image():
 	image = ImageCaptcha(200, 60)
 
 	captcha_text = random_captcha_text()
-	captcha_text = ''.join(captcha_text)
+	captcha_text = '856835'#'''.join(captcha_text)
 
 	captcha = image.generate(captcha_text)
 	image.write(captcha_text, captcha_text + '.jpg')  # 写到文件
