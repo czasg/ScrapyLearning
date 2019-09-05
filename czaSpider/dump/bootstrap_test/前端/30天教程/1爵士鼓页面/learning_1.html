@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>test</title>
+<style type="text/css">
+html {
+	font-size: 10px;
+	background-size: cover;
+	background-image: url('');
+}
+html, body {
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+}
+kbd {
+	display: block;
+	font-size: 20px;
+}
+.keys {
+	display: flex;
+	flex: 0;
+	min-height: 10px;
+	align-items: center;
+	justify-content: center;
+}
+.key {
+	border: 4px solid black;
+	border-radius: 5px;
+	margin: 1px;
+	padding: 1px;
+	font-size: 1rem;
+	width: 10px;
+	text-align: center;
+	color: white;
+	background: rgba(0,0,0,0);
+	text-shadow: 0 0 0px 0px;
+	transition: all 0.7s ease;
+}
+.sound {
+	font-size: 20px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	color: white;
+}
+.playing {
+	transform: scale(1.1);
+	border-color: white;
+	box-shadow: 0 0 1px white;
+}	
+</style>
+</head>
+<body>
+<div class="keys">
+	<div class="key" data-key="">
+		<kbd>A</kbd>
+		<span class="sound"></span>
+	</div>
+	<div class="key" data-key="">
+		<kbd>A</kbd>
+		<span class="sound"></span>
+	</div>
+	<div class="key" data-key="">
+		<kbd>A</kbd>
+		<span class="sound"></span>
+	</div>
+</div>
+<audio src="" data-key=""></audio>
+<audio src="" data-key=""></audio>
+<audio src="" data-key=""></audio>
+<script type="text/javascript">
+	function removePlaying(e) {
+		if (e.propertyName !== 'transform') { return; }
+		e.target.classList.remove('playing');
+	}
+	function addPlaying(e) {
+		const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);
+		const key   = document.querySelector(`div[data-key="${e.keyCode}"]`);
+		if (!audio) { return; }
+		key.classList.add('playing');
+		audio.currentTime = 0;
+		audio.play();
+	}
+	keys = Array.from(document.querySelectorAll('.key'));
+	keys.forEach(key => key.addEventListener('transitionend', removePlaying));
+	window.addEventListener('keydown', addPlaying);
+</script>
+</body>
+</html>
