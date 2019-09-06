@@ -1,0 +1,110 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>test</title>
+    <!--1vh = 1% * 视口高度-->
+    <style>
+        body {
+            margin: 0;
+        }
+        .panels {
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+        .panel {
+            display: flex;
+            flex: 1;  /* this code is important, expand all this window */
+            flex-direction: column;  /* make the son-element to a block and center */
+            align-items: center;
+            justify-content: center;  /* make the content in the center of column */
+
+            font-size: 20px;
+            text-align: center;
+            background-size: cover;
+            background-position: center;
+            color:white;
+            box-shadow:inset 0 0 0 5px rgba(255,255,255,0.1);
+
+            transition:
+                font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+                flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+                background 0.2s;
+        }
+        .panel > * {
+            display: flex;
+            flex: 1 0 auto;
+            align-items: center;  /* to make the content center symmetry about this center line */
+            justify-content: center;
+
+            transition: transform 0.5s;
+            text-transform: uppercase;
+            font-family: 'Amatic SC', cursive;
+            text-shadow:0 0 4px rgba(0, 0, 0, 0.72), 0 0 14px rgba(0, 0, 0, 0.45);
+            font-size: 1em;
+        }
+        .panel p:nth-child(2) {
+            font-size: 2em;
+        }
+        .panel > p:first-child { transform: translateY(-100%); }
+        .panel > p:last-child { transform: translateY(100%); }
+        .panel.open-active > p:first-child { transform: translateY(0); }
+        .panel.open-active > p:last-child { transform: translateY(0); }
+
+        .panel.open {
+            flex: 3;
+            font-size: 30px;
+        }
+
+        .panel1 { background-image: url(./img/1.jpg); }
+        .panel2 { background-image: url(./img/2.jpg); }
+        .panel3 { background-image: url(./img/3.jpg); }
+        .panel4 { background-image: url(./img/4.jpg); }
+        .panel5 { background-image: url(./img/5.jpg); }
+    </style>
+</head>
+<body>
+<div class="panels">
+    <div class="panel panel1">
+        <p>good</p>
+        <p>spider</p>
+        <p>quickly</p>
+    </div>
+    <div class="panel panel2">
+        <p>good</p>
+        <p>spider</p>
+        <p>quickly</p>
+    </div>
+    <div class="panel panel3">
+        <p>good</p>
+        <p>spider</p>
+        <p>quickly</p>
+    </div>
+    <div class="panel panel4">
+        <p>good</p>
+        <p>spider</p>
+        <p>quickly</p>
+    </div>
+    <div class="panel panel5">
+        <p>good</p>
+        <p>spider</p>
+        <p>quickly</p>
+    </div>
+</div>
+<script>
+    function toggleOpen() {
+        console.log('toggleOpen');
+        this.classList.toggle('open');
+    }
+    function toggleOpenActive(e) {
+        console.log('toggleOpenActive');
+        if (e.propertyName.includes('flex')) {
+            this.classList.toggle('open-active');
+        }
+    }
+    const panels = document.querySelectorAll('.panel');
+    panels.forEach(panel => panel.addEventListener('click', toggleOpen));
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleOpenActive))
+</script>
+</body>
+</html>
