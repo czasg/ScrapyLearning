@@ -1,0 +1,50 @@
+<html>
+<head>
+    <title>test</title>
+    <style>
+        :root {
+            --spacing: 10px;
+            --blur: 10px;
+            --base: white;
+        }
+        .aim {
+        width: var(--spacing);
+        height: var(--blur);
+        background-color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="controls">
+    <div class="wrap">
+        <label for="spacing">Spacing:</label>
+        <input type="range" id="spacing" min="0" max="200" value="0" onchange="test1()">
+    </div>
+    <div class="wrap">
+        <label for="blur">Blur:</label>
+        <input type="range" id="blur" min="0" max="200" value="0" onchange="test2()">
+    </div>
+    <div class="wrap">
+        <label for="base">Color:</label>
+        <input type="color" id="base" name="base" value="#ffc600" onchange="test3()">
+    </div>
+    <div class="aim">
+        <div class="aim-son">123</div>
+    </div>
+</div>
+<script>
+    function test1() {
+        const test = document.querySelector('#spacing');
+        document.body.style.setProperty('--spacing', test.value+'px')
+    }
+    function test2() {
+        const test = document.querySelector('#blur');
+        document.body.style.setProperty('--blur', test.value+'px')
+    }
+    function test3() {
+        const test = document.querySelector('#base');
+        document.body.style.setProperty('--base', test.value)
+    }
+</script>
+</body>
+</html>
