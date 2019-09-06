@@ -4,20 +4,10 @@ import base64
 
 from .exceptions import HandShakeError
 
-
 _value_re = re.compile(rb"[\x09\x20-\x7e\x80-\xff]*")
 
 
 class HandShake:
-    """This section is non-normative.
-    The opening handshake is intended to be compatible with HTTP-based
-    server-side software and intermediaries, so that a single port can be
-    used by both HTTP clients talking to that server and WebSocket
-    clients talking to that server.  To this end, the WebSocket client's
-    handshake is an HTTP Upgrade request
-
-    https://tools.ietf.org/html/rfc6455#section-1.3
-    """
     def __init__(self, remote, reader, writer, headers, union_header):
         self.remote = remote
         self.write = writer
@@ -27,14 +17,7 @@ class HandShake:
 
     def shake_headers(self, host: str, port: int, resource: str = '/',
                       version: int = 13):
-        """Request header information for handshaking
-
-        In compliance with [RFC2616], header fields in the handshake may be
-        sent by the client in any order, so the order in which different
-        header fields are received is not significant.
-        """
         if self.headers:
-            # Allow the use of custom header
             if isinstance(self.headers, list):
                 return '\r\n'.join(self.headers) + '\r\n'
             if isinstance(self.headers, dict):
@@ -66,13 +49,8 @@ class HandShake:
         self.write.write(data=handshake_info.encode())
 
     async def shake_result(self):
-        """Check handshake results
-        Any status code other than 101 indicates that the WebSocket handshake
-        has not completed and that the semantics of HTTP still apply.  The
-        headers follow the status code.
-        """
         header = []
-        for _ in range(2**8):
+        for _ in range(2 ** 8):
             result = await self.reader.readline()
             header.append(result)
             if result == b'\r\n':
@@ -86,4 +64,3 @@ class HandShake:
         if not 100 <= socket_code < 1000:
             raise HandShakeError("Unsupported HTTP status code: %d" % socket_code)
         return socket_code
-

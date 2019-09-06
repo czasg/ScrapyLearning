@@ -9,8 +9,8 @@ from .parts import parse_uri
 
 
 class AioWebSocket:
-    def __init__(self, uri: str, headers: list = [],
-                 union_header: dict = {}, timeout: int = 30,
+    def __init__(self, uri: str, headers: list,
+                 union_header: dict, timeout: int = 30,
                  read_timeout: int = 120):
         self.uri = uri
         self.hands = None
@@ -51,7 +51,7 @@ class AioWebSocket:
     def manipulator(self):
         return self.converse
 
-    async def __aenter__(self):
+    async def __aenter__(self):  # 原来玩意是当使用async with的时候回执行一次的啊，好吧
         create = asyncio.wait_for(self.create_connection(), timeout=self.timeout)
         try:
             await create
