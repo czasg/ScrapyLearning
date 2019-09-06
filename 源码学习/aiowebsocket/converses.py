@@ -34,7 +34,7 @@ class AioWebSocket:
         if self.state is not SocketState.zero.value:
             raise ConnectionError('Connection is already exists.')
         remote = scheme, host, port, resource, ssl = parse_uri(self.uri)
-        reader, writer = await asyncio.open_connection(host=host, port=port, ssl=ssl)
+        reader, writer = await asyncio.open_connection(host=host, port=port, ssl=ssl)  # 这是啥，asyncio自带的连接嘛
         self.reader = reader
         self.writer = writer
         self.hands = HandShake(remote, reader, writer,

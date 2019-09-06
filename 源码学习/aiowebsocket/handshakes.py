@@ -16,7 +16,7 @@ class HandShake:
         self.union_header = union_header
 
     def shake_headers(self, host: str, port: int, resource: str = '/',
-                      version: int = 13):
+                      version: int = 13):  # 为请求添加请求头
         if self.headers:
             if isinstance(self.headers, list):
                 return '\r\n'.join(self.headers) + '\r\n'
@@ -50,7 +50,7 @@ class HandShake:
 
     async def shake_result(self):
         header = []
-        for _ in range(2 ** 8):
+        for _ in range(2 ** 8):  # 使用位移算法
             result = await self.reader.readline()
             header.append(result)
             if result == b'\r\n':
