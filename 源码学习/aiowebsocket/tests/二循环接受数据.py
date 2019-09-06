@@ -1,5 +1,14 @@
 import socket, base64, hashlib
 
+"""
+
+ws.send("你好")
+# ws.onopen = function (ev) { //若是连接成功，onopen函数会执行
+#     console.log(22222);
+#     ws.send("你好");
+# }
+"""
+
 
 def get_headers(data):
     '''将请求头转换为字典'''

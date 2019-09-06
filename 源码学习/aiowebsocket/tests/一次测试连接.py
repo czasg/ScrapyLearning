@@ -1,5 +1,9 @@
 import socket, base64, hashlib
 
+"""
+ws =new WebSocket("ws://127.0.0.1:8080");
+"""
+
 
 def get_headers(data):
     '''将请求头转换为字典'''
@@ -20,7 +24,7 @@ def get_headers(data):
 
 sock = socket.socket()
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-sock.bind(("127.0.0.1", 8888))
+sock.bind(("127.0.0.1", 8080))
 sock.listen(5)
 
 # 等待用户连接
