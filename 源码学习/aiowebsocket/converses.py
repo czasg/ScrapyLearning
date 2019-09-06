@@ -9,10 +9,6 @@ from .parts import parse_uri
 
 
 class AioWebSocket:
-    """Responsible for managing the
-    connection between client and server
-    """
-
     def __init__(self, uri: str, headers: list = [],
                  union_header: dict = {}, timeout: int = 30,
                  read_timeout: int = 120):
@@ -28,10 +24,6 @@ class AioWebSocket:
         self.state = SocketState.zero.value
 
     async def close_connection(self):
-        """Close connection.
-        Check connection status before closing.
-        Send Closed Frame to Server.
-        """
         if self.state is SocketState.closed.value:
             raise ConnectionError('SocketState is closed, can not close.')
         if self.state is SocketState.closing:
@@ -39,10 +31,6 @@ class AioWebSocket:
         await self.converse.send(message=b'')
 
     async def create_connection(self):
-        """Create connection.
-        Check the current connection status.
-        Send out a handshake and check the result。
-        """
         if self.state is not SocketState.zero.value:
             raise ConnectionError('Connection is already exists.')
         remote = scheme, host, port, resource, ssl = parse_uri(self.uri)
@@ -76,9 +64,6 @@ class AioWebSocket:
 
 
 class Converse:
-    """Responsible for communication
-    between client and server
-    """
     def __init__(self, reader: object, writer: object, maxsize: int = 2**16):
         self.reader = reader
         self.writer = writer
@@ -87,18 +72,12 @@ class Converse:
 
     async def send(self, message,
                    fin: bool = True, mask: bool = True):
-        """Send message to server """
-
         if isinstance(message, str):
             message = message.encode()
         code = DataFrames.text.value
         await self.frame.write(fin=fin, code=code, message=message, mask=mask)
 
     async def receive(self, text=False, mask=False):
-        """Get a message
-        If there is no message in the message queue,
-        try to read it or pop up directly from the message queue
-        """
         if not self.message_queue.qsize():
             single_message = await self.frame.read(text, mask)
             await self.message_queue.put(single_message)
