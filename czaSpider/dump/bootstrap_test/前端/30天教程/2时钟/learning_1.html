@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<title>test</title>
+<style>
+html {
+    font-size: 625%;
+    background: #018DED url(./image/picture1.jpg) bottom center;
+    background-size: cover;
+}
+
+html, body {
+    margin: 0px;
+    padding: 0px;
+    display: flex;  /*  弹性布局 */
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;  /* 弹性盒子在侧轴上的布局方式，居中 */
+}
+
+.clock {
+    position: relative;
+    width: 3rem;
+    height: 3rem;
+    border: 0.2rem solid white;
+    margin: 0.5rem auto;
+    padding: 0.2rem;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    box-shadow:0 0 2px 4px rgba(0,0,0,0.1),
+               0 0 10px 3px rgba(0,0,0,0.2),
+               0 0 1px 2px #EFEFEF inset,
+               0 0 30px black inset;
+}
+.clock-son {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.hand {
+    background: #fff;
+    position: absolute;
+    bottom: 50%;  /* 这玩意居然有翻转的意思 */
+    left: 50%;  /* 这玩意可以理解为往左移动了50%的父类距离 */
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.1),
+      0 0 8px rgba(0, 0, 0, 0.4),
+      2px 5px 1px rgba(0, 0, 0, 0.5);
+}
+.hour-hand {
+    height: 40%;
+    width: 0.1rem;
+    margin-left: -0.05rem;  /* 设置元素的上外边距 */
+    border-top-right-radius: .05rem;  /*向元素的左下角添加圆角边框：*/
+    border-top-left-radius: .05rem;  /*元素的左上角添加圆角边框：*/
+}
+.min-hand {
+    height: 45%;
+    width: .05rem;
+    margin-left: -0.025rem;
+}
+
+.second-hand {
+    height: 50%;
+    width: .02rem;
+    margin-left:-0.01rem;
+    border-bottom-left-radius: .02rem;
+    border-top-left-radius: .02rem;
+    background-color: red;
+}
+</style>
+</head>
+<body>
+<div class="clock">
+	<div class="clock-son">
+		<div class="hand second-hand"></div>
+		<div class="hand minute-hand"></div>
+		<div class="hand hour-hand"></div>
+	</div>
+</div>
+<div class="date-clock">
+	<div class="date"></div>
+	<div class="week"></div>
+	<div class="time"></div>
+</div>
+<!--<script type="text/javascript">-->
+	<!--function rotateClock() {-->
+		<!--const second_hand = document.querySelector('.second-hand');-->
+		<!--const minute_hand = document.querySelector('.minute-hand');-->
+		<!--const hour_hand = document.querySelector('.hour-hand');-->
+		<!--function update() {-->
+			<!--const now = new Date();-->
+			<!--const second = now.getSeconds();-->
+			<!--const secondDegrees = second * 6;-->
+			<!--const minute = now.getMinutes();-->
+			<!--const minuteDegree = minute * 6 + second / 60 * 6;-->
+			<!--const hour = now.getHours();-->
+			<!--const hourDegree = (hour - 12) * 30 + (minute / 60) * 30;-->
+			<!--second_hand.style.transform = `rotate(${secondDegrees}deg)`;-->
+			<!--minute_hand.style.transform = `rotate(${minuteDegree}deg)`;-->
+			<!--hour_hand.style.transform = `rotate(${hourDegree}deg)`;-->
+		<!--}-->
+		<!--update();-->
+		<!--setInterval(update, 1000);-->
+	<!--}-->
+	<!--function showDateClock() {-->
+		<!--const date_hand = document.querySelector('.date');-->
+		<!--const week_hand = document.querySelector('.week');-->
+		<!--const time_hand = document.querySelector('.time');-->
+		<!--const weekList = ["星期日","星期一","星期二","星期三","星期四","星期五","星期六"];-->
+		<!--function updateWord() {-->
+			<!--const now = new Date();-->
+			<!--date_hand.innerHTML = now.getFullYear() + '-' + (now.getMonth() + 1) + '-' + now.getDate();-->
+			<!--week_hand.innerHTML = weekList[now.getDay()];-->
+		<!--}-->
+		<!--function updateNumDate() {-->
+			<!--const now = new Date();-->
+			<!--time_hand.innerHTML = now.getHours() + ':' + now.getMinutes() + ':' + now.getSeconds();-->
+		<!--}-->
+		<!--updateWord();-->
+		<!--updateNumDate();-->
+		<!--setInterval(updateWord, 24 * 3600);-->
+		<!--setInterval(updateNumDate, 1000);-->
+	<!--}-->
+	<!--rotateClock();-->
+	<!--showDateClock();-->
+<!--</script>-->
+</body>
+</html>

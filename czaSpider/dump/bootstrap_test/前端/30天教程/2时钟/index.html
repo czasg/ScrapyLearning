@@ -61,8 +61,8 @@ html, body {
 .hand {
     background: #fff;
     position: absolute;
-    bottom: 50%;
-    left: 50%;
+    bottom: 50%;  /* 这玩意居然有翻转的意思 */
+    left: 50%;  /* 这玩意可以理解为往左移动了50%的父类距离 */
     transform: rotate(0deg);
     /*
     虽说这样可以使指针居中线，但是translate的平移是相对于自身center位置的，
