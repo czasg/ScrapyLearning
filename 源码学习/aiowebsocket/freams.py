@@ -1,7 +1,7 @@
 import io
 import random
 import logging
-from struct import pack, unpack
+from struct import pack, unpack  # python数值和C的结构之间进行转换
 from itertools import cycle
 from .enumerations import *
 from .exceptions import FrameError
@@ -9,10 +9,11 @@ from .exceptions import FrameError
 
 class Frames:
     """数据帧相关操作"""
+
     def __init__(self, reader: object, writer: object):
         self.reader = reader
         self.writer = writer
-        self.maxsize = 2**64
+        self.maxsize = 2 ** 64
 
     @staticmethod
     def message_mask(message: bytes, mask):
@@ -85,19 +86,19 @@ class Frames:
                 | (0b00100000 if rsv2 else 0)
                 | (0b00010000 if rsv3 else 0)
                 | code
-        )
+        )  # 可以，这个算法直接就是看不懂
         head2 = 0b10000000 if mask else 0  # Whether to mask or not
         return head1, head2
 
     async def write(self, fin, code, message, mask=True, rsv1=0, rsv2=0, rsv3=0):
-        head1, head2 = self.pack_message(fin, code, mask, rsv1, rsv2, rsv3)
+        head1, head2 = self.pack_message(fin, code, mask, rsv1, rsv2, rsv3)  # (129, 128)
         output = io.BytesIO()
         length = len(message)
         if length < 126:
             output.write(pack('!BB', head1, head2 | length))
-        elif length < 2**16:
+        elif length < 2 ** 16:
             output.write(pack('!BBH', head1, head2 | 126, length))
-        elif length < 2**64:
+        elif length < 2 ** 64:
             output.write(pack('!BBQ', head1, head2 | 127, length))
         else:
             raise ValueError('Message is too long')
@@ -107,7 +108,71 @@ class Frames:
             output.write(mask_bits)
             message = self.message_mask(message, mask_bits)
 
-        output.write(message)
+        output.write(message)  # 在写入信息之前写了两段其他的数据，
         self.writer.write(output.getvalue())
 
-    async def receive_close(self):...
+    async def receive_close(self):
+        ...
+
+
+"""
+struct.pack(fmt, v1, v2, ...) 根据fmt规定的格式对v1, v2, ...内容进行打包, 并返回打包(转换)后的字节码.
+struct.pack_into(fmt, buffer, offset, v1, v2, ...) 根据fmt规定的格式对v1, v2, ...内容进行打包, 然后将打包后的内容写入buffer中offset位置.
+struct.unpack(fmt, string)根据fmt规定的格式对string(其实是字节码)进行unpack(解码), 并以元组的形式返回解码内容.
+struct.unpack_from(fmt, buffer[, offset=0])对buffer中offset位置起始的内容根据fmt进行解码,并将结果以元组形式返回.
+struct.calcsize(fmt) 返回fmt指定的格式转换后的数据长度(unit: Byte)
+
+
+Character	Byte order	Size	Alignment
+@	native	native	native
+=	native	standard	none
+<	little-endian	standard	none
+>	big-endian	standard	none
+!	network(= big-endian)	standard	none
+
+
+Format	C Type	Python Type	Standard size
+x	pad byte	no value	
+c	char	string of length 1	1
+b	signed char	integer	1
+B	unsigned char	integer	1
+?	_Bool	bool	1
+h	short	integer	2
+H	unsigned short	integer	2
+i	int	integer	4
+I	unsigned int	integer	4
+l	long	integer	4
+L	unsigned long	integer	4
+q	long long	integer	8
+Q	unsigned long long	integer	8
+f	float	float	4
+d	double	float	8
+s	char[]	string	
+p	char[]	string	
+P	void *	integer	
+
+
+import struct
+#69 is  Version and IHL, 0 is TOS, 1420 is Total Length
+first_line = struct.pack('>BBH', 69, 0, 1420)  
+print(first_line)
+> b'E\x00\x05\x8c'
+
+#calculate the length of format '>BBH'
+struct.calcsize('>BBH')
+> 4   
+
+
+import struct
+s1 = b'E\x00\x05\x8c'
+#unpack the string s1 (s1 is Bytes) according to format '>BBH'
+result = struct.unpack('>BBH', s1)
+print(result)
+>(69, 0, 1420)
+"""
+
+if __name__ == '__main__':
+    message = '弟中弟'
+    head1, head2 = Frames.pack_message(fin=True, code=0x01, mask=True)  # (129, 128)
+    length = len(message)
+    print(pack('!BB', head1, head2 | length))

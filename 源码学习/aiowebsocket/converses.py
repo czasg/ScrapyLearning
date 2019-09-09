@@ -67,8 +67,8 @@ class Converse:
     def __init__(self, reader: object, writer: object, maxsize: int = 2**16):
         self.reader = reader
         self.writer = writer
-        self.message_queue = Queue(maxsize=maxsize)
-        self.frame = Frames(self.reader, self.writer)
+        self.message_queue = Queue(maxsize=maxsize)  # 接收消息直接从这里get就可以了
+        self.frame = Frames(self.reader, self.writer)  # 帧  写/发送消息的操作在这里
 
     async def send(self, message,
                    fin: bool = True, mask: bool = True):  # 发送消息
