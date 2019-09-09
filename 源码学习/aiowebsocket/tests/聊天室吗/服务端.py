@@ -1,54 +1,52 @@
-import tornado.ioloop
 import tornado.web
-import tornado.websocket
+import tornado.ioloop
+import tornado.httpserver
+import tornado.options
+import os
 import datetime
 
+from tornado.web import RequestHandler
+from tornado.options import define, options
+from tornado.websocket import WebSocketHandler
 
-class MainHandler(tornado.web.RequestHandler):
+define("port", default=8001, type=int)
+
+class IndexHandler(RequestHandler):
     def get(self):
-        self.render("s1.html")
+        self.render("index.html")
 
-    def post(self, *args, **kwargs):
-        pass
+class ChatHandler(WebSocketHandler):
 
+    cli = set()  # 用来存放在线用户的容器
 
-users = set()
-
-
-class ChatHandler(tornado.websocket.WebSocketHandler):
-    def open(self, *args, **kwargs):
-        '''客户端连接'''
-        print("connect....")
+    def open(self):
         print(self.request)
-        users.add(self)
+        self.cli.add(self)  # 建立连接后添加用户到容器中
+        for c in self.cli:  # 向已在线用户发送消息
+            c.write_message(u"[%s]-[%s]-进入聊天室" % (self.request.remote_ip, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
     def on_message(self, message):
-        '''有消息到达'''
-        now = datetime.datetime.now()
-        content = self.render_string("recv_msg.html", date=now.strftime("%Y-%m-%d %H:%M:%S"), msg=message)
-        for client in users:
-            if client == self:
-                continue
-            client.write_message(content)
+        for c in self.cli:  # 向在线用户广播消息
+            c.write_message(u"[%s]-[%s]-说：%s" % (self.request.remote_ip, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), message))
 
     def on_close(self):
-        '''客户端主动关闭连接'''
-        users.remove(self)
+        self.cli.remove(self) # 用户关闭连接后从容器中移除用户
+        for c in self.cli:
+            c.write_message(u"[%s]-[%s]-离开聊天室" % (self.request.remote_ip, datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
 
+    def check_origin(self, origin):
+        return True  # 允许WebSocket的跨域请求
 
-st = {
-    "template_path": "template",  # 模板路径配置
-    "static_path": 'static',
-}
-
-# 路由映射   匹配执行，否则404
-application = tornado.web.Application([
-    ("/index", MainHandler),
-    ("/wschat", ChatHandler),
-], **st)
-
-if __name__ == "__main__":
-    application.listen(8080)
-
-    # io多路复用
-    tornado.ioloop.IOLoop.instance().start()
+if __name__ == '__main__':
+    tornado.options.parse_command_line()
+    app = tornado.web.Application([
+            (r"/", IndexHandler),
+            (r"/chat", ChatHandler),
+        ],
+        static_path = os.path.join(os.path.dirname(__file__), "static"),
+        template_path = os.path.join(os.path.dirname(__file__), ""),
+        debug = True
+        )
+    http_server = tornado.httpserver.HTTPServer(app)
+    http_server.listen(options.port)
+    tornado.ioloop.IOLoop.current().start()

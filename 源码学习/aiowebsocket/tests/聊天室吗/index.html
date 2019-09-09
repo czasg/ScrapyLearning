@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>聊天室</title>
+</head>
+<style type="text/css">
+    #char{
+        margin: 0 auto;
+        height:500px;
+        width: 800px;
+    }
+    #contents{
+        height:500px;
+        width: 800px;
+        border:1px solid #cccccc;
+        border-radius:3px;
+        box-shadow: 2px 2px 5px #888888;
+        margin-bottom: 10px;
+    }
+    .input_send #msg{
+        height:20px;
+        width: 757px;
+    }
+</style>
+<body>
+    <div id="char" >
+        <div id="contents"></div>
+        <div class="input_send">
+                <textarea id="msg"></textarea>
+                <a href="#" id="send_mesage" onclick="sendMsg()">发送</a>
+        </div>
+    </div>
+    <script src="{{static_url('js/jquery.min.js')}}"></script>
+    <script type="text/javascript">
+        var ws = new WebSocket("ws://192.168.199.182:9000/chat");
+        ws.onmessage = function(e) {
+            $("#contents").append("<p>" + e.data + "</p>");
+        }
+        function sendMsg() {
+            var msg = $("#msg").val();
+            ws.send(msg);
+            $("#msg").val("");
+        }
+    </script>
+</body>
+</html>

@@ -6,6 +6,7 @@ import socket, base64, hashlib
 
 """
 ws =new WebSocket("ws://127.0.0.1:8080");
+ws.send("你好");
 ws.onopen = function (ev) { //若是连接成功，onopen函数会执行
     console.log(22222);
     ws.send("你好");
