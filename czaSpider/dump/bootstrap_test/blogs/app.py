@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 import json
-
+import orm
 
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
-import orm
-
+# from anti_spider import *
 from tools import *
 from handler import *
 from config import configs
 
 logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(message)s")
 logger = logging.getLogger(__name__)
-# logger.setLevel(logging.INFO)
+
+
+logger.setLevel(logging.INFO)
 
 
 def init_jinja2(app, **kwargs):
-    logger.info('init jinja2...')
     options = dict(
         autoescape=kwargs.get('autoescape', True),
         block_start_string=kwargs.get('block_start_string', '{%'),
@@ -27,21 +27,25 @@ def init_jinja2(app, **kwargs):
         auto_reload=kwargs.get('auto_reload', True)
     )
     path = kwargs.get('path', None)
-    if path is None:
-        # path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-        path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates_new')
-    logger.info('set jinja2 template path: %s' % path)
-    env = Environment(loader=FileSystemLoader(path), **options)
+    current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+    paths = [current_path]
+    # if path is None:
+        # path
+        # paths = [current_path,
+        #          os.path.join(current_path, 'anti_spider')]
+        # path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates_new')
+    env = Environment(loader=FileSystemLoader(paths), **options)
     filters = kwargs.get('filters', None)
     if filters is not None:
         for name, f in filters.items():
             env.filters[name] = f
     app['__templating__'] = env
 
-
-async def anti_spider(app, handler):
-    async def anti_spider_first(request):
-        anti_cookie = request.cookies.get(ANTI_COOKIE)
+ANTI_COOKIE_FIRST = 'anti_spider_first'
+async def anti_spider_first(app, handler):
+    async def _anti_spider_first(request):
+        anti_cookie = request.cookies.get(ANTI_COOKIE_FIRST)
+        print(anti_cookie, ANTI_COOKIE_FIRST, request.path)
         if not request.path.startswith('/get/init/anti/cookie'):
             if anti_cookie:
                 anti = check_anti_spider(anti_cookie)
@@ -52,7 +56,8 @@ async def anti_spider(app, handler):
             else:
                 return web.HTTPFound('/get/init/anti/cookie')
         return (await handler(request))
-    return anti_spider_first
+
+    return _anti_spider_first
 
 
 async def auth_factory(app, handler):
@@ -75,10 +80,13 @@ async def auth_factory(app, handler):
 
     return auth
 
+
 async def response_factory(app, handler):
     async def response(request):
         logger.info('Response Handler .....')
+        print(handler)
         r = await handler(request)
+        print('!!!')
         if isinstance(r, web.StreamResponse):
             logger.info('StreamResponse! return directly')
             return r
@@ -116,6 +124,7 @@ async def response_factory(app, handler):
 
     return response
 
+
 def datetime_filter(t):
     delta = int(time.time() - t)
     if delta < 60:
@@ -129,10 +138,11 @@ def datetime_filter(t):
     dt = datetime.fromtimestamp(t)
     return u'%s年%s月%s日' % (dt.year, dt.month, dt.day)
 
+
 async def init(loop):
     await orm.init_pool(loop=loop, **configs.db)
     app = web.Application(loop=loop, middlewares=[
-        anti_spider, auth_factory, response_factory])
+        anti_spider_first, auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'apis')
     # add_routes(app, 'api')  # todo, 待转移到这边来，分类进行管理
