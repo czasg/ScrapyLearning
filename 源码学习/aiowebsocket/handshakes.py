@@ -41,17 +41,17 @@ class HandShake:
         headers.append('\r\n')
         return '\r\n'.join(headers)
 
-    async def shake_(self):
+    async def shake_(self):  # 1
         """Initiate a handshake"""
         porn, host, port, resource, ssl = self.remote
         handshake_info = self.shake_headers(host=host, port=port,
                                             resource=resource)
-        self.write.write(data=handshake_info.encode())
+        self.write.write(data=handshake_info.encode())  # 写之前需要创建一些先行条件，就是这里吗
 
-    async def shake_result(self):
+    async def shake_result(self):  # 2
         header = []
-        for _ in range(2 ** 8):  # 使用位移算法
-            result = await self.reader.readline()
+        for _ in range(2 ** 8):  # 使用位移算法 256
+            result = await self.reader.readline()  # 在写之后立即读一些东西吗
             header.append(result)
             if result == b'\r\n':
                 break
