@@ -4,7 +4,7 @@ import hashlib
 from datetime import datetime
 
 from models import *
-from error_man import *
+from tools.error_man import *
 from config import configs
 
 COOKIE_NAME = 'czaOrz'
@@ -12,8 +12,8 @@ _COOKIE_KEY = configs.session.secret
 _RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
 _RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
 
-ANTI_COOKIE = 'anti_spider'
-
+ANTI_COOKIE_FIRST = 'anti_spider_first'
+ANTI_COOKIE_SECOND = 'anti_spider_second'
 
 def check_admin(request):
     if request.__user__ is None or not request.__user__.admin:

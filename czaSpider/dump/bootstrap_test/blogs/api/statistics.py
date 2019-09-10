@@ -1,12 +1,13 @@
 from datetime import timedelta
-from motor.motor_asyncio import AsyncIOMotorClient
+# from motor.motor_asyncio import AsyncIOMotorClient
+import pymongo
 
 from handler import get, post
 from tools import *
 
 logger = logging.getLogger(__name__)
-client = AsyncIOMotorClient('127.0.0.1', 27017)
-
+# client = AsyncIOMotorClient()
+client = pymongo.MongoClient('127.0.0.1', 27017)
 
 @get('/api/get/blogs/statistic')
 async def api_get_blogs_statistic(*, limit=7):

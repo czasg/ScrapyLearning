@@ -5,7 +5,6 @@ import orm
 from datetime import datetime
 from jinja2 import Environment, FileSystemLoader
 
-# from anti_spider import *
 from tools import *
 from handler import *
 from config import configs
@@ -14,7 +13,7 @@ logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(messag
 logger = logging.getLogger(__name__)
 
 
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 
 def init_jinja2(app, **kwargs):
@@ -27,8 +26,9 @@ def init_jinja2(app, **kwargs):
         auto_reload=kwargs.get('auto_reload', True)
     )
     path = kwargs.get('path', None)
+    print(path)
     current_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
-    paths = [current_path]
+    paths = current_path
     # if path is None:
         # path
         # paths = [current_path,
@@ -41,24 +41,37 @@ def init_jinja2(app, **kwargs):
             env.filters[name] = f
     app['__templating__'] = env
 
-ANTI_COOKIE_FIRST = 'anti_spider_first'
+# ANTI_COOKIE_FIRST = 'anti_spider_first'
 async def anti_spider_first(app, handler):
     async def _anti_spider_first(request):
         anti_cookie = request.cookies.get(ANTI_COOKIE_FIRST)
-        print(anti_cookie, ANTI_COOKIE_FIRST, request.path)
-        if not request.path.startswith('/get/init/anti/cookie'):
+        if not request.path.startswith('/get/anti/cookie/first'):
             if anti_cookie:
                 anti = check_anti_spider(anti_cookie)
                 if anti == None:
-                    return web.HTTPFound('/get/init/anti/cookie')
+                    return web.HTTPFound('/get/anti/cookie/first')
                 elif anti == 'True':
                     pass  # todo, add anti spider
             else:
-                return web.HTTPFound('/get/init/anti/cookie')
+                return web.HTTPFound('/get/anti/cookie/first')
         return (await handler(request))
 
     return _anti_spider_first
+async def anti_spider_second(app, handler):
+    async def _anti_spider_second(request):
+        anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
+        if not request.path.startswith('/get/anti/cookie/second'):
+            if anti_cookie:
+                anti = check_anti_spider(anti_cookie)
+                if anti == None:
+                    return web.HTTPFound('/get/anti/cookie/second')
+                elif re.match('^\d+c\d+$', anti):
+                    pass
+            else:
+                return web.HTTPFound('/get/anti/cookie/second')
+        return (await handler(request))
 
+    return _anti_spider_second
 
 async def auth_factory(app, handler):
     async def auth(request):
@@ -84,9 +97,7 @@ async def auth_factory(app, handler):
 async def response_factory(app, handler):
     async def response(request):
         logger.info('Response Handler .....')
-        print(handler)
         r = await handler(request)
-        print('!!!')
         if isinstance(r, web.StreamResponse):
             logger.info('StreamResponse! return directly')
             return r
@@ -144,8 +155,8 @@ async def init(loop):
     app = web.Application(loop=loop, middlewares=[
         anti_spider_first, auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
-    add_routes(app, 'apis')
-    # add_routes(app, 'api')  # todo, 待转移到这边来，分类进行管理
+    # add_routes(app, 'apis')
+    add_routes(app, 'api')  # todo, 待转移到这边来，分类进行管理
     add_static(app)
     runner = web.AppRunner(app)
     await runner.setup()

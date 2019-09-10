@@ -7,7 +7,7 @@ from urllib.parse import parse_qs
 from importlib import import_module
 from aiohttp import web
 
-from error_man import *
+from tools.error_man import *
 
 EMPTY = inspect.Parameter.empty
 POSITIONAL_OR_KEYWORD = inspect.Parameter.POSITIONAL_OR_KEYWORD
