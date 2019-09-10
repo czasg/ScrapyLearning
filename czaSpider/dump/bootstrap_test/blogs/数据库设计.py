@@ -1,25 +1,57 @@
 __file__ = 'sql'
 
-"""User
-id：         用户唯一id
-email：      用户邮件，注册是使用
-passwd：     用户密码。登录使用
-admin：      判断用户是否拥有管理员权限
-name：       用户姓名
-image：      用户头像
-create_at：  用户创建时间。创建后不可修改。
 """
+create table users1 (
+    `id` bigint not null,
+    `email` varchar(50) not null,
+    `passwd` varchar(50) not null,
+    `admin` bool not null,
+    `name` varchar(50) not null,
+    `image` varchar(100) not null,
+    `created_at` real not null,
+    `unread_msg` bigint not null,
+    unique key `idx_email` (`email`),
+    key `idx_created_at` (`created_at`),
+    primary key (`id`)
+) engine=innodb default charset=utf8;
 
-"""Blog
-id：         博客唯一id
-user_id：    博客对应的用户者
-user_name：  这个需不需要啊==
-user_image： 这个肯定是不需要的 ==
-name：       博客标题
-summary：    博客摘要
-content：    博客内容
-create_at：  博客创建时间
-count：      博客浏览次数
-update_at：  博客更新时间
-blog_type：  博客标签分类，这里应该保存未json格式，内容为对应的标签类型，也就是对应的数字
+create table blogs1 (
+    `id` bigint not null,
+    `user_id` bigint not null,
+    `blog_image` varchar(100) not null,
+    `title` varchar(50) not null,
+    `summary` varchar(200) not null,
+    `content` mediumtext not null,
+    `created_at` real not null,
+    `count` bigint not null,
+    `update_at` real not null,
+    `blog_type` varchar(50) not null,
+    key `idx_created_at` (`created_at`),
+    primary key (`id`)
+) engine=innodb default charset=utf8;
+
+create table comments1 (
+    `id` bigint not null,
+    `blog_id` bigint not null,
+    `user_id` bigint not null,
+    `user_name` varchar(50) not null,
+    `user_image` varchar(100) not null,
+    `content` mediumtext not null,
+    `created_at` real not null,
+    key `idx_created_at` (`created_at`),
+    primary key (`id`)
+) engine=innodb default charset=utf8;
+
+create table son_comments1 (
+    `id` bigint not null,
+    `comment_id` bigint not null,
+    `blog_id` bigint not null,
+    `user_id` bigint not null,
+    `user_name` varchar(50) not null,
+    `user_image` varchar(100) not null,
+    `content` mediumtext not null,
+    `created_at` real not null,
+    key `idx_created_at` (`created_at`),
+    primary key (`id`)
+) engine=innodb default charset=utf8;
 """
