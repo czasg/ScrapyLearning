@@ -1,4 +1,9 @@
+import os
+
 from datetime import datetime
+
+
+def to_path(path, *paths): return os.path.join(path, *paths)
 
 
 def get_now_datetime():
@@ -10,6 +15,13 @@ def text2html(text):
     lines = map(lambda s: '<p>%s</p>' % s.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;'),
                 filter(lambda s: s.strip() != '', text.split('\n')))
     return ''.join(lines)
+
+
+def save_image(unique_id, image_body):
+    picture = str(unique_id) + '.png'
+    with open(to_path(image_path, picture), 'wb') as img:
+        img.write(image_body)
+    return '/static/img/' + picture
 
 
 def process_commands(all=None, size=None, ne=None, gt=None, gte=None, lt=None, lte=None, **kwargs):
@@ -32,3 +44,6 @@ def process_commands(all=None, size=None, ne=None, gt=None, gte=None, lt=None, l
         commands.append({key: {"$lte": value} for key, value in lte.items()})
     query = {"$and": commands} if commands else {}
     return query
+
+
+image_path = to_path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'static', 'img')
