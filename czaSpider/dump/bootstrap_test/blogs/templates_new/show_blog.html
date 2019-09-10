@@ -35,6 +35,10 @@
                     contentType: 'application/json'
                 };
             opt.data = JSON.stringify(data || {});
+            //postJson('/api/new/comment/from/blog/{{ blog.id }}', data, r => {
+            //    alert('发表评论成功');
+            //    refresh();
+            //})
             $.ajax(opt).done(function(r){
                 if (r && r.error){
                     alert(r.error);
