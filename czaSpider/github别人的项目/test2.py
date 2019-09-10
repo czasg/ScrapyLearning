@@ -163,7 +163,7 @@ def train_crack_captcha_cnn():
                 batch_x_test, batch_y_test = get_next_batch(100)
                 acc = sess.run(accuracy, feed_dict={X: batch_x_test, Y: batch_y_test, keep_prob: 1.})
                 print(step, acc)
-                if acc > 0.95:
+                if acc > 0.80:
                     saver.save(sess, "crack_capcha.model", global_step=step)
                     break
             step += 1
