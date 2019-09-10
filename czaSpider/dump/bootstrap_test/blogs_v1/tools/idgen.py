@@ -44,3 +44,6 @@ class IdGen:
     def next_timestamp(self, timestamp, next_timestamp=0):
         while timestamp >= next_timestamp: next_timestamp = get_current_timestamp()
         return next_timestamp
+
+
+id_pool = IdGen.from_node()

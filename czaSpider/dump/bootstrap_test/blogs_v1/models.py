@@ -1,9 +1,7 @@
 import time
 
 from orm import *
-from tools.idgen import IdGen
-
-id_pool = IdGen.from_node()
+from tools.idgen import id_pool
 
 
 def next_id(): return id_pool.next_id()
@@ -53,7 +51,7 @@ class SonComment(Model):
     __table__ = 'son_comments1'
 
     id = IntegerField(primary_key=True, default=next_id)
-    comment_id = StringField(ddl='varchar(50)')  # 父级评论，可以总的统计一次
+    comment_id = StringField(ddl='varchar(50)')
     blog_id = StringField(ddl='varchar(50)')
     user_id = StringField(ddl='varchar(50)')
     user_name = StringField(ddl='varchar(50)')
