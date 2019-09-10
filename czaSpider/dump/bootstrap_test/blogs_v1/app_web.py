@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import re, json, logging
+import json, logging
 
 import orm
 
