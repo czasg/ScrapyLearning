@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Anti Spider First</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<style>
+*{
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	background: #F5F5F5;
+	height: 100%;
+	width: 100%;
+
+}
+
+#main {
+	position: absolute;
+    left: 50%;
+    top: 50%;
+    margin: -50px 0 0 -50px;
+}
+</style>
+<body>
+<div id="main">
+	hello spider
+</div>
+<script type = "text/javascript" >
+function AntiSpiderFirst() {
+    document.cookie = "anti_spider_first=True; path=/";
+    self.location.assign("/");
+}
+</script>
+<script>
+setTimeout("AntiSpiderFirst()", 500);
+</script >
+</body>
+</html>

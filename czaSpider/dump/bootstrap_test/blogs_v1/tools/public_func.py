@@ -3,6 +3,9 @@ import os
 from datetime import datetime
 
 
+def get_file_path(file): return os.path.dirname(os.path.abspath(file))
+
+
 def to_path(path, *paths): return os.path.join(path, *paths)
 
 
@@ -46,4 +49,4 @@ def process_commands(all=None, size=None, ne=None, gt=None, gte=None, lt=None, l
     return query
 
 
-image_path = to_path(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'static', 'img')
+image_path = to_path(os.path.dirname(get_file_path(__file__)), 'static', 'img')

@@ -14,6 +14,7 @@ async def anti_spider_dom(request):
 
 @get('/get/anti/cookie/first')
 async def anti_spider_first(request):
+    web.HTTPRedirection()
     webResponse = web.HTTPFound('/anti_spider')
     webResponse.set_cookie(ANTI_COOKIE_FIRST, 'True', max_age=86400)
     webResponse.content_type = 'application/json'

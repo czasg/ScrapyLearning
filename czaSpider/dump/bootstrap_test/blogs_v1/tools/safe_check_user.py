@@ -4,6 +4,7 @@ from project_config.config import configs
 from tools.man_error import *
 from models import User
 
+COOKIE_NAME = 'czaOrz'
 _COOKIE_KEY = configs.session.secret
 
 
