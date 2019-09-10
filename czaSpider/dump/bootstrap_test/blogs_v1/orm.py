@@ -1,7 +1,7 @@
 import logging
 import aiomysql
 
-from tools.error_man import *
+from tools.man_error import *
 
 logger = logging.getLogger(__name__)
 
