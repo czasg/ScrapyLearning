@@ -42,11 +42,12 @@ count = 0
 async def anti_spider_first(app, handler):
     async def _anti_spider_first(request):
         anti_cookie = request.cookies.get(ANTI_COOKIE_FIRST)
+        request.__anti_spider_first__ = None
         if not request.path.startswith('/get/anti/spider/first'):
             if anti_cookie:
                 anti = check_anti_spider(anti_cookie)
                 if anti == 'True':
-                    pass
+                    request.__anti_spider_first__ = True
                 else:
                     return web.HTTPForbidden()
             else:
@@ -59,15 +60,10 @@ async def anti_spider_first(app, handler):
 async def anti_spider_second(app, handler):
     async def _anti_spider_second(request):
         anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
-        if not request.path.startswith('/get/anti/spider/second'):
-            if anti_cookie:
-                anti = check_anti_spider(anti_cookie)
-                if anti == None:
-                    return web.HTTPFound('/get/anti/spider/second')
-                elif re.match('^\d+c\d+$', anti):
-                    pass
-            else:
-                return web.HTTPFound('/get/anti/spider/second')
+        if anti_cookie != stringToHex(request.path):
+            r = web.HTTPFound(request.path)
+            r.set_cookie(ANTI_COOKIE_SECOND, stringToHex(request.path))
+            return r
         return (await handler(request))
 
     return _anti_spider_second
@@ -150,7 +146,7 @@ def datetime_filter(t):
 async def init(loop):
     await orm.init_pool(loop=loop, **configs.db)
     app = web.Application(loop=loop, middlewares=[
-        anti_spider_first, auth_factory, response_factory])
+        anti_spider_first, anti_spider_second, auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'apis')
     add_static(app)
