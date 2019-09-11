@@ -19,7 +19,7 @@ function AntiSpiderSecond() {
     var screendate = width + "," + height;
     var curlocation = window.location.href;
     if ( -1 == curlocation.indexOf("security_verify_")) {
-        document.cookie = "anti_spider_second=" + stringToHex(window.location.pathname) + ";path=/;";
+        document.cookie = "anti_spider_second_mid=" + stringToHex(window.location.pathname) + '; path=/;';
     }
     self.location = "/?security_verify_data=" + stringToHex(screendate);
 }

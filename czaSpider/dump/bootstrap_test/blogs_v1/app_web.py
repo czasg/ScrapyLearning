@@ -42,12 +42,11 @@ count = 0
 async def anti_spider_first(app, handler):
     async def _anti_spider_first(request):
         anti_cookie = request.cookies.get(ANTI_COOKIE_FIRST)
-        request.__anti_spider_first__ = None
         if not request.path.startswith('/get/anti/spider/first'):
             if anti_cookie:
                 anti = check_anti_spider(anti_cookie)
                 if anti == 'True':
-                    request.__anti_spider_first__ = True
+                    pass
                 else:
                     return web.HTTPForbidden()
             else:
@@ -59,12 +58,15 @@ async def anti_spider_first(app, handler):
 
 async def anti_spider_second(app, handler):
     async def _anti_spider_second(request):
+        r = (await handler(request))
         anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
-        if anti_cookie != stringToHex(request.path):
-            r = web.HTTPFound(request.path)
-            r.set_cookie(ANTI_COOKIE_SECOND, stringToHex(request.path))
+        if request.path.startswith('/get/anti/spider/second'):
             return r
-        return (await handler(request))
+        if anti_cookie != stringToHex(request.path):  # todo, 没必要每次都计算，可以写一个dict用来存储
+            r = web.HTTPFound('/get/anti/spider/second')
+            # r.cookies.pop(ANTI_COOKIE_SECOND) if ANTI_COOKIE_SECOND in r.cookies else None  # todo, 不加这个可能有问题
+            r.set_cookie(ANTI_COOKIE_SECOND, stringToHex(request.path))
+        return r
 
     return _anti_spider_second
 
