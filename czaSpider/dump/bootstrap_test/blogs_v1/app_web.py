@@ -56,7 +56,7 @@ async def anti_spider_first(app, handler):
     return _anti_spider_first
 
 
-async def anti_spider_second(app, handler):
+async def anti_spider_second(app, handler):  # todo， 这种反爬如何破解，只需要二次访问即可，会携带上相关cookie，所以也不难
     async def _anti_spider_second(request):
         r = (await handler(request))
         anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
@@ -65,6 +65,7 @@ async def anti_spider_second(app, handler):
         if anti_cookie != stringToHex(request.path):  # todo, 没必要每次都计算，可以写一个dict用来存储
             r = web.HTTPFound('/get/anti/spider/second')
             # r.cookies.pop(ANTI_COOKIE_SECOND) if ANTI_COOKIE_SECOND in r.cookies else None  # todo, 不加这个可能有问题
+            # webResponse.set_cookie(ANTI_COOKIE_SECOND, '-deleted-', max_age=0)
             r.set_cookie(ANTI_COOKIE_SECOND, stringToHex(request.path))
         return r
 
