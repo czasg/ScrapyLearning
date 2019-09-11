@@ -81,7 +81,6 @@ async def anti_spider_third(app, handler):  # todo，此处是不是应该加入
         if not count_record:
             redis_handler.set(request.remote, 1, COUNT_EXPIRE_TIME)
         elif int(count_record) > COUNT_FORBID_TIME:
-            print(int(count_record))
             return web.HTTPForbidden()
         if not times_record:
             redis_handler.hset(REDIS_ANTI_SPIDER_TIME, request.remote, get_now_time_stamp())
