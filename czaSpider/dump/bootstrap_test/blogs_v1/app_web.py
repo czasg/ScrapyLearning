@@ -9,6 +9,7 @@ from tools.public_func import *
 from tools.safe_check_spider import *
 from tools.safe_check_user import *
 from tools.handler import *
+from database.redis.database_redis import *
 
 logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(message)s")
 logger = logging.getLogger(__name__)
@@ -34,9 +35,6 @@ def init_jinja2(app, **kwargs):
         for name, f in filters.items():
             env.filters[name] = f
     app['__templating__'] = env
-
-
-count = 0
 
 
 async def anti_spider_first(app, handler):  # todo 反爬需要单独起一个服务，不然别的服务就没法使用了
@@ -76,19 +74,20 @@ async def anti_spider_second(app, handler):  # todo， 这种反爬如何破解�
     return _anti_spider_second
 
 
-async def anti_spider_third(app, handler):  # todo， 这种反爬如何破解，只需要访问第二次抓取cookie，携带上相关cookie重新访问目标页面，所以也不难
-    async def _anti_spider_third(request):  # todo 当前后端分离的时候，可能会遇到惊天大bug
-        r = (await handler(request))
-        anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
-        if request.path.startswith(('/get/anti/spider/second', '/api/')):
-            return r
-        if anti_cookie != stringToHex(request.path):
-            res = web.Response(body=app['__templating__'].get_template('anti_spider/anti_spider_second.html').
-                               render(**{'anti_spider_path': request.path}).encode('utf-8'))
-            res.set_cookie(ANTI_COOKIE_SECOND, stringToHex(request.path))
-            res.content_type = 'text/html;charset=utf-8'
-            return res
-        return r
+async def anti_spider_third(app, handler):  # todo，此处是不是应该加入验证码啊
+    async def _anti_spider_third(request):
+        times_record = redis_handler.hget(REDIS_ANTI_SPIDER_TIME, request.remote)
+        count_record = redis_handler.get(request.remote)
+        if not count_record:
+            redis_handler.set(request.remote, 1, COUNT_EXPIRE_TIME)
+        elif int(count_record) > COUNT_FORBID_TIME:
+            print(int(count_record))
+            return web.HTTPForbidden()
+        if not times_record:
+            redis_handler.hset(REDIS_ANTI_SPIDER_TIME, request.remote, get_now_time_stamp())
+        elif (int(times_record) - get_now_time_stamp()) > 3:
+            redis_handler.incr(request.remote)
+        return (await handler(request))
 
     return _anti_spider_third
 
@@ -170,7 +169,7 @@ def datetime_filter(t):
 async def init(loop):
     await orm.init_pool(loop=loop, **configs.db)
     app = web.Application(loop=loop, middlewares=[
-        anti_spider_first, anti_spider_second, auth_factory, response_factory])
+        anti_spider_first, anti_spider_second, anti_spider_third, auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     app['__anti_spider_path__'] = {}
     add_routes(app, 'apis')

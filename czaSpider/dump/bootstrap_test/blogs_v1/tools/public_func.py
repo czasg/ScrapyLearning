@@ -1,4 +1,4 @@
-import os
+import os, time
 
 from datetime import datetime
 
@@ -12,6 +12,9 @@ def to_path(path, *paths): return os.path.join(path, *paths)
 def get_now_datetime():
     __date = datetime.now()
     return datetime(__date.year, __date.month, __date.day)
+
+
+def get_now_time_stamp(): return int(time.time())
 
 
 def text2html(text):
