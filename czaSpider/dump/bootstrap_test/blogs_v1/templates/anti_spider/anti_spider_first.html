@@ -31,7 +31,7 @@ body {
 <script type = "text/javascript" >
 function AntiSpiderFirst() {
     document.cookie = "anti_spider_first=True; path=/;";
-    self.location.assign("/");
+    self.location.assign("{{ anti_spider_path }}");
 }
 </script>
 <script>

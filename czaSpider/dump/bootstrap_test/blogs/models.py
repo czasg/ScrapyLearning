@@ -1,7 +1,7 @@
 import time
 import uuid
 
-from orm import *
+from database.mysql.orm import *
 
 
 def next_id():

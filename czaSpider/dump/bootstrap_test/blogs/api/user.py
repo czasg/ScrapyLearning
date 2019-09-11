@@ -2,9 +2,8 @@ import json
 
 from aiohttp import web
 
-from handler import get, post
+from tools.handler import get, post
 from tools import _RE_EMAIL, _RE_SHA1
-from tools import *
 
 logger = logging.getLogger(__name__)
 

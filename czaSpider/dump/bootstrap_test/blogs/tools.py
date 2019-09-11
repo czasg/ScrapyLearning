@@ -3,7 +3,7 @@ import hashlib
 
 from datetime import datetime
 
-from models import *
+from database.mysql.models import *
 from tools.error_man import *
 from config import configs
 

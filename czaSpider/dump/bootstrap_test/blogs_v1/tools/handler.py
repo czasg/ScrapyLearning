@@ -147,7 +147,7 @@ class RequestHandler:
 
 
 def add_static(app):
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
+    path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'static')
     app.router.add_static('/static/', path)
 
 

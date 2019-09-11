@@ -1,7 +1,6 @@
 import json
-from handler import get, post
-from tools import *
-from handler import web
+from tools.handler import get
+from tools.handler import web
 
 logger = logging.getLogger(__name__)
 ANTI_COOKIE_FIRST = 'anti_spider_first'

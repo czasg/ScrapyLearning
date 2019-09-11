@@ -1,7 +1,7 @@
 import time
 
-from handler import get, post
-from models import Blog, Comment
+from tools.handler import get, post
+from database.mysql.models import Blog, Comment
 from tools.man_error import APIResourceError
 from tools.man_pager import *
 from tools.sim_engine import *

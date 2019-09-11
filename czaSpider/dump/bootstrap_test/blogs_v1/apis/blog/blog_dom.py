@@ -1,6 +1,4 @@
-from handler import get
-from models import Blog, Comment, SonComment
-from tools.public_func import text2html
+from tools.handler import get
 from tools.man_error import APIResourceError
 from tools.safe_check_user import check_admin
 from tools.man_pager import get_page_index

@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 import json, logging
 
-import orm
+from database.mysql import orm
 
 from jinja2 import Environment, FileSystemLoader
 
 from tools.public_func import *
 from tools.safe_check_spider import *
 from tools.safe_check_user import *
-from handler import *
+from tools.handler import *
 
 logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(message)s")
 logger = logging.getLogger(__name__)
@@ -39,7 +39,7 @@ def init_jinja2(app, **kwargs):
 count = 0
 
 
-async def anti_spider_first(app, handler):
+async def anti_spider_first(app, handler):  # todo 反爬需要单独起一个服务，不然别的服务就没法使用了
     async def _anti_spider_first(request):
         anti_cookie = request.cookies.get(ANTI_COOKIE_FIRST)
         if not request.path.startswith('/get/anti/spider/first'):
@@ -50,26 +50,47 @@ async def anti_spider_first(app, handler):
                 else:
                     return web.HTTPForbidden()
             else:
-                return web.HTTPFound('/get/anti/spider/first')
+                res = web.Response(body=app['__templating__'].get_template('anti_spider/anti_spider_first.html').
+                                   render(**{'anti_spider_path': request.path}).encode('utf-8'))
+                res.content_type = 'text/html;charset=utf-8'
+                return res
         return (await handler(request))
 
     return _anti_spider_first
 
 
-async def anti_spider_second(app, handler):  # todo， 这种反爬如何破解，只需要二次访问即可，会携带上相关cookie，所以也不难
-    async def _anti_spider_second(request):
+async def anti_spider_second(app, handler):  # todo， 这种反爬如何破解，只需要访问第二次抓取cookie，携带上相关cookie重新访问目标页面，所以也不难
+    async def _anti_spider_second(request):  # todo 当前后端分离的时候，可能会遇到惊天大bug
         r = (await handler(request))
         anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
-        if request.path.startswith('/get/anti/spider/second'):
+        if request.path.startswith(('/get/anti/spider/second', '/api/')):
             return r
-        if anti_cookie != stringToHex(request.path):  # todo, 没必要每次都计算，可以写一个dict用来存储
-            r = web.HTTPFound('/get/anti/spider/second')
-            # r.cookies.pop(ANTI_COOKIE_SECOND) if ANTI_COOKIE_SECOND in r.cookies else None  # todo, 不加这个可能有问题
-            # webResponse.set_cookie(ANTI_COOKIE_SECOND, '-deleted-', max_age=0)
-            r.set_cookie(ANTI_COOKIE_SECOND, stringToHex(request.path))
+        if anti_cookie != stringToHex(request.path):
+            res = web.Response(body=app['__templating__'].get_template('anti_spider/anti_spider_second.html').
+                               render(**{'anti_spider_path': request.path}).encode('utf-8'))
+            res.set_cookie(ANTI_COOKIE_SECOND, stringToHex(request.path))
+            res.content_type = 'text/html;charset=utf-8'
+            return res
         return r
 
     return _anti_spider_second
+
+
+async def anti_spider_third(app, handler):  # todo， 这种反爬如何破解，只需要访问第二次抓取cookie，携带上相关cookie重新访问目标页面，所以也不难
+    async def _anti_spider_third(request):  # todo 当前后端分离的时候，可能会遇到惊天大bug
+        r = (await handler(request))
+        anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
+        if request.path.startswith(('/get/anti/spider/second', '/api/')):
+            return r
+        if anti_cookie != stringToHex(request.path):
+            res = web.Response(body=app['__templating__'].get_template('anti_spider/anti_spider_second.html').
+                               render(**{'anti_spider_path': request.path}).encode('utf-8'))
+            res.set_cookie(ANTI_COOKIE_SECOND, stringToHex(request.path))
+            res.content_type = 'text/html;charset=utf-8'
+            return res
+        return r
+
+    return _anti_spider_third
 
 
 async def auth_factory(app, handler):
@@ -151,6 +172,7 @@ async def init(loop):
     app = web.Application(loop=loop, middlewares=[
         anti_spider_first, anti_spider_second, auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
+    app['__anti_spider_path__'] = {}
     add_routes(app, 'apis')
     add_static(app)
     runner = web.AppRunner(app)

@@ -1,5 +1,4 @@
-from handler import get, post
-from tools import *
+from tools.handler import get, post
 
 logger = logging.getLogger(__name__)
 

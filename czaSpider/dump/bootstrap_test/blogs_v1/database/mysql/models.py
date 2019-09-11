@@ -1,6 +1,6 @@
 import time
 
-from orm import *
+from database.mysql.orm import *
 from tools.idgen import id_pool
 
 

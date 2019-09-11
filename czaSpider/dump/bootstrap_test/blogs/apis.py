@@ -4,9 +4,8 @@ from aiohttp import web
 from motor.motor_asyncio import AsyncIOMotorClient
 from datetime import timedelta
 
-from handler import get, post
+from tools.handler import get, post
 from tools import _RE_EMAIL, _RE_SHA1
-from tools import *
 from simengine import SimEngine
 
 client = AsyncIOMotorClient('127.0.0.1', 27017)

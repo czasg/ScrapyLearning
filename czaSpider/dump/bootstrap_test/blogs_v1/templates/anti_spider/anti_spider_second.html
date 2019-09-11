@@ -21,7 +21,7 @@ function AntiSpiderSecond() {
     if ( -1 == curlocation.indexOf("security_verify_")) {
         document.cookie = "anti_spider_second_mid=" + stringToHex(window.location.pathname) + '; path=/;';
     }
-    self.location = "/?security_verify_data=" + stringToHex(screendate);
+    self.location = "{{ anti_spider_path }}" + "?security_verify_data=" + stringToHex(screendate);
 }
 </script>
 <script>
