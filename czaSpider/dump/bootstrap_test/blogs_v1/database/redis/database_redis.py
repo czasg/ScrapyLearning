@@ -12,6 +12,11 @@ class Redis:
 
 
 REDIS_ANTI_SPIDER_TIME = 'anti_spider_time'
-COUNT_EXPIRE_TIME = 60  # 24 * 60 * 60
-COUNT_FORBID_TIME = 20
+COUNT_EXPIRE_TIME = 24 * 60 * 60
+COUNT_CAPTCHA_TIME = 20
+COUNT_FORBID_TIME = 300
+CAPTCHA_EXPIRE_TIME = 15
 redis_handler = Redis.get_redis_client()
+
+if __name__ == '__main__':
+    redis_handler.set('127.0.0.1', 1, COUNT_EXPIRE_TIME)

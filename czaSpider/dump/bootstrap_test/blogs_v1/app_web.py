@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import json, logging
+import logging
 
 from database.mysql import orm
 
@@ -40,7 +40,7 @@ def init_jinja2(app, **kwargs):
 async def anti_spider_first(app, handler):  # todo 反爬需要单独起一个服务，不然别的服务就没法使用了
     async def _anti_spider_first(request):
         anti_cookie = request.cookies.get(ANTI_COOKIE_FIRST)
-        if not request.path.startswith('/get/anti/spider/first'):
+        if not request.path.startswith(('/get/anti/spider/first', '/api/')):
             if anti_cookie:
                 anti = check_anti_spider(anti_cookie)
                 if anti == 'True':
@@ -59,33 +59,62 @@ async def anti_spider_first(app, handler):  # todo 反爬需要单独起一个�
 
 async def anti_spider_second(app, handler):  # todo， 这种反爬如何破解，只需要访问第二次抓取cookie，携带上相关cookie重新访问目标页面，所以也不难
     async def _anti_spider_second(request):  # todo 当前后端分离的时候，可能会遇到惊天大bug
-        r = (await handler(request))
         anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
         if request.path.startswith(('/get/anti/spider/second', '/api/')):
-            return r
+            return (await handler(request))
         if anti_cookie != stringToHex(request.path):
             res = web.Response(body=app['__templating__'].get_template('anti_spider/anti_spider_second.html').
                                render(**{'anti_spider_path': request.path}).encode('utf-8'))
             res.set_cookie(ANTI_COOKIE_SECOND, stringToHex(request.path))
             res.content_type = 'text/html;charset=utf-8'
             return res
-        return r
+        return (await handler(request))
 
     return _anti_spider_second
 
 
-async def anti_spider_third(app, handler):  # todo，此处是不是应该加入验证码啊
+async def anti_spider_third(app, handler):
     async def _anti_spider_third(request):
+        if '/static/' in request.path:
+            return (await handler(request))
+        if request.path.startswith('/api/captcha/anti/spider/third'):
+            if request.method != 'POST':
+                return web.HTTPForbidden()
+            params = await request.json()
+            if 'captcha_answer' not in params:
+                return process_json(dict(error='请求参数错误'))
+            right_answer = redis_handler.get(request.remote + ':captcha')
+            print(right_answer.decode(), params.get('captcha_answer'), type(params.get('captcha_answer')))
+            if not right_answer:
+                return process_json(dict(error='验证码已失效'))
+            if right_answer.decode() == params.get('captcha_answer'):
+                redis_handler.set(request.remote, 1, COUNT_EXPIRE_TIME)
+                return web.HTTPFound('/')
+            else:
+                return process_json(dict(error='验证码错误，请检查大小写是否正确'))
         times_record = redis_handler.hget(REDIS_ANTI_SPIDER_TIME, request.remote)
-        count_record = redis_handler.get(request.remote)
-        if not count_record:
-            redis_handler.set(request.remote, 1, COUNT_EXPIRE_TIME)
-        elif int(count_record) > COUNT_FORBID_TIME:
-            return web.HTTPForbidden()
+        count_record = int(redis_handler.get(request.remote) or 0)
         if not times_record:
             redis_handler.hset(REDIS_ANTI_SPIDER_TIME, request.remote, get_now_time_stamp())
-        elif (int(times_record) - get_now_time_stamp()) > 3:
+        elif (get_now_time_stamp() - int(times_record)) < 3:
+            logger.warning(request.path)
+            logger.warning('%s 访问过频繁，记录1次，当前次数 %d' % (request.remote, count_record))
             redis_handler.incr(request.remote)
+        redis_handler.hset(REDIS_ANTI_SPIDER_TIME, request.remote, get_now_time_stamp())
+        if not count_record:
+            redis_handler.set(request.remote, 1, COUNT_EXPIRE_TIME)
+        elif count_record < COUNT_CAPTCHA_TIME:
+            pass
+        elif count_record < COUNT_FORBID_TIME:
+            logger.error(request.path + str(count_record))
+            result, captcha_picture = next_captcha()
+            redis_handler.set(request.remote + ':captcha', result, CAPTCHA_EXPIRE_TIME)
+            res = web.Response(body=app['__templating__'].get_template('anti_spider/anti_spider_third.html').
+                               render(**{'captcha_picture': captcha_picture.decode()}).encode('utf-8'))
+            res.content_type = 'text/html;charset=utf-8'
+            return res
+        else:
+            return web.HTTPForbidden()
         return (await handler(request))
 
     return _anti_spider_third
@@ -113,6 +142,7 @@ async def response_factory(app, handler):
     async def response(request):
         logger.info('Response Handler .....')
         r = await handler(request)
+        logger.info(r)
         if isinstance(r, web.StreamResponse):
             logger.info('StreamResponse! return directly')
             return r
@@ -170,7 +200,6 @@ async def init(loop):
     app = web.Application(loop=loop, middlewares=[
         anti_spider_first, anti_spider_second, anti_spider_third, auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
-    app['__anti_spider_path__'] = {}
     add_routes(app, 'apis')
     add_static(app)
     runner = web.AppRunner(app)

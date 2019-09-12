@@ -3,20 +3,20 @@
 <head>
     <title>Anti Spider First</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/static/js/public.js"></script>
 </head>
 <style>
 * {
 	margin: 0;
 	padding: 0;
 }
-
 body {
 	background: #F5F5F5;
 	height: 100%;
 	width: 100%;
-
+    font-family:Microsoft Yahei,sans-serif;
 }
-
 #main {
 	position: absolute;
     left: 50%;
@@ -24,17 +24,21 @@ body {
     transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
-
 #anti_spider input{
-    width: 100px;
-    height: 40px;
+    width: 98px;
+    height: 38px;
     overflow: hidden;
     border:1px solid #ddd;
+    margin: 2px;
 }
 #anti_spider span{
     width: 100px;
     height: 40px;
+    margin: 2px;
 }
 #anti_spider span > img{
     width: 100px;
@@ -52,7 +56,7 @@ body {
 }
 .submit a {
     display: inline-block;
-    border: .1px solid white;
+    border: .1px solid #ddd;
     width: 100px;
     height: 40px;
     text-align: center;
@@ -60,6 +64,7 @@ body {
     text-decoration:none;
     color:#fefefe;
     background:#5d9afc;
+    margin: 2px;
 }
 .submit a:hover {
     background:#518ded
@@ -67,24 +72,42 @@ body {
 </style>
 <body>
 <div id="main">
+    <div>
+        <strong>Are You Spider?</strong>
+        <p>this captcha just to confirm you are not Robot</p>
+        <br><br><br>
+    </div>
 	<div>
-        <form method="POST" name="anti_spider_third" id="anti_spider" action="/">
-            <input type=text name="c" value="" placeholder="请输入验证码" id="seccodeInput" autocomplete="off">
+        <div id="anti_spider">
+            <input type=text name="c" value="" placeholder="请输入验证码" id="CaptchaInput" autocomplete="off">
             <span style="padding:0;">
-                <a><img src="1.jpg" style="width:100px;height:40px;"></a>
+                <a><img src="data:image/jpeg;base64,{{ captcha_picture }}" style="width:100px;height:40px;" id="captchaImg"></a>
             </span>
-        </form>
+        </div>
     </div>
     <div class="submit">
-        <a href="javascript:void(0);" id="submit">提交</a>
-        <a href="javascript:void(0);" id="change">换一张</a>
+        <a href="javascript:void(0);" id="submit" onclick="antiSpiderThird()">提交</a>
+        <a href="javascript:void(0);" id="change" onclick="changeCaptcha()">换一张</a>
     </div>
 </div>
 <script type = "text/javascript" >
-function AntiSpiderFirst() {
-    document.cookie = "anti_spider_first=True; path=/;";
-    self.location.assign("{{ anti_spider_path }}");
+function antiSpiderThird() {
+    var
+        captcha_value = document.getElementById('CaptchaInput').value,
+        data = {
+            captcha_value: captcha_value
+        };
+    if (!captcha_value) {
+        return alert('验证码输入不能为空');
+    }
+    postJson('/get/anti/spider/second', data, function(result){
+        alert(result);
+    });
 }
+function changeCaptcha() {
+    alert('wait a min');
+}
+
 </script>
 <script>
 

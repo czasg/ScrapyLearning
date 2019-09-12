@@ -1,7 +1,4 @@
-import os
-import inspect
-import asyncio
-import functools
+import os, inspect, asyncio, functools, json
 
 from urllib.parse import parse_qs
 from importlib import import_module
@@ -177,3 +174,10 @@ def add_routes(app, module_name):
             path = getattr(fn, '__route__', None)
             if method and path:
                 add_route(app, fn)
+
+
+def process_json(json_dict: dict):
+    res = web.Response(body=json.dumps(json_dict, ensure_ascii=False, default=lambda o: o.__dict__)
+                       .encode('utf-8'))
+    res.content_type = 'application/json;charset=utf-8'
+    return res
