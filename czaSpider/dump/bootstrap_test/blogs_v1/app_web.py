@@ -40,7 +40,7 @@ def init_jinja2(app, **kwargs):
 async def anti_spider_first(app, handler):  # todo 反爬需要单独起一个服务，不然别的服务就没法使用了
     async def _anti_spider_first(request):
         anti_cookie = request.cookies.get(ANTI_COOKIE_FIRST)
-        if not request.path.startswith(('/get/anti/spider/first', '/api/')):
+        if not request.path.startswith(('/get/anti/spider/first', '/api/', '/static/')):
             if anti_cookie:
                 anti = check_anti_spider(anti_cookie)
                 if anti == 'True':
@@ -60,7 +60,7 @@ async def anti_spider_first(app, handler):  # todo 反爬需要单独起一个�
 async def anti_spider_second(app, handler):  # todo， 这种反爬如何破解，只需要访问第二次抓取cookie，携带上相关cookie重新访问目标页面，所以也不难
     async def _anti_spider_second(request):  # todo 当前后端分离的时候，可能会遇到惊天大bug
         anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
-        if request.path.startswith(('/get/anti/spider/second', '/api/')):
+        if request.path.startswith(('/get/anti/spider/second', '/api/', '/static/')):
             return (await handler(request))
         if anti_cookie != stringToHex(request.path):
             res = web.Response(body=app['__templating__'].get_template('anti_spider/anti_spider_second.html').
@@ -75,25 +75,25 @@ async def anti_spider_second(app, handler):  # todo， 这种反爬如何破解�
 
 async def anti_spider_third(app, handler):
     async def _anti_spider_third(request):
-        if '/static/' in request.path:
+        if request.path.startswith(('/static/')):
             return (await handler(request))
         if request.path.startswith('/api/captcha/anti/spider/third'):
             if request.method != 'POST':
                 return web.HTTPForbidden()
             params = await request.json()
-            if 'captcha_answer' not in params:
+            if 'captcha_value' not in params:
                 return process_json(dict(error='请求参数错误'))
             right_answer = redis_handler.get(request.remote + ':captcha')
-            print(right_answer.decode(), params.get('captcha_answer'), type(params.get('captcha_answer')))
             if not right_answer:
                 return process_json(dict(error='验证码已失效'))
-            if right_answer.decode() == params.get('captcha_answer'):
+            if right_answer.decode() == params.get('captcha_value'):
                 redis_handler.set(request.remote, 1, COUNT_EXPIRE_TIME)
-                return web.HTTPFound('/')
+                return process_json(dict(success='验证成功'))
             else:
                 return process_json(dict(error='验证码错误，请检查大小写是否正确'))
         times_record = redis_handler.hget(REDIS_ANTI_SPIDER_TIME, request.remote)
         count_record = int(redis_handler.get(request.remote) or 0)
+
         if not times_record:
             redis_handler.hset(REDIS_ANTI_SPIDER_TIME, request.remote, get_now_time_stamp())
         elif (get_now_time_stamp() - int(times_record)) < 3:
@@ -101,6 +101,7 @@ async def anti_spider_third(app, handler):
             logger.warning('%s 访问过频繁，记录1次，当前次数 %d' % (request.remote, count_record))
             redis_handler.incr(request.remote)
         redis_handler.hset(REDIS_ANTI_SPIDER_TIME, request.remote, get_now_time_stamp())
+
         if not count_record:
             redis_handler.set(request.remote, 1, COUNT_EXPIRE_TIME)
         elif count_record < COUNT_CAPTCHA_TIME:
@@ -109,8 +110,10 @@ async def anti_spider_third(app, handler):
             logger.error(request.path + str(count_record))
             result, captcha_picture = next_captcha()
             redis_handler.set(request.remote + ':captcha', result, CAPTCHA_EXPIRE_TIME)
+            if request.path.startswith('/api/captcha/change'):
+                return process_json({'captcha_picture': captcha_picture})
             res = web.Response(body=app['__templating__'].get_template('anti_spider/anti_spider_third.html').
-                               render(**{'captcha_picture': captcha_picture.decode()}).encode('utf-8'))
+                               render(**{'captcha_picture': captcha_picture}).encode('utf-8'))
             res.content_type = 'text/html;charset=utf-8'
             return res
         else:

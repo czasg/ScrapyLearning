@@ -14,7 +14,7 @@ def stringToHex(s): return "".join([hex(ord(i))[2:] for i in s])
 
 def next_captcha(byte=True):
     answer, captcha = captcha_handler.next_captcha(byte=byte)
-    return answer, base64.b64encode(captcha)
+    return answer, base64.b64encode(captcha).decode()
 
 
 class CaptchaManager:

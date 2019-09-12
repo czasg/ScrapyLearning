@@ -100,17 +100,27 @@ function antiSpiderThird() {
     if (!captcha_value) {
         return alert('验证码输入不能为空');
     }
-    postJson('/get/anti/spider/second', data, function(result){
-        alert(result);
+    postJSON('/api/captcha/anti/spider/third', data, function(result){
+        if (result && result.error) {
+            return alert(result.error);
+        } else if (result && result.success) {
+            alert(result.success);
+            return refresh();
+        }
+        alert('未知错误！')
     });
 }
 function changeCaptcha() {
-    alert('wait a min');
+    var img = document.querySelector(`img[id="captchaImg"]`);
+    postJSON('/api/captcha/change', {}, function(result){
+        if (result && result.captcha_picture) {
+            img.src = 'data:image/jpeg;base64,' + result.captcha_picture;
+        } else if (result && result.success) {
+            alert('未知错误！');
+        }
+    });
 }
 
 </script>
-<script>
-
-</script >
 </body>
 </html>

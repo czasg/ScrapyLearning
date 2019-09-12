@@ -14,7 +14,7 @@ class Redis:
 REDIS_ANTI_SPIDER_TIME = 'anti_spider_time'
 COUNT_EXPIRE_TIME = 24 * 60 * 60
 COUNT_CAPTCHA_TIME = 20
-COUNT_FORBID_TIME = 300
+COUNT_FORBID_TIME = 30
 CAPTCHA_EXPIRE_TIME = 15
 redis_handler = Redis.get_redis_client()
 
