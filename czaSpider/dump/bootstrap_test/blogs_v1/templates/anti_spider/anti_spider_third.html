@@ -3,124 +3,156 @@
 <head>
     <title>Anti Spider First</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-    <script src="/static/js/public.js"></script>
-</head>
-<style>
-* {
-	margin: 0;
-	padding: 0;
-}
-body {
-	background: #F5F5F5;
-	height: 100%;
-	width: 100%;
-    font-family:Microsoft Yahei,sans-serif;
-}
-#main {
-	position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-#anti_spider input{
-    width: 98px;
-    height: 38px;
-    overflow: hidden;
-    border:1px solid #ddd;
-    margin: 2px;
-}
-#anti_spider span{
-    width: 100px;
-    height: 40px;
-    margin: 2px;
-}
-#anti_spider span > img{
-    width: 100px;
-    height: 40px;
-}
-#anti_spider {
-    position: block;
-    display: flex;
-}
-.submit {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #F5F5F5;
+            height: 100%;
+            width: 100%;
+            font-family:Microsoft Yahei,sans-serif;
+        }
+        .panel {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+            flex: 1;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition:
+                font-size 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+                flex 0.7s cubic-bezier(0.61,-0.19, 0.7,-0.11),
+                background 0.2s;
+        }
+        .panel > * {
+            display: flex;
+            flex: 1 0 auto;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.5s;
+        }
+        .panel.open {
+            flex: 3;
+            font-size: 30px;
+        }
 
-}
-.submit a {
-    display: inline-block;
-    border: .1px solid #ddd;
-    width: 100px;
-    height: 40px;
-    text-align: center;
-    line-height:38px;
-    text-decoration:none;
-    color:#fefefe;
-    background:#5d9afc;
-    margin: 2px;
-}
-.submit a:hover {
-    background:#518ded
-}
+        .panel > div:first-child { transform: translateY(-100%); }
+        .panel > div:last-child { transform: translateY(100%); }
+        .panel.open-active > div:first-child { transform: translateY(0); }
+        .panel.open-active > div:last-child { transform: translateY(0); }
+
+        .info {
+            flex-direction: column;
+        }
+        #anti_spider input{
+            width: 98px;
+            height: 38px;
+            overflow: hidden;
+            border:1px solid #ddd;
+            margin: 2px;
+        }
+        #anti_spider span{
+            width: 100px;
+            height: 40px;
+            margin: 2px;
+        }
+        #anti_spider span > img{
+            width: 100px;
+            height: 40px;
+        }
+        .submit a {
+            display: inline-block;
+            border: .1px solid #ddd;
+            width: 100px;
+            height: 40px;
+            text-align: center;
+            line-height:38px;
+            text-decoration:none;
+            color:#fefefe;
+            background:#5d9afc;
+            margin: 2px;
+            font-size: 20px;
+        }
+        .submit a:hover {
+            background:#518ded
+        }
 </style>
+</head>
 <body>
-<div id="main">
-    <div>
-        <strong>Are You Spider?</strong>
-        <p>this captcha just to confirm you are not Robot</p>
-        <br><br><br>
-    </div>
-	<div>
+<div class="panels">
+    <div class="panel">
         <div id="anti_spider">
             <input type=text name="c" value="" placeholder="请输入验证码" id="CaptchaInput" autocomplete="off">
             <span style="padding:0;">
                 <a><img src="data:image/jpeg;base64,{{ captcha_picture }}" style="width:100px;height:40px;" id="captchaImg"></a>
             </span>
         </div>
-    </div>
-    <div class="submit">
-        <a href="javascript:void(0);" id="submit" onclick="antiSpiderThird()">提交</a>
-        <a href="javascript:void(0);" id="change" onclick="changeCaptcha()">换一张</a>
+        <div class="info">
+            <strong>Are You Spider?</strong>
+            <p>this captcha just to confirm you are not Robot</p>
+            <br><br><br>
+        </div>
+        <div class="submit">
+            <a href="javascript:void(0);" id="submit" onclick="antiSpiderThird()" >提交</a>
+            <a href="javascript:void(0);" id="change" onclick="changeCaptcha()">换一张</a>
+        </div>
     </div>
 </div>
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="/static/js/public.js"></script>
 <script type = "text/javascript" >
-function antiSpiderThird() {
-    var
-        captcha_value = document.getElementById('CaptchaInput').value,
-        data = {
-            captcha_value: captcha_value
-        };
-    if (!captcha_value) {
-        return alert('验证码输入不能为空');
+    function antiSpiderThird() {
+        var
+            captcha_value = document.getElementById('CaptchaInput').value,
+            data = {
+                captcha_value: captcha_value
+            };
+        if (!captcha_value) {
+            return alert('验证码输入不能为空');
+        }
+        postJSON('/api/captcha/anti/spider/third', data, function(result){
+            if (result && result.error) {
+                return alert(result.error);
+            } else if (result && result.success) {
+                alert(result.success);
+                return refresh();
+            }
+            alert('未知错误！')
+        });
     }
-    postJSON('/api/captcha/anti/spider/third', data, function(result){
-        if (result && result.error) {
-            return alert(result.error);
-        } else if (result && result.success) {
-            alert(result.success);
-            return refresh();
-        }
-        alert('未知错误！')
-    });
-}
-function changeCaptcha() {
-    var img = document.querySelector(`img[id="captchaImg"]`);
-    postJSON('/api/captcha/change', {}, function(result){
-        if (result && result.captcha_picture) {
-            img.src = 'data:image/jpeg;base64,' + result.captcha_picture;
-        } else if (result && result.success) {
-            alert('未知错误！');
-        }
-    });
-}
+    function changeCaptcha() {
+        var img = document.querySelector(`img[id="captchaImg"]`);
+        postJSON('/api/captcha/change', {}, function(result){
+            if (result && result.captcha_picture) {
+                img.src = 'data:image/jpeg;base64,' + result.captcha_picture;
+            } else if (result && result.success) {
+                alert('未知错误！');
+            }
+        });
+    }
+    function toggleOpen(e) {
+        e.preventDefault();
+        console.log(e.propertyName);
 
+        panel.classList.toggle('open');
+    }
+    function toggleOpenActive(e) {
+        if (e.propertyName.includes('flex')) {
+            this.classList.toggle('open-active');
+        }
+    }
+    const panel = document.querySelector('.panel');
+    const info = document.querySelector('.info');
+    info.addEventListener('click', toggleOpen);
+    panel.addEventListener('transitionend', toggleOpenActive)
 </script>
 </body>
 </html>
