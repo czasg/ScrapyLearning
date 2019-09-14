@@ -11,12 +11,14 @@
         text-decoration:none;
         transition: display 0.5s;
     }
-    .index-top {
+    .index-top { transform: translateY(-100%); }
+    .index-top.current_page {
         font-family:'helvetica neue';
         font-size: 20px;
         font-weight: 200;
         background: #F5F5F5;
         display: block;
+        transform: translateY(0);
     }
     .top-panels {
         min-height: 100vh;
@@ -70,10 +72,14 @@
     .index-bottom {
         display: none;
     }
+    .index-bottom.current_page {
+        display: block;
+        transform: translateY(100%)
+    }
 </style>
 </head>
 <body>
-<div class="index-top">
+<div class="index-top current_page">
     <div class="top-panels">
         <div class="panel panel1">
             <p>数据展示</p>
@@ -109,11 +115,10 @@
     // 上半部分
     function toBottom() {
         var
-            top_content = $('.index-top'),
-            bottom_content = $('.index-bottom');
-        top_content.toggle(3000);
-        bottom_content.toggle(3000);
-
+            top_content = document.querySelector('.index-top'),
+            bottom_content = document.querySelector('.index-bottom');
+        top_content.classList.toggle('current_page');
+        bottom_content.classList.toggle('current_page');
     }
     function toggleOpen() {
         this.parentElement.classList.toggle('open');
