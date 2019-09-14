@@ -9,20 +9,33 @@
         margin: 0;
         padding: 0;
         text-decoration:none;
-        transition: display 0.5s;
+        overflow: hidden;
     }
-    .index-top { transform: translateY(-100%); }
-    .index-top.current_page {
+    body {
+        background: #F5F5F5;
+
+    }
+    .top-hidden {
+        visibility: hidden;
+        -webkit-animation: moveToTop .6s ease both;
+        -moz-animation: moveToTop .6s ease both;
+        animation: moveToTop .6s ease both;
+    }
+    .bottom-show {
+        visibility: visible;
+        -webkit-animation: moveFromBottom .6s ease both;
+        -moz-animation: moveFromBottom .6s ease both;
+        animation: moveFromBottom .6s ease both;
+    }
+    .index-top {
         font-family:'helvetica neue';
         font-size: 20px;
         font-weight: 200;
-        background: #F5F5F5;
-        display: block;
-        transform: translateY(0);
+
+        visibility: visible;
     }
     .top-panels {
         min-height: 100vh;
-        overflow: hidden;
         display: flex;
     }
     .panel {
@@ -72,14 +85,28 @@
     .index-bottom {
         display: none;
     }
-    .index-bottom.current_page {
-        display: block;
-        transform: translateY(100%)
+    @-webkit-keyframes moveFromBottom {
+        from { -webkit-transform: translateY(100%); }
+    }
+    @-moz-keyframes moveFromBottom {
+        from { -moz-transform: translateY(100%); }
+    }
+    @keyframes moveFromBottom {
+        from { transform: translateY(100%); }
+    }
+    @-webkit-keyframes moveToTop {
+        to { -webkit-transform: translateY(-100%); }
+    }
+    @-moz-keyframes moveToTop {
+        to { -moz-transform: translateY(-100%); }
+    }
+    @keyframes moveToTop {
+        to { transform: translateY(-100%); }
     }
 </style>
 </head>
 <body>
-<div class="index-top current_page">
+<div class="index-top">
     <div class="top-panels">
         <div class="panel panel1">
             <p>数据展示</p>
@@ -108,7 +135,9 @@
         </div>
     </div>
 </div>
-<div class="index-bottom">test</div>
+<div class="index-bottom">
+    <p>hello world</p>
+</div>
 
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script>
@@ -117,8 +146,11 @@
         var
             top_content = document.querySelector('.index-top'),
             bottom_content = document.querySelector('.index-bottom');
-        top_content.classList.toggle('current_page');
-        bottom_content.classList.toggle('current_page');
+        bottom_content.style.display = 'block';
+        top_content.classList.toggle('top-hidden');
+        bottom_content.classList.toggle('bottom-show');
+
+
     }
     function toggleOpen() {
         this.parentElement.classList.toggle('open');
