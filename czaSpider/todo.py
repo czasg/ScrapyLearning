@@ -208,3 +208,12 @@ Courage is not the absence of fear, but rather the judgment that something else 
 爬虫调度器需要解耦，除了定时任务之外，还需加入调度池引入优先级的说法。定时任务和调度任务是两回事吗。
 
 """
+
+"""新版本
+第一道反爬：携带固定cookie访问，否则跳转到指定页面。api接口免认证
+第二道反爬：页面都有自己的cookie，未提供算法，或者说提供了障眼法的错误算法。
+第三道反爬：访问频率限制。反爬页面也实现了，验证码也有
+
+
+
+"""
