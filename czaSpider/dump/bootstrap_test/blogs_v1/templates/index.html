@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>test</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/static/img/favicon.ico" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
 <style>
     /* 上半部分 */
     * {
@@ -28,6 +30,7 @@
     .index-top-container {
         position: absolute;
         width: 100%;
+        padding-top: 50px
     }
     .index-top {
         font-family: 'helvetica neue';
@@ -89,6 +92,7 @@
         height: 100vh;
         width: 100%;
         visibility: hidden;
+        padding-top: 50px
     }
     @-webkit-keyframes topHidden {
         from { -webkit-transform: translateY(0); }
@@ -117,42 +121,94 @@
 </style>
 </head>
 <body>
-<div class="index-top-container">
-    <div class="index-top">
-        <div class="top-panels">
-            <div class="panel panel1">
-                <p>数据展示</p>
-                <p class="panel-toggle">data</p>
-                <a href="javascript:void(0)" onclick="toBottom()"><p>enter&nbsp;</p></a>
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#NAVBAR-HEADER"
+                aria-expanded="false">
+            <span class="sr-only">Toggle Navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#" type="button" data-toggle="modal" data-target="#IOCO">IOCO</a>
+    </div>
+    <div class="collapse navbar-collapse" id="NAVBAR-HEADER">
+            <form class="navbar-form navbar-left" id="top-search">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search" v-model="content">
+                </div>
+                <a type="button" class="btn btn-info" @click="topSearch">Submit</a>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropdown-toggle" id="NAV-TOP-MENU" data-toggle="dropdown" role="button"
+                       aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list"
+                                                                        aria-hidden="true"></span></a>
+                    <ul class="dropdown-menu flag1">
+                        {% if __user__ %}
+                        {% if __user__.admin %}
+                        <li class="dropdown-header">超级用户: {{ __user__.name }}</li>
+                        <li><a href="/root/manage/users">账号管理</a></li>
+                        <li><a href="/root/manage/blogs">博客管理</a></li>
+                        <li><a href="#">爬虫管理</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
+                        {% else %}
+                        <li class="dropdown-header">当前用户: {{ __user__.name }}</li>
+                        <li><a href="/manage/blogs">个人博客管理</a></li>
+                        <li><a href="/new/blog">创建个人博客</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
+                        {% endif %}
+                        {% else %}
+                        <li><a href="#" type="button" data-toggle="modal" data-target="#LOGIN-IN">登录</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+</nav>
+<div class="container-fluid">
+    <div class="row">
+        <div class="index-top-container">
+            <div class="index-top">
+                <div class="top-panels">
+                    <div class="panel panel1">
+                        <p>数据展示</p>
+                        <p class="panel-toggle">data</p>
+                        <a href="javascript:void(0)" onclick="toBottom()"><p>enter&nbsp;</p></a>
+                    </div>
+                    <div class="panel panel2">
+                        <p>爬虫</p>
+                        <p class="panel-toggle">spider</p>
+                        <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
+                    </div>
+                    <div class="panel panel3">
+                        <p>博客</p>
+                        <p class="panel-toggle">blog</p>
+                        <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
+                    </div>
+                    <div class="panel panel4">
+                        <p>工具</p>
+                        <p class="panel-toggle">tools</p>
+                        <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
+                    </div>
+                    <div class="panel panel5">
+                        <p>简介</p>
+                        <p class="panel-toggle">resume</p>
+                        <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
+                    </div>
+                </div>
             </div>
-            <div class="panel panel2">
-                <p>爬虫</p>
-                <p class="panel-toggle">spider</p>
-                <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
-            </div>
-            <div class="panel panel3">
-                <p>博客</p>
-                <p class="panel-toggle">blog</p>
-                <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
-            </div>
-            <div class="panel panel4">
-                <p>工具</p>
-                <p class="panel-toggle">tools</p>
-                <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
-            </div>
-            <div class="panel panel5">
-                <p>简介</p>
-                <p class="panel-toggle">resume</p>
-                <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
-            </div>
+        </div>
+        <div class="index-bottom">
+            <p>hello world</p>
         </div>
     </div>
 </div>
-<div class="index-bottom">
-    <p>hello world</p>
-</div>
-
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
     // 上半部分
     function toBottom() {
@@ -160,10 +216,6 @@
             top_content_container = document.querySelector('.index-top-container'),
             top_content = document.querySelector('.index-top'),
             bottom_content = document.querySelector('.index-bottom');
-        //top_content.style.display = 'none';
-        //top_content_container.style.position = 'absolute';
-
-        //top_content.style.display = 'flex';
         bottom_content.style.visibility = 'visible';
         top_content_container.classList.toggle('top-hidden');
         bottom_content.classList.toggle('bottom-show');
