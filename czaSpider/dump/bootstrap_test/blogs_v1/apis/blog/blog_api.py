@@ -79,3 +79,23 @@ async def api_find_blog_by_engine(*, user_input):
     results = re.sub('\[(.*)\]', '(\\1)', str(result))
     blogs = await Blog.findAll(where='id in %s' % results, orderBy='created_at desc', limit=(0, 10))
     return dict(blogs=blogs)
+
+# todo This is just Test-API-Data
+@get('/api/get/blogs/statistic')
+async def api_get_blogs_statistic():
+    return {
+        'dataSet': [{'data':[1,2,3]}],
+        'timeline': {'data': [201901,201902,201903]}
+    }
+@get('/api/get/multi/statistic')
+async def api_get_multi_statistic():
+    return {
+        'dataSet': [{'name': 'test', 'data': [1,2,3]}],
+        'timeline': {'data': [201901,201902,201903]}
+    }
+@get('/api/get/multi/statistic/github_info')
+async def api_get_multi_statistic_github_info(*, start_year=2019):
+    return {
+        'dataSet': [{'data':[1,2,3]}],
+        'timeline': {'data': [201901,201902,201903]}
+    }

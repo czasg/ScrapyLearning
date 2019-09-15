@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <title>test</title>
-    <link rel="shortcut icon" type="image/x-icon" href="/static/img/favicon.ico" />
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>czaOrz</title>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
 <style>
     /* 上半部分 */
@@ -16,6 +18,8 @@
         position: relative;
         overflow: hidden;
         background: #F5F5F5;
+        padding-top: 50px;
+        padding-bottom: 70px;
     }
     .top-hidden {
         -webkit-animation: topHidden .6s ease both;
@@ -30,7 +34,6 @@
     .index-top-container {
         position: absolute;
         width: 100%;
-        padding-top: 50px
     }
     .index-top {
         font-family: 'helvetica neue';
@@ -82,17 +85,35 @@
     .panel > *:last-child:hover { color: black; }
     .panel > *:nth-child(1) { font-size: 20px; }
     .panel > *:nth-child(3) { font-size: 20px; }
-    .panel > *:first-child { transform: translateY(-100%); }
-    .panel > *:last-child  { transform: translateY(100%); }
+    .panel > *:first-child { transform: translateY(-150%); }
+    .panel > *:last-child  { transform: translateY(150%); }
     .panel.open-active > *:first-child { transform: translateY(0); }
     .panel.open-active > *:last-child  { transform: translateY(0); }
+    .panel1 { background-image:url(static/img/1.jpg); }
+    .panel2 { background-image:url(static/img/2.jpg); }
+    .panel3 { background-image:url(static/img/3.jpg); }
+    .panel4 { background-image:url(static/img/4.jpg); }
+    .panel5 { background-image:url(static/img/5.jpg); }
     /* 下半部分 */
     .index-bottom {
         position: absolute;
-        height: 100vh;
         width: 100%;
         visibility: hidden;
-        padding-top: 50px
+        padding-top: 10px;
+        display: none;
+    }
+    .canvas-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .canvas-container > * {
+        background: white;
+        height: 300px;
+        width: 800px;
+        /*margin: 10px;
+        padding: 10px;*/
     }
     @-webkit-keyframes topHidden {
         from { -webkit-transform: translateY(0); }
@@ -167,7 +188,6 @@
                 </li>
             </ul>
         </div>
-
 </nav>
 <div class="container-fluid">
     <div class="row">
@@ -203,20 +223,139 @@
             </div>
         </div>
         <div class="index-bottom">
-            <p>hello world</p>
+            <div class="canvas-container">
+                <div id="index-canvas3"></div><br>
+                <div id="index-canvas2"></div><br>
+                <div id="index-canvas1"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="IOCO" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="TTTTT"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">IOCO</h4>
+                <h6>Institution Of Computer Organization</h6>
+            </div>
+            <div class="modal-body">
+                <div class="jumbotron">
+                    <div class="container">
+                        <p><strong>作者: </strong>czaOrz</p>
+                        <p><strong>邮箱: </strong>chenziangsg@163.com</p>
+                        <p><strong>联系方式: </strong>15607173521</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <ul class="pager" style="margin:-5px;">
+                    <li><a href="/">进入首页</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="LOGIN-IN" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">Welcome to IOCO</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>用户名</label>
+                    <input v-model="email" type="text" class="form-control" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input v-model="passwd" type="password" class="form-control" placeholder="Password">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <ul class="pager" style="margin:-5px;">
+                    <li class="previous"><a href="/register" type="button">注册</a></li>
+                    <li class="next"><a href="#" type="button" @click="LOGINFunc">登录</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="LOGIN-OUT" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title text-center">是否退出</h4>
+            </div>
+            <div class="modal-footer">
+                <ul class="pager" style="margin:-5px;">
+                    <li class="previous"><a href="#" type="button" data-dismiss="modal">Cancel</a></li>
+                    <li class="next"><a href="/signout" type="button">Confirm</a></li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<script src="https://echarts.baidu.com/examples/vendors/echarts/echarts.min.js"></script>
+<script src="static/js/public.js"></script>
 <script>
-    // 上半部分
+    $(document).ready(function(){
+        var dynamicNav = $('#NAV-TOP-MENU');
+        dynamicNav.click(function(){
+            $('.flag1').toggle(300);
+        })
+
+        var left_nav_for_blogs = $('#left-nav-for-blogs');
+        left_nav_for_blogs.click(function(){
+            $('.flag2').toggle(300);
+        })
+        var left_nav_for_blogs2 = $('#left-nav-for-blogs2');
+        left_nav_for_blogs2.click(function(){
+            $('.flag3').toggle(300);
+        })
+    })
+    function drawCanvas(id, api, api_data, text, dataZoom) {
+        const dom = document.getElementById(id);
+        const myChart = echarts.init(dom);
+        myChart.setOption({
+            title: { text: text },
+            tooltip: { trigger: 'axis' },
+            xAxis: {
+                type: 'category',
+                data: []
+            },
+            yAxis: { type: 'value' },
+            dataZoom: dataZoom,
+            series: {
+                data: [],
+                type: 'line'
+            }
+        });
+        myChart.showLoading();
+        getJSON(api, api_data, function(data){
+            myChart.hideLoading();
+            myChart.setOption({
+                xAxis: data.timeline,
+                series: data.dataSet
+            });
+        })
+    }
     function toBottom() {
         var
             top_content_container = document.querySelector('.index-top-container'),
             top_content = document.querySelector('.index-top'),
             bottom_content = document.querySelector('.index-bottom');
         bottom_content.style.visibility = 'visible';
+        bottom_content.style.display = 'block';
+        //bottom_content.style.width = '300px';
         top_content_container.classList.toggle('top-hidden');
         bottom_content.classList.toggle('bottom-show');
         function recoverBodyToAuto() { document.body.style.overflow = 'auto'; };
@@ -232,9 +371,35 @@
     }
     const
         panels_toggle = document.querySelectorAll('.panel-toggle'),
-        panels = document.querySelectorAll('.panel');
+        panels = document.querySelectorAll('.panel'),
+        ajax_data_f = [
+            {'housePrice': 'ziru'},
+            {'job': 'boss'},
+            {'zufang': 'fangtx'}
+        ],
+        ajax_data = {
+            dbNames_and_collectionNames: JSON.stringify(ajax_data_f),
+            limit: 15
+        },
+        dataZoom = [
+            {
+                show: true,
+                realtime: true,
+                start: 25,
+                end: 100
+            },
+            {
+                type: 'inside',
+                realtime: true,
+                start: 5,
+                end: 95
+            }
+        ];
     panels_toggle.forEach(panel => panel.addEventListener('click', toggleOpen));
     panels.forEach(panel => panel.addEventListener('transitionend', toggleOenActive))
+    drawCanvas('index-canvas1', '/api/get/blogs/statistic', {}, '补给站', []);
+    drawCanvas('index-canvas2', '/api/get/multi/statistic', ajax_data, '在线爬虫', dataZoom);
+    drawCanvas('index-canvas3', '/api/get/multi/statistic/github_info', {}, 'github-commits', []);
 </script>
 </body>
 </html>

@@ -60,7 +60,7 @@ async def anti_spider_first(app, handler):  # todo 反爬需要单独起一个�
 async def anti_spider_second(app, handler):  # todo 这种反爬如何破解，只需要访问第二次抓取cookie，携带上相关cookie重新访问目标页面，所以也不难
     async def _anti_spider_second(request):  # todo 当前后端分离的时候，可能会遇到惊天大bug
         anti_cookie = request.cookies.get(ANTI_COOKIE_SECOND)
-        if request.path.startswith(('/get/anti/spider/second', '/api/', '/static/')):
+        if request.path.startswith(('/get/anti/spider/second', '/api/', '/static/', '/favicon.ico')):
             return (await handler(request))
         if anti_cookie != stringToHex(request.path):
             res = web.Response(body=app['__templating__'].get_template('anti_spider/anti_spider_second.html').
