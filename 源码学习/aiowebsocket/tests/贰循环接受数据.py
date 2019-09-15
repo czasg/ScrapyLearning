@@ -26,8 +26,8 @@ def get_headers(data):
             header_dict[k] = v.strip()
     return header_dict
 
-
-def get_data(info):
+# 完全就是解析数据的意思咯
+def get_data(info):  # 这里解码的方式，不会就是那一坨完全看不懂的东西把
     payload_len = info[1] & 127
     if payload_len == 126:
         extend_payload_len = info[2:4]
@@ -41,7 +41,7 @@ def get_data(info):
         extend_payload_len = None
         mask = info[2:6]
         decoded = info[6:]
-
+    # 这个倒是没见过，只知道有一个byteIO，原来还有一耳光list额类型呀
     bytes_list = bytearray()  # 这里我们使用字节将数据全部收集，再去字符串编码，这样不会导致中文乱码
     for i in range(len(decoded)):
         chunk = decoded[i] ^ mask[i % 4]  # 解码方式
@@ -50,7 +50,7 @@ def get_data(info):
     return body
 
 
-sock = socket.socket()
+sock = socket.socket()  # 创建一个socket连接
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind(("127.0.0.1", 8080))
 sock.listen(5)
