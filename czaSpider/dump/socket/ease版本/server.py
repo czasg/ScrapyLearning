@@ -124,6 +124,7 @@ class MyServer(socketserver.BaseRequestHandler):
                 continue
 
 
+# todo 这个感觉还是不错的，每连接一个用户就增加计数，也就是相当于维护一个计数嘛，但是for的方法来遍历是不是太僵硬了
 if __name__ == '__main__':
     server = socketserver.ThreadingTCPServer(('127.0.0.1', 8022), MyServer)  # 绑定当地的端口
     print('waiting for connection...')
