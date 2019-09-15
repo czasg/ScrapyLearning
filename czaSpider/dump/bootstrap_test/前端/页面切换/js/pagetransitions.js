@@ -341,9 +341,10 @@ var PageTransitions = (function() {
 				inClass = 'pt-page-rotateSlideIn';
 				break;
 
-		}
-
+		} //***************************************************************
+        console.log(outClass);
 		$currPage.addClass( outClass ).on( animEndEventName, function() {
+		    console.log(outClass);
 			$currPage.off( animEndEventName );
 			endCurrPage = true;
 			if( endNextPage ) {
@@ -352,6 +353,7 @@ var PageTransitions = (function() {
 		} );
 
 		$nextPage.addClass( inClass ).on( animEndEventName, function() {
+		    console.log(inClass);
 			$nextPage.off( animEndEventName );
 			endNextPage = true;
 			if( endCurrPage ) {

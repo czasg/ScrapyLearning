@@ -8,30 +8,28 @@
     * {
         margin: 0;
         padding: 0;
-        text-decoration:none;
-        overflow: hidden;
+        text-decoration: none;
     }
     body {
+        position: relative;
+        overflow: hidden;
         background: #F5F5F5;
-
     }
     .top-hidden {
-        visibility: hidden;
-        -webkit-animation: moveToTop .6s ease both;
-        -moz-animation: moveToTop .6s ease both;
-        animation: moveToTop .6s ease both;
+        -webkit-animation: topHidden .6s ease both;
+        -moz-animation: topHidden .6s ease both;
+        animation: topHidden .6s ease both;
     }
     .bottom-show {
-        visibility: visible;
-        -webkit-animation: moveFromBottom .6s ease both;
-        -moz-animation: moveFromBottom .6s ease both;
-        animation: moveFromBottom .6s ease both;
+        -webkit-animation: bottomShow .6s ease both;
+        -moz-animation: bottomShow .6s ease both;
+        animation: bottomShow .6s ease both;
     }
     .index-top {
-        font-family:'helvetica neue';
+        font-family: 'helvetica neue';
         font-size: 20px;
         font-weight: 200;
-
+        overflow: hidden;
         visibility: visible;
     }
     .top-panels {
@@ -83,25 +81,33 @@
     .panel.open-active > *:last-child  { transform: translateY(0); }
     /* 下半部分 */
     .index-bottom {
-        display: none;
+        position: absolute;
+        height: 100vh;
+        width: 100%;
     }
-    @-webkit-keyframes moveFromBottom {
-        from { -webkit-transform: translateY(100%); }
-    }
-    @-moz-keyframes moveFromBottom {
-        from { -moz-transform: translateY(100%); }
-    }
-    @keyframes moveFromBottom {
-        from { transform: translateY(100%); }
-    }
-    @-webkit-keyframes moveToTop {
+    @-webkit-keyframes topHidden {
+        from { -webkit-transform: translateY(0); }
         to { -webkit-transform: translateY(-100%); }
     }
-    @-moz-keyframes moveToTop {
-        to { -moz-transform: translateY(-100%); }
+    @-moz-keyframes topHidden {
+        from { -webkit-transform: translateY(0); }
+        to { -webkit-transform: translateY(-100%); }
     }
-    @keyframes moveToTop {
-        to { transform: translateY(-100%); }
+    @keyframes topHidden {
+        from { -webkit-transform: translateY(0); }
+        to { -webkit-transform: translateY(-100%); }
+    }
+    @-webkit-keyframes bottomShow {
+        from { transform: translateY(100%); }
+        to { -webkit-transform: translateY(0); }
+    }
+    @-moz-keyframes bottomShow {
+        from { transform: translateY(100%); }
+        to { -webkit-transform: translateY(0); }
+    }
+    @keyframes bottomShow {
+        from { transform: translateY(100%); }
+        to { -webkit-transform: translateY(0); }
     }
 </style>
 </head>
@@ -146,11 +152,13 @@
         var
             top_content = document.querySelector('.index-top'),
             bottom_content = document.querySelector('.index-bottom');
-        bottom_content.style.display = 'block';
+        top_content.style.display = 'none';
+        top_content.style.position = 'absolute';
+        bottom_content.style.visibility = 'visible';
         top_content.classList.toggle('top-hidden');
         bottom_content.classList.toggle('bottom-show');
-
-
+        function recoverBodyToAuto() { document.body.style.overflow = 'auto'; };
+        bottom_content.addEventListener('animationend', recoverBodyToAuto);
     }
     function toggleOpen() {
         this.parentElement.classList.toggle('open');
