@@ -7,11 +7,11 @@ from urllib import parse
 
 import requests
 
-from wenshu_utils.cipher import CipherText
-from wenshu_utils.des3 import des3decrypt
-from wenshu_utils.pageid import PageID
-from wenshu_utils.token import RequestVerificationToken
-from util_20190901 import get_postData
+from 大牛的代码.wenshu_utils import CipherText
+from 大牛的代码.wenshu_utils import des3decrypt
+from 大牛的代码.wenshu_utils import PageID
+from 大牛的代码.wenshu_utils import RequestVerificationToken
+from 大牛的代码.util_20190901 import get_postData
 
 API = "http://120.78.76.198:8000/wenshu"
 

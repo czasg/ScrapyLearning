@@ -6,10 +6,10 @@ from pprint import pprint
 
 import requests
 
-from wenshu_utils.old.docid.decrypt import decrypt_doc_id
-from wenshu_utils.old.docid.runeval import decrypt_runeval
-from wenshu_utils.old.document.parse import parse_detail
-from wenshu_utils.old.vl5x.args import Vjkl5, Vl5x, Number, Guid
+from 大牛的代码.wenshu_utils import decrypt_doc_id
+from 大牛的代码.wenshu_utils import decrypt_runeval
+from 大牛的代码.wenshu_utils import parse_detail
+from 大牛的代码.wenshu_utils import Vjkl5, Vl5x, Number, Guid
 
 
 class OldDemo:

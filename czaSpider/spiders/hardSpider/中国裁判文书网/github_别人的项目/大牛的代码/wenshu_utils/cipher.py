@@ -1,7 +1,7 @@
 from datetime import datetime
 
-from wenshu_utils.des3 import des3encrypt
-from wenshu_utils.token import RequestVerificationToken
+from 大牛的代码.wenshu_utils import des3encrypt
+from 大牛的代码.wenshu_utils import RequestVerificationToken
 
 
 class CipherText(str):
