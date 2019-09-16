@@ -1,0 +1,4 @@
+lxml
+pycryptodomex
+PyExecJS
+requests
