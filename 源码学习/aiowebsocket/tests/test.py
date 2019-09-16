@@ -20,6 +20,10 @@ async def startup(uri):
 
 if __name__ == '__main__':
     remote = 'wss://api.bbxapp.vip/v1/ifcontract/realTime'
-    asyncio.get_event_loop().run_until_complete(startup(remote))
+    # asyncio.get_event_loop().run_until_complete(startup(remote))
     # handler = AioWebSocket('').manipulator
     # print(handler)
+
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(startup(remote))
+    loop.run_forever()
