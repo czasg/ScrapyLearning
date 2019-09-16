@@ -3,14 +3,37 @@ from czaSpider.czaTools import *
 
 
 class MySpider(IOCO):
-    name = "chinaReferee20190725-government"
-    custom_settings = {'HTTPERROR_ALLOWED_CODES': [503, 502]}
+    name = "中国裁判文书网-中国裁判文书网"
 
-    # url = 'http://wenshu.court.gov.cn/website/wenshu/181107ANFZ0BXSK4/index.html?docId=692902dbddd44d3aa8bdaac40123726a'
-    url = "http://wenshu.court.gov.cn/website/wenshu/181217BMTKHNT2W0/index.html?pageId=353035a8ea5d7b33eccb16065c63c897&s8=03"
+    ajax_url = "http://wenshu.court.gov.cn/website/parse/rest.q4w"
+
+    def start_requests(self):
+        self.mode = self.crawler.settings.get("mode")
+        self.keyword = self.crawler.settings.get("target")
+        if self.keyword:
+            if self.mode == "1":
+                self.query = [{"key": "s2", "value": self.keyword}]
+            elif self.mode == "2":
+                self.query = [{"key": "s21", "value": self.keyword}]
+            self.logger.info("获取到了新的查询条件：%s", self.keyword)
+            yield FormRequest(self.ajax_url, formdata=get_list_postData(self.query))
+        else:
+            self.logger.info("没有获取到查询条件")
 
     def parse(self, response):
-        print(response.text)
+        list_content = get_detail_json(response)
+        for docId in list_content['relWenshu']:
+            yield FormRequest(self.ajax_url, formdata=get_detail_postData(docId), callback=self.parse_detail)
+            return  # test
+
+    def parse_detail(self, response):
+        info = {}
+        detail_content = get_detail_json(response)
+        for key, value in detail_content.items():
+            if key in dict_map:
+                info[dict_map[key]] = value
+        import pprint
+        pprint.pprint(info)
 
 
 if __name__ == '__main__':
