@@ -1,7 +1,9 @@
 import json
 import numpy as np
-from collections import defaultdict
+from collections import defaultdict, deque
 from copy import deepcopy
+from importlib import import_module
+trees=import_module('tree')
 dupefilter = ['疑难网站', '网站异常', '驳回需求', '运维发现异常', '废弃需求', '停止维护', '网站异常']
 basic_state = ['正在开发', '开发完成', '清洗修改完成', '正在测试', '测试查完成', '正在入库', '入库完成', '研发修改完成', '返回修改']
 minute=60
@@ -147,7 +149,7 @@ if __name__ == '__main__':
     # print(get_task_state(data[aim]))
     # print(get_spider_tasks(data[aim]))
 
-    labels=[]
+    labels=deque()
     dataSets=[]
     all_spider_tasks = get_spider_tasks(data[aim], hard_spider_name)
     for spider_name, spider_tasks in all_spider_tasks.items():
@@ -168,6 +170,14 @@ if __name__ == '__main__':
 
         b = a.process_dict()
         for key in ['developer_time','tester_time','storager_time','total_time']:
+            if key == 'total_time':
+                if b[key] < two_day:
+                    b[key] = 'good'
+                elif b[key] < five_day:
+                    b[key] = 'normal'
+                else:
+                    b[key] = 'whats'
+                continue
             if b[key] < two_day:
                 b[key] = 1
             elif b[key] < five_day:
@@ -179,7 +189,11 @@ if __name__ == '__main__':
         keys = b.keys()
         if not labels:
             for key in keys:
-                labels.append(key)
+                if key == 'total_time':
+                    labels.append(key)
+                else:
+                    labels.appendleft(key)
+                # labels.append(key)  # todo, 我不能保存最后一个就是我需要的total_time，这个需要管控下
         dataSet=[]
         for label in labels:
             dataSet.append(b.pop(label))
@@ -212,5 +226,7 @@ if __name__ == '__main__':
 
         # break
 
-    dataSets = np.array(dataSets)
-    print(dataSets)
+    # dataSets = np.array(dataSets)
+    # print(dataSets)
+
+    print(trees.createTree(dataSets, list(labels)))  # todo, 可视化一下，这个太难看了把
