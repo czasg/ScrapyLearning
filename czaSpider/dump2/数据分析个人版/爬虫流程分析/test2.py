@@ -26,9 +26,15 @@ def get_spider_tasks(data_list, dupefilter=()):
         spider_tasks[data['spiderName']].append(data)
     return spider_tasks
 if __name__ == '__main__':
-    aim = "人事变动"
-    data = get_data(aim)
+    # aim = "人事变动"
+    # data = get_data(aim)
     # print(get_task_state_statistics(data[aim]))
-    filter_spider_name = get_dupefilter_spider(data[aim])
-    all_spider_tasks = get_spider_tasks(data[aim], filter_spider_name)
+    # filter_spider_name = get_dupefilter_spider(data[aim])
+    # all_spider_tasks = get_spider_tasks(data[aim], filter_spider_name)
     # print(all_spider_tasks)
+
+    def _test(data):
+        print(data, type(data))
+
+    _test([1,2,3])
+    _test((1,2,3))
