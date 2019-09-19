@@ -35,7 +35,7 @@ def splitDataSet(dataSet,axis,value):
 def chooseBestFeatureToSplit(dataSet):
 	numFeatures = len(dataSet[0]) - 1 # if you have three cols, you just need to care except of last cols, which is criteria including yes or no
 	baseEntropy = calcShannonEnt(dataSet) # marking the prime retrop
-	bestInfoGain = 0.0; bestFeature = 0  # todo,熵值不减反增吗
+	bestInfoGain = 0.0; bestFeature = -1
 	for i in range(numFeatures):
 		tempList = [example[i] for example in dataSet]
 		uniqueVals = set(tempList)
@@ -47,7 +47,8 @@ def chooseBestFeatureToSplit(dataSet):
 			#print('prob in chooseBestFeatureToSplit is: %s'%prob)
 			newEntropy += prob * calcShannonEnt(tempSplitResult)
 		infoGain = baseEntropy - newEntropy
-		if infoGain > bestInfoGain:
+		print(infoGain)
+		if infoGain >= bestInfoGain:
 			bestInfoGain = infoGain
 			bestFeature = i
 	return bestFeature

@@ -187,8 +187,10 @@ if __name__ == '__main__':
             else:
                 b[key] = '3慢'
         # print(b)
-        for key in ['developer_times','tester_times','storager_times']:
+        # for key in ['developer_time', 'tester_time', 'storager_time']:
         #     b.pop(key)
+        for key in ['developer_times','tester_times','storager_times']:
+            # b.pop(key)
             if b[key] < 2:
                 b[key] = '1优'
             elif b[key] < 4:
@@ -254,5 +256,5 @@ if __name__ == '__main__':
     import pprint
     # print(dataSets)
     # print('----'*50)
-    # pprint.pprint(trees.createTree(dataSets, list(labels)))
+    pprint.pprint(trees.createTree(dataSets, list(labels)))
     # print(trees.createTree(dataSets, list(labels)))  # todo, 可视化一下，这个太难看了把
