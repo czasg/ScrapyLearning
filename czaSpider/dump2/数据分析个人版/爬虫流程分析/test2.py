@@ -38,3 +38,8 @@ if __name__ == '__main__':
 
     _test([1,2,3])
     _test((1,2,3))
+
+    import matplotlib.pyplot as plt
+    plt.scatter()
+    p,a = plt.subplots()
+    a.set_ylabel()

@@ -47,7 +47,7 @@ def chooseBestFeatureToSplit(dataSet):
 			#print('prob in chooseBestFeatureToSplit is: %s'%prob)
 			newEntropy += prob * calcShannonEnt(tempSplitResult)
 		infoGain = baseEntropy - newEntropy
-		print(infoGain)
+		# print(infoGain)
 		if infoGain >= bestInfoGain:
 			bestInfoGain = infoGain
 			bestFeature = i
