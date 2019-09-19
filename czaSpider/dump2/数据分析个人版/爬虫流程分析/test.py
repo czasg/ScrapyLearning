@@ -157,7 +157,6 @@ if __name__ == '__main__':
     all_spider_tasks = get_spider_tasks(data[aim], hard_spider_name)
     for spider_name, spider_tasks in all_spider_tasks.items():
         tasks = sorted(spider_tasks, key=lambda data: data['time'])  # 按时间进行排序
-        # print(tasks)
         try:
             a = Test(tasks).process()
         except AbnormalTask:
@@ -255,5 +254,5 @@ if __name__ == '__main__':
     import pprint
     # print(dataSets)
     # print('----'*50)
-    pprint.pprint(trees.createTree(dataSets, list(labels)))
+    # pprint.pprint(trees.createTree(dataSets, list(labels)))
     # print(trees.createTree(dataSets, list(labels)))  # todo, 可视化一下，这个太难看了把
