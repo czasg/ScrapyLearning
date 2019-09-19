@@ -139,11 +139,16 @@ class Test:
         self.process_label(label)
         return self
 if __name__ == '__main__':
-    # aim = "人事变动"
-    aim = "领导之窗"
+    aim = "人事变动"
+    aim1 = "领导之窗"
     data = get_data(aim)
+    data1 = get_data(aim1)
     # print(data)
-    hard_spider_name = get_hard_spider_name(data[aim])
+    fina = []
+    fina.extend(data[aim])
+    fina.extend(data1[aim1])
+    # hard_spider_name = get_hard_spider_name(data[aim])
+    hard_spider_name = get_hard_spider_name(fina)
     # print(get_task_state(data[aim]))
     # print(get_spider_tasks(data[aim]))
 
@@ -177,20 +182,20 @@ if __name__ == '__main__':
                     b[key] = 'whats'
                 continue
             if b[key] < two_day:
-                b[key] = 1
+                b[key] = '1优'
             elif b[key] < five_day:
-                b[key] = 2
+                b[key] = '2正常'
             else:
-                b[key] = 3
+                b[key] = '3慢'
         # print(b)
         for key in ['developer_times','tester_times','storager_times']:
         #     b.pop(key)
             if b[key] < 2:
-                b[key] = 1
+                b[key] = '1优'
             elif b[key] < 4:
-                b[key] = 2
+                b[key] = '2正常'
             else:
-                b[key] = 3
+                b[key] = '3慢'
         # for key in ['developer_time','tester_time','storager_time']:
         #     b.pop(key)
 
