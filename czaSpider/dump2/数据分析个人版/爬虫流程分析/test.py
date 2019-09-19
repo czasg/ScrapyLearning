@@ -69,24 +69,22 @@ class Test:
     def _get_state_time(self, state):
         if not isinstance(state, tuple) and not isinstance(state, list):
             state = [state]
-        flag = time = label = None
-        for i, data in enumerate(self.data):
+        flag = time_use = label = None
+        for index, data in enumerate(self.data):
             if data[self.state] in state:
-                flag = i + 1
-                time = data[self.time]
+                flag = index + 1
+                time_use = data[self.time]
                 try:
                     label = data[self.state]
                     if self.data[flag][self.state] in state:
                         continue
                 except:
                     break
-                self.data = self.data[i:]
+                self.data = self.data[index:]
                 break
         if not flag:
-            # print(self.source)
-            # print(self.data)
-            raise AbnormalTask()
-        return time, label
+            raise AbnormalTask
+        return time_use, label
     def _process_task(self, start, end):
         time1, label1 = self._get_state_time(start)
         time2, label2 = self._get_state_time(end)
@@ -141,8 +139,8 @@ class Test:
         self.process_label(label)
         return self
 if __name__ == '__main__':
-    aim = "人事变动"
-    # aim = "领导之窗"
+    # aim = "人事变动"
+    aim = "领导之窗"
     data = get_data(aim)
     # print(data)
     hard_spider_name = get_hard_spider_name(data[aim])
@@ -185,6 +183,17 @@ if __name__ == '__main__':
             else:
                 b[key] = 3
         # print(b)
+        for key in ['developer_times','tester_times','storager_times']:
+        #     b.pop(key)
+            if b[key] < 2:
+                b[key] = 1
+            elif b[key] < 4:
+                b[key] = 2
+            else:
+                b[key] = 3
+        # for key in ['developer_time','tester_time','storager_time']:
+        #     b.pop(key)
+
 
         keys = b.keys()
         if not labels:
@@ -194,6 +203,9 @@ if __name__ == '__main__':
                 else:
                     labels.appendleft(key)
                 # labels.append(key)  # todo, 我不能保存最后一个就是我需要的total_time，这个需要管控下
+
+
+
         dataSet=[]
         for label in labels:
             dataSet.append(b.pop(label))
@@ -223,10 +235,20 @@ if __name__ == '__main__':
         # for t in basic:
         #     pass
 
+        # for key in ['developer_time','tester_time','storager_time']:
+        #     b.pop(key)
+
 
         # break
 
     # dataSets = np.array(dataSets)
     # print(dataSets)
-
-    print(trees.createTree(dataSets, list(labels)))  # todo, 可视化一下，这个太难看了把
+    # print(np.array(dataSets).shape)
+    labels.pop()
+    # print(labels)
+    # trees.test()
+    import pprint
+    # print(dataSets)
+    # print('----'*50)
+    pprint.pprint(trees.createTree(dataSets, list(labels)))
+    # print(trees.createTree(dataSets, list(labels)))  # todo, 可视化一下，这个太难看了把
