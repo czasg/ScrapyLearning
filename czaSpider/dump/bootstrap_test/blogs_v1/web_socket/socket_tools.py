@@ -62,9 +62,14 @@ def get_send_msg(msg_bytes):
     return msg
 
 
-def to_user(content, state):
-    return json.dumps({'state': state, 'content': content}).encode()
+def to_user(content, state, online=1, info_from='WebSocketServer'):
+    return json.dumps({
+        'state': state,
+        'content': content,
+        'online': online,
+        'info_from': info_from
+    }).encode()
 
 
-def process_msg(info, state):
-    return get_send_msg(to_user(info, state))
+def process_msg(info, state, online=1, info_from='WebSocketServer'):
+    return get_send_msg(to_user(info, state, online, info_from))
