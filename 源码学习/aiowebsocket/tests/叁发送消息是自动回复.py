@@ -5,7 +5,16 @@
 import socket, base64, hashlib
 
 """
+ws =new WebSocket("ws://127.0.0.1:8022");
+ws.onmessage = function (ev) {
+    console.log(JSON.parse(ev.data));
+}
+
 ws =new WebSocket("ws://127.0.0.1:8080");
+ws.onmessage = function (ev) {
+    console.log(ev);
+}
+
 ws.send("你好");
 ws.onopen = function (ev) { //若是连接成功，onopen函数会执行
     console.log(22222);
@@ -20,6 +29,7 @@ ws.onmessage = function (ev) {
 def get_headers(data):
     '''将请求头转换为字典'''
     header_dict = {}
+    print(data)
     data = str(data, encoding="utf-8")
 
     header, body = data.split("\r\n\r\n", 1)
@@ -35,7 +45,7 @@ def get_headers(data):
 
 
 def get_data(info):
-    payload_len = info[1] & 127
+    payload_len = info[1] & 127  # 0b1111111 获取info消息中第一位，然后与一下，可以得到对应的消息长度
     if payload_len == 126:
         extend_payload_len = info[2:4]
         mask = info[4:8]
@@ -50,7 +60,7 @@ def get_data(info):
         decoded = info[6:]
 
     bytes_list = bytearray()  # 这里我们使用字节将数据全部收集，再去字符串编码，这样不会导致中文乱码
-    for i in range(len(decoded)):
+    for i in range(len(decoded)):  # 这个解码真是无语了啊
         chunk = decoded[i] ^ mask[i % 4]  # 解码方式
         bytes_list.append(chunk)
     body = str(bytes_list, encoding='utf-8')
@@ -70,7 +80,7 @@ def send_msg(conn, msg_bytes):
     length = len(msg_bytes)
     if length < 126:
         token += struct.pack("B", length)
-    elif length <= 0xFFFF:
+    elif length <= 0xFFFF:  # 65535
         token += struct.pack("!BH", 126, length)
     else:
         token += struct.pack("!BQ", 127, length)

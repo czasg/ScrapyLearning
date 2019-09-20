@@ -74,7 +74,7 @@ class Converse:
                    fin: bool = True, mask: bool = True):  # 发送消息
         if isinstance(message, str):
             message = message.encode()
-        code = DataFrames.text.value
+        code = DataFrames.text.value  # 0x01
         await self.frame.write(fin=fin, code=code, message=message, mask=mask)
 
     async def receive(self, text=False, mask=False):  # 接收消息
