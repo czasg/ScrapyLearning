@@ -9,6 +9,7 @@ ws =new WebSocket("ws://127.0.0.1:8022");
 ws.onmessage = function (ev) {
     console.log(JSON.parse(ev.data));
 }
+ws.send(JSON.stringify({'name':'c', 'cookie':'test'}))
 
 ws =new WebSocket("ws://127.0.0.1:8080");
 ws.onmessage = function (ev) {
