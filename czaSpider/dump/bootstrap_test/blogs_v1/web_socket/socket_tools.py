@@ -40,13 +40,7 @@ def socket_decode(info):
     else:
         mask = info[2:6]
         decoded = info[6:]
-    bytes_list = bytearray()
-    for i in range(len(decoded)):
-        chunk = decoded[i] ^ mask[i % 4]
-        bytes_list.append(chunk)
-    body = str(bytes_list, encoding='utf-8')
-    return body
-    # return str(bytearray(decoded[i] ^ mask[i % 4] for i in range(len(decoded))), encoding='utf-8')  # todo, 有bug
+    return str(bytearray([decoded[i] ^ mask[i % 4] for i in range(len(decoded))]), encoding='utf-8')  # todo, 有bug
 
 
 def get_send_msg(msg_bytes):
