@@ -5,7 +5,7 @@ from tools.man_pager import get_page_index
 
 
 @get('/blogs')
-async def blogs(): return {'__template__': 'blogs.html'}
+async def blogs(): return {'__template__': 'blogs/blogs.html'}
 
 
 @get('/root/manage/blogs')
@@ -41,11 +41,11 @@ def edit_blog(*, id):
     return {
         '__template__': 'blog_editor.html',
         'id': id,
-        'api': '/api/edit/blog/%s' % id  # todo, 为啥要加这个呢，在里面直接定义好不就行了吗，只要接口不改变的话，这种接口肯定是写在前段啊
+        'api': '/api/edit/blog/%s' % id
     }
 
 
-@get('/blogs/blog/{id}')  # todo, 内容要和评论拆开,博客内容要以接口的形式返回，而不是直接返回一个大文档
+@get('/blogs/blog/{id}')
 async def detail_blog(id):
     return {
         '__template__': 'blog_detail.html',
