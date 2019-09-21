@@ -56,7 +56,7 @@ def get_send_msg(msg_bytes):
     return msg
 
 
-def to_user(content, state, online=1, info_from='WebSocketServer'):
+def to_user(content, state, online=1, info_from='WebSocketServer'):  # todo 怎么动态添加参数，这是个大问题啊
     return json.dumps({
         'state': state,
         'content': content,
