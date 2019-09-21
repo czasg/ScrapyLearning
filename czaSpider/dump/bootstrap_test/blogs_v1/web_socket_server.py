@@ -99,12 +99,20 @@ def start_server(addrPort, handler=MyServerHandler, queue_size=500):
 if __name__ == '__main__':
     start_server(('127.0.0.1', 8022))
 
-    """
-    ws =new WebSocket("ws://127.0.0.1:8022");
-    ws.onmessage = function (ev) {
-        console.log(JSON.parse(ev.data));
-    }
-    ws.send(JSON.stringify({'name':'ga', 'cookie':'test', 'message':'haha', 'to':'pa', 'state': 'w11'}))
-    ws.send(JSON.stringify({'name':'pa', 'cookie':'test', 'message':'heihei', 'to':'ga'}))
-    ws.send(JSON.stringify({'name':'sf', 'cookie':'test', 'message':'heihei', 'to':'ga'}))
-    """
+"""
+ws =new WebSocket("ws://127.0.0.1:8022");
+监听message事件，在服务器响应时接受数据。返回的数据存储在事件对象中
+ws.onmessage = function (ev) {
+    console.log(JSON.parse(ev.data));
+}
+ws.send(JSON.stringify({'name':'ga', 'cookie':'test', 'message':'haha', 'to':'pa', 'state': 'w11'}))
+ws.send(JSON.stringify({'name':'pa', 'cookie':'test', 'message':'heihei', 'to':'ga'}))
+ws.send(JSON.stringify({'name':'sf', 'cookie':'test', 'message':'heihei', 'to':'ga'}))
+
+监听open事件，在成功建立websocket时向url发送纯文本字符串数据
+websocket.onopen = () => {
+  if (websocket.readyState === WebSocket.OPEN) {
+    websocket.send('hello world')
+  }
+}
+"""
