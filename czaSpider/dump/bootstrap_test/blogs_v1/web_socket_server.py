@@ -33,7 +33,7 @@ class MyServerHandler(socketserver.BaseRequestHandler):
             json_data = json.loads(self.get_recv_data())
             if json_data['cookie'] == 'test':  # todo Cookie验证
                 self.conn = Connector(json_data['name'], self.request)  # id_pool.next_id()
-                ConnectManager.connectors[json_data['name']] = self.conn
+                ConnectManager.add_connector(json_data['name'], self.conn)
                 return
         except:
             pass
@@ -60,29 +60,26 @@ class MyServerHandler(socketserver.BaseRequestHandler):
                     error_count += 1
                     continue
                 if state == 11:
-                    to_obj = ConnectManager.connectors.get(to)
-                    if to_obj:
-                        to_obj.request.send(
-                            process_msg(message, 1, info_from=self.conn.snow_key))  # todo 这种只能在线发送了，如何离线发送呢
+                    if self.send_msg_p2g(message, 'connectors', to):
+                        pass
                     else:
-                        self.failure('无此用户耶')
+                        self.failure('%s 不存在' % to)
                         continue
                 elif state == 12:
-                    if ConnectManager.groups.get(to):
-                        for conn in ConnectManager.groups.get(to):
-                            conn.request.send(process_msg(message, 1, info_from=self.conn.snow_key))
+                    if self.send_msg_p2g(message, 'groups', to):
+                        pass
                     else:
                         self.failure('%s 不存在' % to)
                         continue
                 elif state == 21:
-                    if ConnectManager.groups.get(to):
+                    if ConnectManager.group_exist(to):
                         self.failure('%s 已存在' % to)
                         continue
                     else:
-                        ConnectManager.groups[to].append(self.conn)
+                        ConnectManager.add_group(to, self.conn)
                 elif state == 22:  # todo 用户加进去了怎么删除啊，懵逼了，哈哈
-                    if ConnectManager.groups.get(to):
-                        ConnectManager.groups[to].append(self.conn)
+                    if ConnectManager.group_exist(to):
+                        ConnectManager.add_group(to, self.conn)
                     else:
                         self.failure('%s 不存在' % to)
                         continue
@@ -95,6 +92,14 @@ class MyServerHandler(socketserver.BaseRequestHandler):
             self.failure('验证失败，已关闭连接', 0)
         except:
             pass
+
+    def send_msg_p2g(self, message, attr, to):
+        if getattr(ConnectManager, attr).get(to):
+            for conn in getattr(ConnectManager, attr).get(to):
+                conn.request.send(process_msg(message, 1, info_from=self.conn.snow_key))
+            return True
+        else:
+            return False
 
     def finish(self):
         logger.warning('%s:%s Connect Close' % self.client_address)
@@ -119,7 +124,7 @@ if __name__ == '__main__':
     ws.onmessage = function (ev) {
         console.log(JSON.parse(ev.data));
     }
-    ws.send(JSON.stringify({'name':'ga', 'cookie':'test', 'message':'haha', 'to':'pa'}))
+    ws.send(JSON.stringify({'name':'ga', 'cookie':'test', 'message':'haha', 'to':'pa', 'state': 11}))
     ws.send(JSON.stringify({'name':'pa', 'cookie':'test', 'message':'heihei', 'to':'ga'}))
     ws.send(JSON.stringify({'name':'sf', 'cookie':'test', 'message':'heihei', 'to':'ga'}))
     """

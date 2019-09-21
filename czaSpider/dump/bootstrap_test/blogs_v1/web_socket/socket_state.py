@@ -1,4 +1,5 @@
 from collections import defaultdict
+import weakref
 
 """STATE INSTRUCTIONS
 # 服务端 #
@@ -7,17 +8,20 @@ from collections import defaultdict
 2: 错误状态，具体原因见返回内容
 
 # 客户端 #
-11: p2p
-12: p2g
-21: create one group
-22: add to one group
+w11: p2p
+w12: p2g
+w21: create one group
+w22: add to one group
 
 # 测试码 #
 99999: return 'hello world'
 """
-state_code = [11, 12, 21, 22, 99999]
+state_code = ['w11', 'w12', 'w21', 'w22', 'w99999']
 
 ERROR_COUNT = 2
+
+KEY_MAP = {}
+VAL_MAP = {}
 
 
 class Connector:
@@ -27,7 +31,7 @@ class Connector:
 
 
 class ConnectManager:  # todo 加载之前就可以把所有的用户加载进来，一旦没有找到则再次更新数据库
-    connectors = dict()
+    connectors = defaultdict(list)
     groups = defaultdict(list)
 
     @classmethod
@@ -37,6 +41,22 @@ class ConnectManager:  # todo 加载之前就可以把所有的用户加载进�
     @classmethod
     def clear(cls, conn):
         try:
-            cls.connectors.pop(conn.snow_key)
+            cls.connectors[conn.snow_key].pop(cls.connectors[conn.snow_key].index(conn))
         except:
             pass
+
+    @classmethod
+    def add_connector(cls, key, value):
+        cls.connectors[key].append(value)
+
+    @classmethod
+    def add_group(cls, key, value):
+        cls.groups[key].append(value)
+
+    @classmethod
+    def group_exist(cls, key):
+        return key in cls.groups
+
+# if __name__ == '__main__':
+#     a = ConnectManager['connectors']
+#     print(a)
