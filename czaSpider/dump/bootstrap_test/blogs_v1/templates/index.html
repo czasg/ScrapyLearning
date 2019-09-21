@@ -396,7 +396,7 @@
             }
         ];
     panels_toggle.forEach(panel => panel.addEventListener('click', toggleOpen));
-    panels.forEach(panel => panel.addEventListener('transitionend', toggleOenActive))
+    panels.forEach(panel => panel.addEventListener('transitionend', toggleOenActive));
     drawCanvas('index-canvas1', '/api/get/blogs/statistic', {}, '补给站', []);
     drawCanvas('index-canvas2', '/api/get/multi/statistic', ajax_data, '在线爬虫', dataZoom);
     drawCanvas('index-canvas3', '/api/get/multi/statistic/github_info', {}, 'github-commits', []);
