@@ -4,11 +4,11 @@ from tools.safe_check_user import check_admin
 from tools.man_pager import get_page_index
 
 
-@get('/blogs')
-async def blogs(): return {'__template__': 'blogs/blogs.html'}
+@get('/blog/blogs')
+async def blogs(): return {'__template__': 'blog/blogs.html'}
 
 
-@get('/root/manage/blogs')
+@get('/blog/root/manage')
 async def root_manage_blogs(request, *, page='1'):
     check_admin(request)
     return {
@@ -17,7 +17,7 @@ async def root_manage_blogs(request, *, page='1'):
     }
 
 
-@get('/manage/blogs')
+@get('/blog/manage')
 async def manage_blogs(request, *, page='1'):
     if request.__user__ is None:
         raise APIResourceError('请先登陆', 'No Login')
@@ -27,7 +27,7 @@ async def manage_blogs(request, *, page='1'):
     }
 
 
-@get('/new/blog')
+@get('/blog/new')
 def new_blog():
     return {
         '__template__': 'blog_editor.html',
@@ -36,7 +36,7 @@ def new_blog():
     }
 
 
-@get('/edit/blog/{id}')
+@get('/blog/edit/{id}')
 def edit_blog(*, id):
     return {
         '__template__': 'blog_editor.html',
@@ -45,7 +45,7 @@ def edit_blog(*, id):
     }
 
 
-@get('/blogs/blog/{id}')
+@get('/blog/{id}')
 async def detail_blog(id):
     return {
         '__template__': 'blog_detail.html',

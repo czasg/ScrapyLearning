@@ -76,8 +76,6 @@ async def anti_spider_second(app, handler):
 
 async def anti_spider_third(app, handler):
     async def _anti_spider_third(request):
-        if request.path.startswith(('/static/')):
-            return (await handler(request))
         if request.path.startswith('/api/captcha/anti/spider/third'):
             if request.method != 'POST':
                 return web.HTTPForbidden()
@@ -92,6 +90,8 @@ async def anti_spider_third(app, handler):
                 return process_json(dict(success='验证成功'))
             else:
                 return process_json(dict(error='验证码错误，请检查大小写是否正确'))
+        if request.path.startswith(('/static/', '/api/', '/favicon.ico')):  # todo 这个'/favicon.ico'好讨厌啊
+            return (await handler(request))
         times_record = redis_handler.hget(REDIS_ANTI_SPIDER_TIME, request.remote)
         count_record = int(redis_handler.get(request.remote) or 0)
 
