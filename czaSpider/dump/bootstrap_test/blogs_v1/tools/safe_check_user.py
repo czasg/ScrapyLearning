@@ -15,8 +15,8 @@ def check_admin(request):
 
 def user2cookie(user, max_age):
     expires = str(time.time() + max_age)
-    s = "%s-%s-%s-%s" % (user.id, user.passwd, expires, _COOKIE_KEY)
-    cookie = [user.id, expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
+    s = "%d-%s-%s-%s" % (user.id, user.passwd, expires, _COOKIE_KEY)
+    cookie = [str(user.id), expires, hashlib.sha1(s.encode('utf-8')).hexdigest()]
     return '-'.join(cookie)
 
 

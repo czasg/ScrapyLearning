@@ -1,6 +1,9 @@
-import os, time
+import os, re, time
 
 from datetime import datetime
+
+_RE_EMAIL = re.compile(r'^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$')
+_RE_SHA1 = re.compile(r'^[0-9a-f]{40}$')
 
 
 def get_file_path(file): return os.path.dirname(os.path.abspath(file))

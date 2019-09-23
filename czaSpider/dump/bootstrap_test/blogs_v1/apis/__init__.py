@@ -1,5 +1,7 @@
 from .blog.blog_api import *
 from .blog.blog_dom import *
+from .user.user_api import *
+from .user.user_dom import *
 
 from tools.handler import get
 

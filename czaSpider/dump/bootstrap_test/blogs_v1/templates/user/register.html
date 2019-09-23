@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>czaOrz</title>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+<style>
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    padding-top: 60px;
+    background-color: #F5F5F5;
+}
+</style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2 col-md-2"></div>
+        <div class="col-sm-8 col-md-8">
+
+            <h4 class="text-center">欢迎注册</h4><br>
+            <form id="registerBody" @submit="submit">
+                <div class="form-group">
+                    <label>请输入用户名</label>
+                    <input v-model="name" type="text" class="form-control" id="registerName" placeholder="Username" maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label>请输入注册邮箱</label>
+                    <input v-model="email" type="text" class="form-control" id="registerEmail" placeholder="Email" maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label>请输入密码</label>
+                    <input v-model="password1" type="password" class="form-control" id="registerPassword1" placeholder="Password" maxlength="50">
+                </div>
+                <div class="form-group">
+                    <label>请确认密码</label>
+                    <input v-model="password2" type="password" class="form-control" id="registerPassword2" placeholder="Check Password" maxlength="50">
+                </div>
+                <button type="submit" class="btn btn-default ">Register</button>
+            </form>
+
+        </div>
+        <div class="col-sm-2 col-md-2"></div>
+    </div>
+</div>
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+<script src="/static/js/public.js"></script>
+<script src="/static/js/sha1.min.js"></script>
+<script>
+    function isValidEmail (email) {
+        var re = /^[a-z0-9\.\-\_]+\@[a-z0-9\-\_]+(\.[a-z0-9\-\_]+){1,4}$/;
+        return re.test(email.toLowerCase());
+    }
+
+    $(function () {
+        var register = new Vue({
+            el: '#registerBody',
+            data: {
+                name: '',
+                email: '',
+                password1: '',
+                password2: ''
+            },
+            methods: {
+                submit: function (event) {
+                    event.preventDefault();
+                    var $form = $('#registerBody');
+                    if (! this.name.trim()) {
+                        alert('请输入名字');return
+                    }
+                    if (! isValidEmail(this.email.trim().toLowerCase())) {
+                        alert('Email格式异常，请确认');return
+                    }
+                    if (this.password1.length < 8) {
+                        alert('密码至少为8个字符');return
+                    }
+                    if (this.password1 !== this.password2) {
+                        alert('两次输入密码不一致，请确认');return
+                    }
+                    var
+                        email = this.email.trim().toLowerCase(),
+                        data = {
+                            name: this.name.trim(),
+                            email: email,
+                            passwd: this.passwd==='' ? '' : CryptoJS.SHA1(email + ':' + this.password2).toString()
+                        };
+                    postJSON('{{ register_url }}', data, function(r){
+                        if (r && r.error){
+                            alert(r.error);
+                        } else {
+                            alert('注册成功');
+                            redirect('/');
+                        }
+                    });
+                }
+            }
+        });
+    })
+</script>
+</body>
+</html>

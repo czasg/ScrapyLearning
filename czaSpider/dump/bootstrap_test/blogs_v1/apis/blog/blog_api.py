@@ -15,7 +15,7 @@ async def api_get_blogs(*, page='1', page_size=None, user_id=None):
     num = await Blog.findNumber('count(id)')
     p = Pager(num, page_index, get_page_size(page_size)) if page_size else Pager(num, page_index)
     if num == 0:
-        return dict(page=0, users=())
+        return dict(page=0, blogs=())
     if user_id:
         blogs = await Blog.findAll('user_id=?', [user_id], orderBy='created_at desc', limit=(p.offset, p.limit))
     else:

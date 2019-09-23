@@ -8,6 +8,16 @@
     <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
     <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/static/css/public.css" />
+<style>
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    padding-top: 60px;
+    background-color: #F5F5F5;
+}
+</style>
 </head>
 <body>
 <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -33,6 +43,7 @@
                     <form class="navbar-form">
                         <a type="button" class="btn btn-info">
                             <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                            <span class="badge">4</span>
                         </a>
                     </form>
                 </li>
@@ -64,39 +75,71 @@
             </ul>
         </div>
 </nav>
+
 <div class="container-fluid">
     <div class="row">
-        <div class="index-top-container">
-            <div class="index-top">
-                <div class="top-panels">
-                    <div class="panel panel1">
-                        <p>数据展示</p>
-                        <p class="panel-toggle">data</p>
-                        <a href="javascript:void(0)" onclick="toBottom()"><p>enter&nbsp;</p></a>
+        <div class="col-sm-2 col-md-2"></div>
+        <div class="col-sm-8 col-md-8">
+            <div class="row">
+                <div class="col-sm-9 col-md-9">
+                    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+                        </ol>
+                        <div class="carousel-inner" role="listbox">
+                            <div class="item active">
+                                <img src="/static/img/test.jpg" style="width: 100%;">
+                                <div class="carousel-caption">
+                                    <h4>This is Test Code</h4>
+                                    <p>hei-hei</p>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <img src="/static/img/test.jpg">
+                                <div class="carousel-caption"></div>
+                            </div>
+                            <div class="item">
+                                <img src="/static/img/test.jpg">
+                                <div class="carousel-caption"></div>
+                            </div>
+                        </div>
+                        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
                     </div>
-                    <div class="panel panel2">
-                        <p>爬虫</p>
-                        <p class="panel-toggle">spider</p>
-                        <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
-                    </div>
-                    <div class="panel panel3">
-                        <p>博客</p>
-                        <p class="panel-toggle">blog</p>
-                        <a href="/blog/blogs"><p>enter&nbsp;</p></a>
-                    </div>
-                    <div class="panel panel4">
-                        <p>工具</p>
-                        <p class="panel-toggle">tools</p>
-                        <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
-                    </div>
-                    <div class="panel panel5">
-                        <p>简介</p>
-                        <p class="panel-toggle">resume</p>
-                        <a href="javascript:void(0)"><p>enter&nbsp;</p></a>
-                    </div>
+<br>
+<div class="panel-group" id="show-blogs" role="tablist" aria-multiselectable="true">
+    <div class="panel" v-for="(blog, index) in blogs" style="margin-bottom: 15px;">
+        <div class="panel-body">
+            <span style="float:left;width: 30%;overflow: hidden;margin-right: 20px;border-radius: 7px;"><img src="/static/img/test.jpg" class="img-responsive"></span>
+            <div class="blog-title" style="margin-top: -5px;overflow: hidden;text-overflow: ellipsis;"><h4 ><a :href="'/blogs/blog/'+blog.id" v-text="blog.name" style="text-decoration: none;"></a></h4></div>
+            <div class="blog-summary"><strong><span v-text="blog.summary"></span></strong></div>
+            <div style="width: 100%;top: 10px;text-align: right;display: inline-block;position: relative;">
+                <span class="glyphicon glyphicon-user"></span>&nbsp;<span v-text="blog.user_name" ></span>&nbsp;&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-time"></span>&nbsp;<span v-text="blog.created_at.toDateTime2()"></span>&nbsp;&nbsp;&nbsp;
+                <span class="badge pull-right" v-text="blog.count"></span><span class="glyphicon glyphicon-eye-open pull-right"></span>&nbsp;&nbsp;&nbsp;
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+                </div>
+                <div class="col-sm-3 col-md-3">
+                    <div>test</div>
                 </div>
             </div>
         </div>
+        <div class="col-sm-2 col-md-2"></div>
     </div>
 </div>
 <div class="modal fade" id="IOCO" tabindex="-1" role="dialog">
@@ -172,8 +215,8 @@
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
-<script src="https://echarts.baidu.com/examples/vendors/echarts/echarts.min.js"></script>
 <script src="/static/js/public.js"></script>
+<script src="/static/js/sha1.min.js"></script>
 <script>
     $(document).ready(function(){
         var dynamicNav = $('#NAV-TOP-MENU');
@@ -182,6 +225,69 @@
         })
     })
     gotoTop('.container-fluid', 600);
+    //首次刷新
+    function initBlogs(data) {
+        if (data.blogs) {
+            showBlogs.blogs = data.blogs
+            showBlogs.page = data.page
+            page_count = data.page.page_count
+        }
+    }
+    $(function() {
+        var page_count = 0;
+        $.get('/api/get/blogs', {},
+            function (results, status) {
+                if (status==='success'){
+                    initBlogs(results);
+                }else{
+                    alert(results);
+            }
+        });
+    })
+    showBlogs = new Vue({
+        el: '#show-blogs',
+        data: {
+            blogs: '',
+            page: ''
+        }
+    })
+    $(function(){
+        login_object = new Vue({
+            el: '#LOGIN-IN',
+            data: {
+                email: '',
+                passwd: ''
+            },
+            methods: {
+                LOGINFunc: function(event){
+                    event.preventDefault();
+                    var
+                        $loginBody = $('#LOGIN-IN'),
+                        email = this.email.trim().toLowerCase(),
+                        data = {
+                            email: email,
+                            passwd: this.passwd==='' ? '' : CryptoJS.SHA1(email + ':' + this.passwd).toString()
+                        },
+                        opt = {
+                            type: 'POST',
+                            dataType: 'json',
+                            url: '/api/authenticate',
+                            contentType: 'application/json'
+                        };
+                    opt.data = JSON.stringify(data || {});
+                    $.ajax(opt).done(function(r){
+                        if (r && r.error){
+                            alert(r.error);
+                        } else {
+                            location.assign('/');
+                        }
+                    }).fail(function(jqXHR, textStatus){
+                        alert(textStatus);
+                    })
+                }
+            }
+        });
+    });
 </script>
 </body>
 </html>

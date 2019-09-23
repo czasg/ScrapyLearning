@@ -30,7 +30,7 @@ async def manage_blogs(request, *, page='1'):
 @get('/blog/new')
 def new_blog():
     return {
-        '__template__': 'blog_editor.html',
+        '__template__': 'blog/blog_editor.html',
         'id': '',
         'api': '/api/new/blog'
     }
@@ -45,7 +45,7 @@ def edit_blog(*, id):
     }
 
 
-@get('/blog/{id}')
+@get('/blog/detail/{id}')
 async def detail_blog(id):
     return {
         '__template__': 'blog_detail.html',
