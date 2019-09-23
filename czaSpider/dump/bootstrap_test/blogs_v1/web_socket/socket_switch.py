@@ -1,5 +1,4 @@
 from web_socket.socket_state import *
-from tools.idgen import id_pool
 
 
 class Switch:
@@ -15,7 +14,7 @@ class Switch:
 
     @classmethod
     def w12(cls, request, message, to):
-        if request.send_msg_p2g(message, 'groups', to) is not None:
+        if request.send_msg_p2g(message, 'groups', to, group_from=to) is not None:
             return '%s 不存在' % to
 
     @classmethod

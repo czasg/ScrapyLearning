@@ -18,8 +18,8 @@ class MyServerHandler(socketserver.BaseRequestHandler):
     def get_recv_data(self, size=1024):
         return socket_decode(self.request.recv(size))
 
-    def send_to_user(self, info, state, info_from='WebSocketServer'):
-        self.request.send(process_msg(info, state, ConnectManager.online(), info_from))
+    def send_to_user(self, info, state, info_from='WebSocketServer', **kwargs):
+        self.request.send(process_msg(info, state, ConnectManager.online(), info_from, **kwargs))
 
     def failure(self, info='failure', state=2):
         self.send_to_user(info, state)
@@ -71,11 +71,11 @@ class MyServerHandler(socketserver.BaseRequestHandler):
         except:
             pass
 
-    def send_msg_p2g(self, message, attr, to):
+    def send_msg_p2g(self, message, attr, to, **kwargs):
         if not getattr(ConnectManager, attr).get(to):
             return False
         for conn in getattr(ConnectManager, attr).get(to):
-            conn.request.send(process_msg(message, 1, info_from=self.conn.snow_key))
+            conn.request.send(process_msg(message, 1, info_from=self.conn.snow_key, **kwargs))
 
     def finish(self):
         logger.warning('%s:%s Connect Close' % self.client_address)

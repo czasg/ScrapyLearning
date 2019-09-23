@@ -1,5 +1,4 @@
 from collections import defaultdict
-import weakref
 
 """STATE INSTRUCTIONS
 # 服务端 #
@@ -56,7 +55,3 @@ class ConnectManager:  # todo 加载之前就可以把所有的用户加载进�
     @classmethod
     def group_exist(cls, key):
         return key in cls.groups
-
-# if __name__ == '__main__':
-#     a = ConnectManager['connectors']
-#     print(a)

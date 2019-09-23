@@ -1,5 +1,6 @@
 import json, base64, hashlib, struct
 
+
 # todo 这一坨代码太丑了吧
 
 def socket_encode(data):
@@ -57,14 +58,16 @@ def get_send_msg(msg_bytes):
     return msg
 
 
-def to_user(content, state, online=1, info_from='WebSocketServer'):  # todo 怎么动态添加参数，这是个大问题啊
-    return json.dumps({
+def to_user(content, state, online=1, info_from='WebSocketServer', **kwargs):  # todo 怎么动态添加参数，这是个大问题啊
+    info = {
         'state': state,
         'content': content,
         'online': online,
         'info_from': info_from
-    }).encode()
+    }
+    info.update(kwargs)
+    return json.dumps(info).encode()
 
 
-def process_msg(info, state, online=1, info_from='WebSocketServer'):
-    return get_send_msg(to_user(info, state, online, info_from))
+def process_msg(info, state, online=1, info_from='WebSocketServer', **kwargs):
+    return get_send_msg(to_user(info, state, online, info_from, **kwargs))
