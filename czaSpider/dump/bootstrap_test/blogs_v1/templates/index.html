@@ -163,10 +163,17 @@
                 <a type="button" class="btn btn-info" @click="topSearch">Submit</a>
             </form>
             <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <form class="navbar-form">
+                        <a type="button" class="btn btn-info">
+                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                        </a>
+                    </form>
+                </li>
                 <li class="dropdown">
                     <a href="javascript:void(0)" class="dropdown-toggle" id="NAV-TOP-MENU" data-toggle="dropdown" role="button"
                        aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list"
-                                                                        aria-hidden="true"></span></a>
+                                                                        aria-hidden="true">&nbsp;</span></a>
                     <ul class="dropdown-menu flag1">
                         {% if __user__ %}
                         {% if __user__.admin %}
