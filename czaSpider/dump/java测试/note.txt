@@ -16,3 +16,17 @@
 
 反射      |   无定义的调用    |   hasattr/getattr/setattr
 
+泛型  // 编写是将所有定义好的类型转化为T，然后再前面加入<T>即可
+/**
+* 泛型类型<T>不能用于静态方法
+*/
+public class ArrayList<T> {
+    private T[] array;
+    private int size;
+    public void add(T e) {...}
+    public void remove(int index) {...}
+    public T get(int index) {...}
+}
+ArrayList<String> strList = new ArrayList<String>();
+ArrayList<Float> floatList = new ArrayList<Float>();
+ArrayList<Number> list = new ArrayList<>();  //简写
