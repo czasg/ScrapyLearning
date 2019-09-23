@@ -3,3 +3,16 @@
 使用java可以运行一个已编译的Java程序，参数是类名
 
 
+方法      |   void getName    |   def getName
+构造方法  |   class Person    |   def __init__(self)
+方法重载  |   get()           |   def get()
+继承      |   extends         |   class A(B)
+多态
+抽象类    |   定义不实现      |   定义不实现
+接口      |   纯定义必实现    |   第三方包
+静态字段  |   static int      |   global
+静态方法  |   static void     |   @classmethod
+包        |   jar路径压缩包   |   import
+
+反射      |   无定义的调用    |   hasattr/getattr/setattr
+
