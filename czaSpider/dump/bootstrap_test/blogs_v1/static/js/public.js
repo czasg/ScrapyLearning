@@ -144,3 +144,24 @@ function postJSON(url, data, callback) {
     }
     _httpJSON('POST', url, data, callback);
 }
+
+function gotoTop(min_property, min_height) {
+    var toTop_html = '<button id="toTop" class="btn btn-default"">返回顶部</button>';
+    $(min_property).append(toTop_html);
+    $('#toTop').click(function(){
+        $('html,body').animate({scrollTop: 0}, 700);
+    }).hover(
+        function(){ $(this).addClass("hover"); },
+        function(){ $(this).removeClass("hover");
+    });
+    min_height ? min_height = min_height : min_height = 600;
+    $(window).scroll(function(){
+        var s = $(window).scrollTop();
+        if( s > min_height){
+            $("#toTop").fadeIn(100);
+        } else {
+            $("#toTop").fadeOut(200);
+        };
+    });
+};
+
