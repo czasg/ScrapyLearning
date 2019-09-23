@@ -13,10 +13,10 @@ logger.setLevel(logging.INFO)
 class MyServerHandler(socketserver.BaseRequestHandler):
 
     def setup(self):
-        self.request.send(socket_encode(self.request.recv(1024)))
+        self.request.send(WebSocketProtocol.encode(self.request.recv(1024)))
 
     def get_recv_data(self, size=1024):
-        return socket_decode(self.request.recv(size))
+        return WebSocketProtocol.decode(self.request.recv(size))
 
     def send_to_user(self, info, state, info_from='WebSocketServer', **kwargs):
         self.request.send(process_msg(info, state, ConnectManager.online(), info_from, **kwargs))
@@ -67,6 +67,8 @@ class MyServerHandler(socketserver.BaseRequestHandler):
             self.failure('错误查询次数过多，已关闭连接', 0)
         except AuthenticationError:
             logger.warning('%s:%s Authentication Failed' % self.client_address)
+            import traceback
+            print(traceback.format_exc())
             self.failure('验证失败，已关闭连接', 0)
         except:
             pass
@@ -87,6 +89,7 @@ class MyServerThreadingTCPServer(socketserver.ThreadingTCPServer):
     def __init__(self, server_address, RequestHandlerClass, request_queue_size=5):
         logger.info('Server Start ...')
         logger.info('Server Address is %s:%s' % server_address)
+        ProtocolProperty.set_location(server_address)
         self.request_queue_size = request_queue_size
         super(MyServerThreadingTCPServer, self).__init__(server_address, RequestHandlerClass)
 
@@ -100,8 +103,8 @@ if __name__ == '__main__':
     start_server(('127.0.0.1', 8022))
 
 """
-ws =new WebSocket("ws://127.0.0.1:8022");
 监听message事件，在服务器响应时接受数据。返回的数据存储在事件对象中
+ws =new WebSocket("ws://127.0.0.1:8022");
 ws.onmessage = function (ev) {
     console.log(JSON.parse(ev.data));
 }

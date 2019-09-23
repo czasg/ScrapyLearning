@@ -29,7 +29,7 @@ class Connector:
         self.request = request
 
 
-class ConnectManager:  # todo 加载之前就可以把所有的用户加载进来，一旦没有找到则再次更新数据库
+class ConnectManager:
     connectors = defaultdict(list)
     groups = defaultdict(list)
 
