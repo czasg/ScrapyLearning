@@ -2,6 +2,7 @@ import logging
 import socketserver
 
 from web_socket.socket_error import AuthenticationError
+from web_socket.socket_token_check import TokenChecker
 from web_socket.socket_tools import *
 from web_socket.socket_switch import *
 
@@ -30,6 +31,11 @@ class MyServerHandler(socketserver.BaseRequestHandler):
     def token_check(self):
         try:
             json_data = json.loads(self.get_recv_data())
+
+            # self.conn = Connector(TokenChecker.check(json_data['Cookie']), self.request)
+            # ConnectManager.add_connector(json_data['name'], self.conn)
+            # return  # todo 此处为redis验证模块
+
             if json_data['cookie'] == 'test':  # todo Cookie验证
                 self.conn = Connector(json_data['name'], self.request)  # id_pool.next_id()
                 ConnectManager.add_connector(json_data['name'], self.conn)
