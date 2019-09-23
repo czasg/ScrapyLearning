@@ -15,17 +15,17 @@ class MyServerHandler(socketserver.BaseRequestHandler):
     def setup(self):
         self.request.send(socket_encode(self.request.recv(1024)))
 
-    def send_to_user(self, info, state, info_from='WebSocketServer'):
-        self.request.send(process_msg(info, state, ConnectManager.online(), info_from))
-
     def get_recv_data(self, size=1024):
         return socket_decode(self.request.recv(size))
 
-    def success(self, info='success'):
-        self.send_to_user(info, 1)
+    def send_to_user(self, info, state, info_from='WebSocketServer'):
+        self.request.send(process_msg(info, state, ConnectManager.online(), info_from))
 
     def failure(self, info='failure', state=2):
         self.send_to_user(info, state)
+
+    def success(self, info='success'):
+        self.send_to_user(info, 1)
 
     def token_check(self):
         try:

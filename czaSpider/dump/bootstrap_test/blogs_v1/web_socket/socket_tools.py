@@ -1,5 +1,6 @@
 import json, base64, hashlib, struct
 
+# todo 这一坨代码太丑了吧
 
 def socket_encode(data):
     def get_headers(data):
