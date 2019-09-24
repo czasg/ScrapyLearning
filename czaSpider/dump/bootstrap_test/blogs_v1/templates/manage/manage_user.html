@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>czaOrz</title>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/public.css" />
+<style>
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    padding-top: 60px;
+    background-color: #F5F5F5;
+}
+</style>
+</head>
+<body>
+{% include '_config/顶部导航栏.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2 col-md-2"></div>
+        <div class="col-sm-8 col-md-8">
+<div id="manageUsers">
+    <table class="table">
+        <caption>用户管理:</caption>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>名字</th>
+                <th>电子邮件</th>
+                <th>注册时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(user, index) in users">
+                <th scope="row" v-text="index"></th>
+                <td>
+                    <span v-text="user.name"></span>
+                    <span v-if="user.admin" style="color:#d05">管理员</span>
+                </td>
+                <td>
+                    <a href="#" v-text="user.email"></a>
+                </td>
+                <td>
+                    <span v-text="user.created_at.toDateTime()"></span>
+                </td>
+                {% if __user__.admin %}
+                <td>
+                    <a href="#" @click="show_user(user)" type="button" data-toggle="modal" data-target="#SHOW-USER-INFO"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></a>
+                    <a href="#" @click="drop_user(user)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>
+                </td>
+                {% else %}
+                <td>
+                    <a href="#" v-text="user.name"></a>
+                    <a href="#" v-text="user.name"></a>
+                </td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" tabindex="-1" role="dialog" id="SHOW-USER-INFO">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">用户信息</h4>
+            </div>
+            <div class="modal-body">
+                <p>用户名称: <strong v-text="user.name"></strong></p>
+                <p>用户邮箱: <strong v-text="user.email"></strong></p>
+                <p>注册时间: <strong v-text="user.created_at.toDateTime()"></strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+        </div>
+        <div class="col-sm-2 col-md-2"></div>
+    </div>
+</div>
+
+<script src="/static/js/public.js"></script>
+<script>
+    function initManageUser(data) {
+        manageUsers.users = data.users
+        manageUsers.page = data.page
+        page_count = data.page.page_count
+    }
+    $(function() {
+        $.get('/api/get/users', {
+            page: {{ page_index }}
+        }, function (results, status) {
+            if (status==='success'){
+                $('#loading').hide();
+                initManageUser(results);
+            }else{
+                alert(results);
+            }
+        })
+    })
+    //定义manageUsers对象
+    var manageUsers = new Vue({
+        el: '#manageUsers',
+        data: {
+            users: '',
+            page: ''
+        },
+        methods: {
+            drop_user: function (user) {
+                if (confirm('确认要删除“' + user.name + '”?删除后不可恢复！')) {
+                    var opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/api/drop/user',
+                        data: JSON.stringify({
+                            id: user.id
+                        }),
+                        contentType: 'application/json'
+                    };
+                    $.ajax(opt).done(function (r) {
+                        if (r && r.error) {
+                            alert(r.error)
+                            return
+                        } else {
+                            alert('操作成功')
+                            refresh();
+                        }
+                    })
+                }
+            },
+            show_user: function (user) {
+                showUserInfo.user = user;
+            }
+        }
+    })
+
+    var showUserInfo = new Vue({
+        el: '#SHOW-USER-INFO',
+        data: {
+            user: '',
+        }
+    })
+</script>
+</body>
+</html>

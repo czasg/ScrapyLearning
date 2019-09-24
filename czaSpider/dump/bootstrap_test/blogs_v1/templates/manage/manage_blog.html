@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>czaOrz</title>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/public.css" />
+<style>
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    padding-top: 60px;
+    background-color: #F5F5F5;
+}
+</style>
+</head>
+<body>
+{% include '_config/顶部导航栏.html' %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2 col-md-2"></div>
+        <div class="col-sm-8 col-md-8">
+<div id="manageBlogs">
+    <table class="table">
+        <caption>博客管理:</caption>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>标题</th>
+                <th>摘要</th>
+                <th>作者</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="(blog, index) in blogs">
+
+                <th scope="row" v-text="index"></th>
+                <td>
+                    <span v-text="blog.name"></span>
+                </td>
+                <td>
+                    <span v-text="blog.summary"></span>
+                </td>
+                <td>
+                    <a href="#" v-text="blog.user_name"></a>
+                </td>
+                <td>
+                    <span v-text="blog.created_at.toDateTime()"></span>
+                </td>
+                <td>
+                    <a href="#" @click="showBlog(blog)"><span class="glyphicon glyphicon-send" aria-hidden="true"></span></a>
+                    <a href="#" @click="drop_blog(blog)"><span class="glyphicon glyphicon-remove-sign" aria-hidden="true"></span></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+        </div>
+        <div class="col-sm-2 col-md-2"></div>
+    </div>
+</div>
+
+<script src="/static/js/public.js"></script>
+<script>
+    function initManageBlog(data) {
+        if (data.blogs && data.blogs.length) {
+            console.log(data)
+            manageBlogs.blogs = data.blogs
+            manageBlogs.page = data.page
+            page_count = data.page.page_count
+        } else {
+            $('#manageBlogs').hide();
+        }
+    }
+    $(function() {
+        $.get('/api/get/blogs', {
+            page: {{ page_index }},
+            page_size: 10,
+            user_id: '{{ __user__.id }}'
+        }, function (results, status) {
+            if (status==='success'){
+                $('#loading').hide();
+                initManageBlog(results);
+            }else{
+                alert(results);
+            }
+        });
+    })
+    $(function(){
+        var
+            nextPage = $('#nextPage'),
+            prePage = $('#prePage');
+        nextPage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) + 1,
+                res = '';
+            if (nextPage > page_count) {
+                alert('已经是末页')
+                return
+            }
+            $.get('/api/get/blogs', {
+                page: nextPage,
+                page_size: 10,
+                user_id: '{{ __user__.id }}'
+            }, function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    manageBlogs.blogs = results.blogs
+                    manageBlogs.page = results.page
+                    page_index.text(results.page.page_index)
+                    Vue.nextTick()
+                }
+            })
+        })
+        prePage.click(function(){
+            var
+                page_index = $('#footer_page_index'),
+                nextPage = parseInt(page_index.text().trim()) - 1,
+                res = '';
+            if (nextPage < 1) {
+                alert('已经是首页')
+                return
+            }
+            $.get('/api/get/blogs', {
+                page: nextPage,
+                page_size: 10,
+                user_id: '{{ __user__.id }}'
+            }, function (results, status) {
+                if (status==='success'){
+                    $('#loading').hide();
+                    manageBlogs.blogs = results.blogs
+                    manageBlogs.page = results.page
+                    page_index.text(results.page.page_index)
+                    Vue.nextTick()
+                }
+            })
+        })
+    })
+    var manageBlogs = new Vue({
+        el: '#manageBlogs',
+        data: {
+            blogs: '',
+            page: ''
+        },
+        methods: {
+            edit_blog: function (blog) {
+                location.assign('/edit/blog/' + blog.id);
+            },
+            drop_blog: function (blog) {
+                if (confirm('确认要删除“' + blog.name + '”？删除后不可恢复！')) {
+                    var opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/api/drop/blog/' + blog.id,
+                        data: JSON.stringify({}),
+                        contentType: 'application/json'
+                    };
+                    $.ajax(opt).done(function(r) {
+                        if (r && r.error) {
+                            alert(r.error)
+                            return
+                        } else {
+                            refresh();
+                        }
+                    }).fail(function (jqXHR, textStatus) {
+                        alert(textStatus);
+                    })
+                }
+            },
+            showBlog: function (blog) {
+                location.assign('/blog/detail/' + blog.id);
+            }
+        }
+    })
+</script>
+</body>
+</html>

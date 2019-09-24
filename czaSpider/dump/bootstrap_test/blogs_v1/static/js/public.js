@@ -165,3 +165,19 @@ function gotoTop(min_property, min_height) {
     });
 };
 
+function getBlogType(type) {
+    console.log(type)
+    if (type === 1) {
+        current_type_text = '前端'
+    } else if (type === 2) {
+        current_type_text = '后端'
+    } else if (type === 3) {
+        current_type_text = '爬虫'
+    } else if (type === 4) {
+        current_type_text = '生活'
+    } else {
+        current_type_text = '未指定分类'
+    }
+    return current_type_text
+}
+

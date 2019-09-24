@@ -20,61 +20,7 @@ body{
 </style>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#NAVBAR-HEADER"
-                aria-expanded="false">
-            <span class="sr-only">Toggle Navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#" type="button" data-toggle="modal" data-target="#IOCO">IOCO</a>
-    </div>
-    <div class="collapse navbar-collapse" id="NAVBAR-HEADER">
-            <form class="navbar-form navbar-left" id="top-search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search" v-model="content">
-                </div>
-                <a type="button" class="btn btn-info" @click="topSearch">Submit</a>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <form class="navbar-form">
-                        <a type="button" class="btn btn-info">
-                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                            <span class="badge">4</span>
-                        </a>
-                    </form>
-                </li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropdown-toggle" id="NAV-TOP-MENU" data-toggle="dropdown" role="button"
-                       aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list"
-                                                                        aria-hidden="true">&nbsp;</span></a>
-                    <ul class="dropdown-menu flag1">
-                        {% if __user__ %}
-                        {% if __user__.admin %}
-                        <li class="dropdown-header">超级用户: {{ __user__.name }}</li>
-                        <li><a href="/root/manage/users">账号管理</a></li>
-                        <li><a href="/root/manage/blogs">博客管理</a></li>
-                        <li><a href="#">爬虫管理</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
-                        {% else %}
-                        <li class="dropdown-header">当前用户: {{ __user__.name }}</li>
-                        <li><a href="/manage/blogs">个人博客管理</a></li>
-                        <li><a href="/new/blog">创建个人博客</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
-                        {% endif %}
-                        {% else %}
-                        <li><a href="#" type="button" data-toggle="modal" data-target="#LOGIN-IN">登录</a></li>
-                        {% endif %}
-                    </ul>
-                </li>
-            </ul>
-        </div>
-</nav>
+{% include '_config/顶部导航栏.html' %}
 
 <div class="container-fluid">
     <div class="row">
@@ -97,11 +43,11 @@ body{
                                 </div>
                             </div>
                             <div class="item">
-                                <img src="/static/img/test.jpg">
+                                <img src="/static/img/test.jpg" style="width: 100%;">
                                 <div class="carousel-caption"></div>
                             </div>
                             <div class="item">
-                                <img src="/static/img/test.jpg">
+                                <img src="/static/img/test.jpg" style="width: 100%;">
                                 <div class="carousel-caption"></div>
                             </div>
                         </div>
@@ -118,15 +64,15 @@ body{
 <div class="panel-group" id="show-blogs" role="tablist" aria-multiselectable="true">
     <div class="panel" v-for="(blog, index) in blogs" style="margin-bottom: 15px;">
         <div class="panel-body">
-            <span style="float:left;width: 30%;overflow: hidden;margin-right: 20px;border-radius: 7px;"><img src="/static/img/test.jpg" class="img-responsive"></span>
-            <div class="blog-title" style="margin-top: -5px;overflow: hidden;text-overflow: ellipsis;"><h4 ><a :href="'/blogs/blog/'+blog.id" v-text="blog.name" style="text-decoration: none;"></a></h4></div>
+            <span style="float:left;width: 30%;overflow: hidden;margin-right: 20px;border-radius: 7px;"><img :src="blog.blog_image" class="img-responsive"></span>
+            <div class="blog-title" style="margin-top: -5px;overflow: hidden;text-overflow: ellipsis;"><h4 ><a :href="'/blog/detail/'+blog.id" v-text="blog.title" style="text-decoration: none;"></a></h4></div>
+            <span class="glyphicon glyphicon-pushpin"></span>&nbsp;<span v-text="getBlogType(parseInt(blog.blog_type))"></span>&nbsp;&nbsp;&nbsp;
             <div class="blog-summary"><strong><span v-text="blog.summary"></span></strong></div>
             <div style="width: 100%;top: 10px;text-align: right;display: inline-block;position: relative;">
                 <span class="glyphicon glyphicon-user"></span>&nbsp;<span v-text="blog.user_name" ></span>&nbsp;&nbsp;&nbsp;
-                <span class="glyphicon glyphicon-time"></span>&nbsp;<span v-text="blog.created_at.toDateTime2()"></span>&nbsp;&nbsp;&nbsp;
+                <span class="glyphicon glyphicon-time"></span>&nbsp;<span v-text="blog.created_at.toDateTime()"></span>&nbsp;&nbsp;&nbsp;
                 <span class="badge pull-right" v-text="blog.count"></span><span class="glyphicon glyphicon-eye-open pull-right"></span>&nbsp;&nbsp;&nbsp;
             </div>
-
         </div>
     </div>
 </div>
@@ -142,76 +88,7 @@ body{
         <div class="col-sm-2 col-md-2"></div>
     </div>
 </div>
-<div class="modal fade" id="IOCO" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="TTTTT"><span
-                        aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">IOCO</h4>
-                <h6>Institution Of Computer Organization</h6>
-            </div>
-            <div class="modal-body">
-                <div class="jumbotron">
-                    <div class="container">
-                        <p><strong>作者: </strong>czaOrz</p>
-                        <p><strong>邮箱: </strong>chenziangsg@163.com</p>
-                        <p><strong>联系方式: </strong>15607173521</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <ul class="pager" style="margin:-5px;">
-                    <li><a href="/">进入首页</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="LOGIN-IN" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Welcome to IOCO</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>用户名</label>
-                    <input v-model="email" type="text" class="form-control" placeholder="Username">
-                </div>
-                <div class="form-group">
-                    <label>密码</label>
-                    <input v-model="passwd" type="password" class="form-control" placeholder="Password">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <ul class="pager" style="margin:-5px;">
-                    <li class="previous"><a href="/register" type="button">注册</a></li>
-                    <li class="next"><a href="#" type="button" @click="LOGINFunc">登录</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="LOGIN-OUT" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title text-center">是否退出</h4>
-            </div>
-            <div class="modal-footer">
-                <ul class="pager" style="margin:-5px;">
-                    <li class="previous"><a href="#" type="button" data-dismiss="modal">Cancel</a></li>
-                    <li class="next"><a href="/signout" type="button">Confirm</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
@@ -224,7 +101,7 @@ body{
             $('.flag1').toggle(300);
         })
     })
-    gotoTop('.container-fluid', 600);
+    gotoTop('.container-fluid', 300);
     //首次刷新
     function initBlogs(data) {
         if (data.blogs) {
@@ -235,13 +112,8 @@ body{
     }
     $(function() {
         var page_count = 0;
-        $.get('/api/get/blogs', {},
-            function (results, status) {
-                if (status==='success'){
-                    initBlogs(results);
-                }else{
-                    alert(results);
-            }
+        getJSON('/api/get/blogs', {'page_size': 10}, function(results) {
+            initBlogs(results);
         });
     })
     showBlogs = new Vue({
@@ -251,43 +123,7 @@ body{
             page: ''
         }
     })
-    $(function(){
-        login_object = new Vue({
-            el: '#LOGIN-IN',
-            data: {
-                email: '',
-                passwd: ''
-            },
-            methods: {
-                LOGINFunc: function(event){
-                    event.preventDefault();
-                    var
-                        $loginBody = $('#LOGIN-IN'),
-                        email = this.email.trim().toLowerCase(),
-                        data = {
-                            email: email,
-                            passwd: this.passwd==='' ? '' : CryptoJS.SHA1(email + ':' + this.passwd).toString()
-                        },
-                        opt = {
-                            type: 'POST',
-                            dataType: 'json',
-                            url: '/api/authenticate',
-                            contentType: 'application/json'
-                        };
-                    opt.data = JSON.stringify(data || {});
-                    $.ajax(opt).done(function(r){
-                        if (r && r.error){
-                            alert(r.error);
-                        } else {
-                            location.assign('/');
-                        }
-                    }).fail(function(jqXHR, textStatus){
-                        alert(textStatus);
-                    })
-                }
-            }
-        });
-    });
+
 </script>
 </body>
 </html>

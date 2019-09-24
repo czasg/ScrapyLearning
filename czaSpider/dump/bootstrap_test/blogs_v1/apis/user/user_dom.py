@@ -23,7 +23,7 @@ async def root_register():
 async def root_manage_users(request, *, page='1'):
     check_admin(request)
     return {
-        '__template__': 'root_manage_users.html',
+        '__template__': 'manage/manage_user.html',
         'page_index': get_page_index(page)
     }
 

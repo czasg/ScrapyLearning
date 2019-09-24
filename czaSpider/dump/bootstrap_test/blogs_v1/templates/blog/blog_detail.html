@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>czaOrz</title>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico" />
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/static/css/public.css" />
+<style>
+*{
+    padding: 0;
+    margin: 0;
+}
+body{
+    padding-top: 60px;
+}
+</style>
+</head>
+<body>
+
+{% include '_config/顶部导航栏.html' %}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2 col-md-2"></div>
+        <div class="col-sm-8 col-md-8">
+
+<div class="media">
+    <div class="media-body">
+        <div class="page-header media-heading">
+            <h3>
+                <strong>{{ blog.title }}  </strong>
+                {% if __user__ %}
+                {% if __user__.id==blog.user_id %}
+                <small>&nbsp;&nbsp;<a href="/blog/edit/{{ blog.id }}" data-toggle="tooltip" data-placement="top" title="编辑博客"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a></small>
+                {% endif %}{% endif %}
+            </h3>
+            <small>作者: {{ blog.user_name }}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;发表于: {{ blog.created_at|datetime }}</small>
+        </div>
+    </div>
+    <div class="media-right">
+        <a href="#">
+            <img class="media-object img-rounded" src="{{ __user__.image }}" alt="64x64" data-holder-rendered="true" style="width: 64px; height: 64px;">
+        </a>
+    </div>
+</div>
+<!--博客摘要-->
+<blockquote>
+    <p><strong>摘要:</strong></p><em>{{ blog.summary }}</em>
+</blockquote>
+<!--博客内容-->
+<hr/>
+<div>{{ blog.html_content|safe }}</div>
+
+<div class="page-header"></div>
+<h4>发表评论 <small>{% if __user__ %}当前用户: {{ __user__.name }}{% endif %}</small></h4>
+<form id="comment-form">
+    <div class="form-group">
+        <label class="sr-only">None</label>
+        <textarea class="form-control" rows="2" placeholder="说点什么吧..."></textarea>
+    </div>
+    <button type="submit" class="btn btn-info">发表评论</button>
+</form>
+<div class="page-header"></div>
+
+<h4><strong>最新评论</strong></h4>
+<div id="drop_comment_in_blog">
+{% for comment in comments %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        用户: {{ comment.user_name }}
+        {% if comment.user_id==blog.user_id %}(作者){% endif %} - {{ comment.created_at|datetime }}
+        {% if __user__ %}
+        {% if __user__.admin %}
+        <a href="#" type="button" @click="dropComment('{{ comment.id }}')">删除</a>
+        {% endif %}
+        {% endif %}
+        <a href="javascript:void(0)" class="pull-right" type="button" @click="showSons('son-comments-{{ comment.id }}')"><span class="caret"></span><span class="badge">{{ comment.son_comments_nums }}</span></a>
+        <div class="pull-right">&nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <a href="#" class="pull-right" type="button" @click="addSons({{ comment }})" data-toggle="modal" data-target="#son-comment-modal"><span class="glyphicon glyphicon-edit"></span></a>
+    </div>
+    <div class="panel-body">{{ comment.html_content|safe }}</div>
+    <table class="table" id="son-comments-{{ comment.id }}" style="display: none">
+        {% if comment.son_comments %}
+        {% for son in comment.son_comments %}
+        <tr>
+            <td>{{ son.html_content|safe }}</td><td>用户:{{ son.user_name }}发表于: {{ son.created_at|datetime }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr><td>暂无其他评论</td></tr>
+        {% endif %}
+    </table>
+</div>
+{% else %}
+<p>无人发表评论...</p>
+{% endfor %}
+</div>
+<div id="son-comment-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">点评评论</h4>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" rows="2" v-model="content"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" @click="addSonComment">添加评论</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+        </div>
+        <div class="col-sm-3 col-md-3">
+        </div>
+    </div>
+</div>
+<script src="/static/js/public.js"></script>
+<script>
+    var drop = new Vue({
+        el: '#drop_comment_in_blog',
+        methods: {
+            dropComment: function (id) {
+                if (confirm('删除后不可恢复，是否继续删除！')) {
+                    var
+                        opt = {
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {},
+                            url: '/api/drop/comment/from/blog/'+id,
+                            contentType: 'application/json'
+                        };
+                    $.ajax(opt).done(function(r){
+                        if (r && r.error){
+                            alert(r.error);
+                        } else {
+                            alert('删除评论成功');
+                            refresh();
+                        }
+                    }).fail(function(jqXHR, textStatus){
+                        alert(textStatus);
+                    })
+                }
+            },
+            showSons: function (id) {
+                $('#'+id).toggle(50)
+            },
+            addSons: function (comment) {
+                son_comment.comment = comment
+            }
+        }
+    });
+    var son_comment = new Vue({
+        el: '#son-comment-modal',
+        data: {
+            comment: '',
+            content: ''
+        },
+        methods: {
+            addSonComment: function () {
+                var
+                    data = {
+                        comment_id: this.comment.id.toString(),
+                        content: this.content
+                    }
+                    opt = {
+                        type: 'POST',
+                        dataType: 'json',
+                        url: '/api/new/son/comment/from/blog/{{ blog.id }}',
+                        contentType: 'application/json'
+                    };
+                opt.data = JSON.stringify(data || {})
+                $.ajax(opt).done(function (r) {
+                    if (r && r.error){
+                        alert(r.error);
+                    } else {
+                        alert('添加评论成功');
+                        refresh();
+                    }
+                }).fail(function(jqXHR, textStatus){
+                    alert(textStatus);
+                })
+            }
+        }
+    })
+    $(function () {
+        var $comment = $('#comment-form');
+        $comment.submit(function (event) {
+            event.preventDefault();
+            var content = $comment.find('textarea').val().trim();
+            if (content==='') {
+                alert('评论不能为空')
+                return
+            }
+            var
+                data = {
+                    content: content
+                },
+                opt = {
+                    type: 'POST',
+                    dataType: 'json',
+                    url: '/api/new/comment/from/blog/{{ blog.id }}',
+                    contentType: 'application/json'
+                };
+            opt.data = JSON.stringify(data || {});
+            $.ajax(opt).done(function(r){
+                if (r && r.error){
+                    alert(r.error);
+                } else {
+                    alert('发表评论成功');
+                    refresh();
+                }
+            }).fail(function(jqXHR, textStatus){
+                alert(textStatus);
+            })
+        })
+
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+
+
+</body>
+</html>

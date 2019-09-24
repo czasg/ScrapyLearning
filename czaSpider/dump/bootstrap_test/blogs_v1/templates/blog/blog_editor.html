@@ -18,73 +18,34 @@
 body{
     padding-top: 60px;
 }
+.img-box{
+    position: relative;
+    width: 240px;
+    height: 240px;
+    left: 0;
+    right: 0;
+    top: 10px;
+    bottom: 0;
+    margin:left;
+    overflow: hidden;
+    background-size: cover;
+}
+.img-box img{
+    width: 240px;
+    height: 240px;
+}
 </style>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#NAVBAR-HEADER"
-                aria-expanded="false">
-            <span class="sr-only">Toggle Navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#" type="button" data-toggle="modal" data-target="#IOCO">IOCO</a>
-    </div>
-    <div class="collapse navbar-collapse" id="NAVBAR-HEADER">
-            <form class="navbar-form navbar-left" id="top-search">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search" v-model="content">
-                </div>
-                <a type="button" class="btn btn-info" @click="topSearch">Submit</a>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <form class="navbar-form">
-                        <a type="button" class="btn btn-info">
-                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                            <span class="badge">4</span>
-                        </a>
-                    </form>
-                </li>
-                <li class="dropdown">
-                    <a href="javascript:void(0)" class="dropdown-toggle" id="NAV-TOP-MENU" data-toggle="dropdown" role="button"
-                       aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list"
-                                                                        aria-hidden="true">&nbsp;</span></a>
-                    <ul class="dropdown-menu flag1">
-                        {% if __user__ %}
-                        {% if __user__.admin %}
-                        <li class="dropdown-header">超级用户: {{ __user__.name }}</li>
-                        <li><a href="/root/manage/users">账号管理</a></li>
-                        <li><a href="/root/manage/blogs">博客管理</a></li>
-                        <li><a href="#">爬虫管理</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
-                        {% else %}
-                        <li class="dropdown-header">当前用户: {{ __user__.name }}</li>
-                        <li><a href="/manage/blogs">个人博客管理</a></li>
-                        <li><a href="/new/blog">创建个人博客</a></li>
-                        <li role="separator" class="divider"></li>
-                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
-                        {% endif %}
-                        {% else %}
-                        <li><a href="#" type="button" data-toggle="modal" data-target="#LOGIN-IN">登录</a></li>
-                        {% endif %}
-                    </ul>
-                </li>
-            </ul>
-        </div>
-</nav>
+{% include '_config/顶部导航栏.html' %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-2 col-md-2"></div>
         <div class="col-sm-8 col-md-8">
-
-
 <form id="blog_editor">
+
     <div class="form-group">
         <label>文章标题:</label>
-        <input class="form-control" v-model="blog.name">
+        <input class="form-control" v-model="blog.title">
     </div>
     <div class="form-group">
         <label>文章摘要:</label>
@@ -96,105 +57,32 @@ body{
     </div>
     <div class="form-group">
         <label>图片:</label>
-        <input type="file" v-model="blog.blog_image" />
-        <span style="">
-            <img :src="blog.blog_image">
-        </span>
+        <div class="img-box">
+            <input type="file" ref="img_file"  @change="readImage" />
+            <img id="blog_image" class="img-responsive" :src="blog.blog_image" />
+        </div>
     </div>
     <button class="btn btn-info pull-right" @click="submit">保存</button>
+    <div class="btn-group dropup pull-right">
+        <button type="button" class="btn btn-default" v-text="current_type_text"></button>
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="#" @click.prevent="choose_type(0)">未指定分类</a></li>
+            <li><a href="#" @click.prevent="choose_type(1)">前端</a></li>
+            <li><a href="#" @click.prevent="choose_type(2)">后端</a></li>
+            <li><a href="#" @click.prevent="choose_type(3)">爬虫</a></li>
+            <li><a href="#" @click.prevent="choose_type(4)">生活</a></li>
+        </ul>
+    </div>
 </form>
-<div class="btn-group dropup" id="blog_type">
-    <button type="button" class="btn btn-default" v-text="current_type_func"></button>
-    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="caret"></span>
-        <span class="sr-only">Toggle Dropdown</span>
-    </button>
-    <ul class="dropdown-menu">
-        <li><a href="#" @click.prevent="choose_type(1)">前端</a></li>
-        <li><a href="#" @click.prevent="choose_type(2)">后端</a></li>
-        <li><a href="#" @click.prevent="choose_type(3)">爬虫</a></li>
-        <li><a href="#" @click.prevent="choose_type(4)">生活</a></li>
-    </ul>
-</div>
-
-
         </div>
         <div class="col-sm-2 col-md-2"></div>
     </div>
 </div>
-<div class="modal fade" id="IOCO" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="TTTTT"><span
-                        aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">IOCO</h4>
-                <h6>Institution Of Computer Organization</h6>
-            </div>
-            <div class="modal-body">
-                <div class="jumbotron">
-                    <div class="container">
-                        <p><strong>作者: </strong>czaOrz</p>
-                        <p><strong>邮箱: </strong>chenziangsg@163.com</p>
-                        <p><strong>联系方式: </strong>15607173521</p>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <ul class="pager" style="margin:-5px;">
-                    <li><a href="/">进入首页</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="LOGIN-IN" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title">Welcome to IOCO</h4>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label>用户名</label>
-                    <input v-model="email" type="text" class="form-control" placeholder="Username">
-                </div>
-                <div class="form-group">
-                    <label>密码</label>
-                    <input v-model="passwd" type="password" class="form-control" placeholder="Password">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <ul class="pager" style="margin:-5px;">
-                    <li class="previous"><a href="/register" type="button">注册</a></li>
-                    <li class="next"><a href="#" type="button" @click="LOGINFunc">登录</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="LOGIN-OUT" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title text-center">是否退出</h4>
-            </div>
-            <div class="modal-footer">
-                <ul class="pager" style="margin:-5px;">
-                    <li class="previous"><a href="#" type="button" data-dismiss="modal">Cancel</a></li>
-                    <li class="next"><a href="/signout" type="button">Confirm</a></li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+
 <script src="/static/js/wangEditor.min.js"></script>
 <script src="/static/js/public.js"></script>
 <script>
@@ -204,16 +92,72 @@ body{
             $('.flag1').toggle(300);
         })
     })
-    gotoTop('.container-fluid', 600);
-    //首次刷新
-    function initBlogs(data) {
-        showBlogs.blogs = data.blogs
-        showBlogs.page = data.page
-        page_count = data.page.page_count
-    }
+    var
+        blog_id = '{{ id }}',
+        blog_api = '{{ api }}',
+        blog = {
+            title: '',
+            summary: '',
+            content: '',
+            blog_image: '',
+            blog_type: '',
+        };
+    var
+        blog_editor = new Vue({
+            el: '#blog_editor',
+            data: {
+                blog: blog,
+                current_type_text: '',
+            },
+            methods: {
+                submit: function(event){
+                    event.preventDefault();
+                    this.$data.blog.content = editor.txt.html();
+                    console.log(this.$data.blog)
+                    postJSON(blog_api, this.$data.blog, function(r) {
+                        if (r && r.error) {
+                            alert(r.error)
+                            return
+                        } else {
+                            location.assign('/blog/detail/' + r.id);
+                        }
+                    });
+                },
+                readImage: function(event) {
+                    var img_file = this.$refs.img_file.files[0];
+                    if (img_file) {
+                        var reader = new FileReader();
+                        that = this
+                        reader.onload = function(evt){
+                            that.$data.blog.blog_image = evt.target.result;
+                        }
+                        reader.readAsDataURL(img_file);
+                    }
+                },
+                choose_type: function (type) {
+                        this.current_type_text = getBlogType(type)
+                        this.blog.blog_type = type
+                }
+            }
+        });
+    $(function(){
+        if (blog_id) {
+            $.getJSON('/api/get/blog/'+blog_id, {}).done(function(data) {
+                initBlog(data);
+            });
+        } else {
+            initBlog({
+                title: '',
+                summary: '',
+                content: '',
+                blog_image: '/static/img/test.jpg',
+                blog_type: 0
+            });
+        }
+    })
     function initBlog (blog) {
             blog_editor.blog = blog;
-            blog_type.current_type = blog.blog_type;
+            blog_editor.current_type_text = getBlogType(parseInt(blog.blog_type))
             var E = window.wangEditor;
             editor = new E('#editor');
             editor.customConfig.emotions = [{
@@ -442,100 +386,6 @@ body{
             editor.create();
             editor.txt.html(blog.content)
         }
-    var
-        blog_id = '{{ id }}',
-        blog_api = '{{ api }}',
-        blog = {
-            name: '',
-            summary: '',
-            content: ''
-        };
-    var
-        blog_editor = new Vue({
-            el: '#blog_editor',
-            data: {
-                blog: blog
-            },
-            methods: {
-                submit: function(event){
-                    event.preventDefault();
-                    var opt = {
-                        type: 'POST',
-                        dataType: 'json',
-                        url: blog_api,
-                        contentType: 'application/json'
-                    };
-                    this.$data.blog.content = editor.txt.html();
-                    opt.data = JSON.stringify(this.$data.blog || {});
-                    $.ajax(opt).done(function(r){
-                        if (r && r.error) {
-                            alert(r.error)
-                            return
-                        } else {
-                            location.assign('/blogs/blog/'+r.id);
-                        }
-                    });
-                }
-            }
-        }),
-        blog_type = new Vue({
-            el: '#blog_type',
-            data: {
-                current_type: ''
-            },
-            computed: {
-                current_type_func: function () {
-                    console.log(this.current_type)
-                    var bt = this.current_type
-                    if (bt === 0) {
-                        this.current_type = '未指定分类'
-                    } else if (bt === 1) {
-                        this.current_type = '前端'
-                    } else if (bt === 2) {
-                        this.current_type = '后端'
-                    } else if (bt === 3) {
-                        this.current_type = '爬虫'
-                    } else if (bt === 4) {
-                        this.current_type = '生活'
-                    }
-                    return this.current_type
-                }
-            },
-            methods: {
-                choose_type: function (type) {
-                        var that = this,
-                            opt = {
-                            type: 'POST',
-                            dataType: 'json',
-                            url: '/api/choose/blog/' + blog_id + '/type',
-                            contentType: 'application/json'
-                        };
-                        opt.data = JSON.stringify({current_type: type});
-                        $.ajax(opt).done(function(r){
-                            if (r && r.error) {
-                                alert(r.error)
-                                return
-                            } else {
-                                that.current_type = type
-                                alert('补给站类别更换成功!')
-                            }
-                        });
-                }
-            }
-        });
-    $(function(){
-        if (blog_id) {
-            $.getJSON('/api/get/blog/'+blog_id, {}).done(function(data) {
-                initBlog(data);
-            });
-        } else {
-            initBlog({
-                name: '',
-                summery: '',
-                content: ''
-            });
-        }
-    })
 </script>
 </body>
 </html>

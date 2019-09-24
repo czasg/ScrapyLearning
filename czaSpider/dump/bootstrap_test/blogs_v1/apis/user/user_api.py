@@ -109,4 +109,5 @@ async def api_get_users(*, page='1'):
     users = await User.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
     for u in users:
         u.passwd = '******'
+        u['id'] = str(u['id'])
     return dict(page=p, users=users)

@@ -1,4 +1,4 @@
-import os, re, time
+import os, re, time, base64
 
 from datetime import datetime
 
@@ -29,7 +29,7 @@ def text2html(text):
 def save_image(unique_id, image_body):
     picture = str(unique_id) + '.png'
     with open(to_path(image_path, picture), 'wb') as img:
-        img.write(image_body)
+        img.write(base64.b64decode(image_body))
     return '/static/img/' + picture
 
 

@@ -202,7 +202,9 @@ def datetime_filter(t):
 async def init(loop):
     await orm.init_pool(loop=loop, **configs.db)
     app = web.Application(loop=loop, middlewares=[
-        anti_spider_first, anti_spider_second, anti_spider_third, auth_factory, response_factory])
+        anti_spider_first,
+        # anti_spider_second, anti_spider_third,
+        auth_factory, response_factory])
     init_jinja2(app, filters=dict(datetime=datetime_filter))
     add_routes(app, 'apis')
     add_static(app)
