@@ -1,3 +1,41 @@
+<style>
+.chatSidebar,
+.chatMain { height: 100%; }
+.chatSidebar {
+    float: left;
+    width: 200px;
+    color: #f4f4f4;
+    background-color: #2e3238;
+}
+.chatMain {
+    position: relative;
+    overflow: hidden;
+    background-color: #eee;
+    height: 100%;
+}
+.chatSidebar-card {
+    padding: 12px;
+    border-bottom: solid 1px #24272C;
+}
+.chatSidebar-card-img {
+    margin: 0 10px 0 0;
+    border-radius: 3px;
+}
+.chatSidebar-card-name {
+    display: inline-block;
+    margin: 0 0 0 15px;
+    vertical-align: middle;
+    font-size: 16px;
+}
+.chatMain-TaskName {
+    font-size: 15px;
+    padding: 15px 0;
+    padding-left: 20px;
+    box-sizing: border-box;
+    background-color: #fdfdfd;
+    border-bottom: 1px solid #dcdcdc;
+}
+</style>
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#NAVBAR-HEADER"
@@ -19,9 +57,13 @@
         <ul class="nav navbar-nav navbar-right">
             <li>
                 <form class="navbar-form">
-                    <a type="button" class="btn btn-info">
+                    <a type="button" class="btn btn-info" data-toggle="modal" data-target="#WebSocket-Chat">
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                        <span class="badge">4</span>
+                        {% if __user__ %}
+                        {% if __user__.unread_msg %}
+                        <span class="badge" >4</span>
+                        {% endif %}
+                        {% endif %}
                     </a>
                 </form>
             </li>
@@ -125,6 +167,27 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="WebSocket-Chat" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document" style="width: 900px;">
+        <div class="modal-content">
+            <div style="height: 600px;">
+                <div class="chatSidebar">
+                    <div class="chatSidebar-card">
+                        <img src="/static/img/user.png" class="chatSidebar-card-img" style="height:40px; width: 40px;">
+                        <p class="chatSidebar-card-name">陈子昂</p>
+                    </div>
+                    <div class="chatSidebar-list"></div>
+                </div>
+                <div class="chatMain">
+                    <div class="chatMain-TaskName">测试咯</div>
+                    <div class="chatMain-Message"></div>
+                    <div class="chatMain-Text"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
@@ -133,6 +196,45 @@
     $(function(){
         login_object = new Vue({
             el: '#LOGIN-IN',
+            data: {
+                email: '',
+                passwd: ''
+            },
+            methods: {
+                LOGINFunc: function(event){
+                    event.preventDefault();
+                    var
+                        $loginBody = $('#LOGIN-IN'),
+                        email = this.email.trim().toLowerCase(),
+                        data = {
+                            email: email,
+                            passwd: this.passwd==='' ? '' : CryptoJS.SHA1(email + ':' + this.passwd).toString()
+                        },
+                        opt = {
+                            type: 'POST',
+                            dataType: 'json',
+                            url: '/api/authenticate',
+                            contentType: 'application/json'
+                        };
+                    opt.data = JSON.stringify(data || {});
+                    $.ajax(opt).done(function(r){
+                        if (r && r.error){
+                            alert(r.error);
+                        } else {
+                            location.assign('/');
+                        }
+                    }).fail(function(jqXHR, textStatus){
+                        alert(textStatus);
+                    })
+                }
+            }
+        });
+    });
+</script>
+<script>
+    $(function(){
+        login_object = new Vue({
+            el: '#WebSocket-Chat',
             data: {
                 email: '',
                 passwd: ''
