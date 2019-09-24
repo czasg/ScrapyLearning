@@ -5,6 +5,7 @@ from tools.man_pager import get_page_index, Pager
 from tools.public_func import _RE_SHA1, _RE_EMAIL
 from tools.safe_check_user import *
 from database.mysql.models import *
+from database.redis.database_redis import *
 
 
 @post('/api/authenticate')
@@ -47,6 +48,7 @@ async def api_register_user(*, name, email, passwd):
     user = User(id=uid, name=name.strip(), email=email, passwd=hashlib.sha1(sha1_passwd.encode()).hexdigest(),
                 image='/static/img/user.png')
     await user.save()
+    redis_handler.hset(REDIS_USER_SNOW_ID, user.id, user.name)
     webResponse = web.Response()
     webResponse.set_cookie(COOKIE_NAME, user2cookie(user, 86400), max_age=86400)
     user.passwd = '******'
@@ -73,7 +75,7 @@ async def api_register_root_user(*, name, email, passwd):
     sha1_passwd = '%d:%s' % (uid, passwd)
     user = User(id=uid, name=name.strip(), email=email, admin=True,
                 passwd=hashlib.sha1(sha1_passwd.encode()).hexdigest(),
-                image='http://www.gravatar.com/avatar/%s?d=mm&s=120' % hashlib.md5(email.encode('utf-8')).hexdigest())
+                image='/static/img/user.png')
     await user.save()
     webResponse = web.Response()
     webResponse.set_cookie(COOKIE_NAME, user2cookie(user, 86400), max_age=86400)
@@ -96,6 +98,7 @@ async def api_drop_user(request, *, id):
             await comment.remove()
         await blog.remove()
     await user.remove()
+    redis_handler.hdel(REDIS_USER_SNOW_ID, id)
     return {'id': id}
 
 

@@ -1,4 +1,5 @@
 from collections import defaultdict
+from database.redis.database_redis import *
 
 """STATE INSTRUCTIONS
 # 服务端 #
@@ -24,33 +25,36 @@ VAL_MAP = {}
 
 
 class Connector:
-    def __init__(self, snow_key, request):
+    def __init__(self, snow_key, request, client_address):
         self.snow_key = snow_key
         self.request = request
+        self.client_address = ':'.join([str(i) for i in client_address])
+        self.user_name = str(redis_handler.hget(REDIS_USER_SNOW_ID, snow_key))
 
 
 class ConnectManager:
-    connectors = defaultdict(list)
-    groups = defaultdict(list)
+    connectors = defaultdict(dict)
+    groups = defaultdict(dict)
 
     @classmethod
     def online(cls):
         return len(cls.connectors)
 
     @classmethod
-    def clear(cls, conn):
+    def clear(cls, name, key):
         try:
-            cls.connectors[conn.snow_key].pop(cls.connectors[conn.snow_key].index(conn))
+            cls.connectors[name].pop(key)
         except:
             pass
 
     @classmethod
-    def add_connector(cls, key, value):
-        cls.connectors[key].append(value)
+    def add_connector(cls, name, key, value):
+        cls.connectors[name][key] = value
 
     @classmethod
-    def add_group(cls, key, value):
-        cls.groups[key].append(value)
+    def add_group(cls, name, key, value):
+        # cls.groups[key].append(value)
+        cls.groups[name][key] = value
 
     @classmethod
     def group_exist(cls, key):

@@ -49,8 +49,8 @@ async def api_new_blog(request, *, title, summary, content, blog_image, blog_typ
     if not content or not content.strip():
         raise APIResourceError('文章内容不能为空', 'None Text For Blog')
     blog_id = id_pool.next_id()
-    if blog_image and blog_image.startswith('data:image/png;base64,'):
-        blog_image = save_image(blog_id, blog_image[22:])
+    if blog_image and blog_image.startswith('data:image'):
+        blog_image = save_image(blog_id, re.search('.*?base64,(.*)', blog_image).group(1))
     blog = Blog(id=blog_id, user_id=request.__user__.id, user_name=request.__user__.name,
                 user_image=request.__user__.image, blog_image=blog_image, blog_type=blog_type,
                 title=title.strip(), summary=summary.strip(), content=content.strip())

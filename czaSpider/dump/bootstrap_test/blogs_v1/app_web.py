@@ -10,6 +10,7 @@ from tools.safe_check_spider import *
 from tools.safe_check_user import *
 from tools.handler import *
 from database.redis.database_redis import *
+from database.mysql.models import *
 
 logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(message)s")
 logger = logging.getLogger(__name__)
@@ -35,6 +36,13 @@ def init_jinja2(app, **kwargs):
         for name, f in filters.items():
             env.filters[name] = f
     app['__templating__'] = env
+
+
+async def init_user2redis():
+    users = await User.findAll()
+    if users:
+        for user in users:
+            redis_handler.hset(REDIS_USER_SNOW_ID, user.id, user.name)
 
 
 async def anti_spider_first(app, handler):  # todo 反爬需要单独起一个服务，不然别的服务就没法使用了
@@ -201,6 +209,7 @@ def datetime_filter(t):
 
 async def init(loop):
     await orm.init_pool(loop=loop, **configs.db)
+    await init_user2redis()
     app = web.Application(loop=loop, middlewares=[
         anti_spider_first,
         # anti_spider_second, anti_spider_third,

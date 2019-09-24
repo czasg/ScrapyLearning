@@ -32,16 +32,17 @@ class MyServerHandler(socketserver.BaseRequestHandler):
         try:
             json_data = json.loads(self.get_recv_data())
 
-            # self.conn = Connector(TokenChecker.check(json_data['Cookie']), self.request)
-            # ConnectManager.add_connector(json_data['name'], self.conn)
-            # return  # todo 此处为redis验证模块
+            self.conn = Connector(TokenChecker.check(json_data['Cookie']), self.request, self.client_address)
+            ConnectManager.add_connector(self.conn.snow_key, self.conn.client_address, self.conn)
+            return  # todo 此处为redis验证模块
 
-            if json_data['cookie'] == 'test':  # todo Cookie验证
-                self.conn = Connector(json_data['name'], self.request)  # id_pool.next_id()
-                ConnectManager.add_connector(json_data['name'], self.conn)
-                return
+            # if json_data['cookie'] == 'test':  # todo Cookie验证
+            #     self.conn = Connector(json_data['name'], self.request)  # id_pool.next_id()
+            #     ConnectManager.add_connector(json_data['name'], self.conn)
+            #     return
         except:
-            pass
+            import traceback
+            print(traceback.format_exc())
         raise AuthenticationError
 
     def handle(self):
@@ -82,12 +83,15 @@ class MyServerHandler(socketserver.BaseRequestHandler):
     def send_msg_p2g(self, message, attr, to, **kwargs):
         if not getattr(ConnectManager, attr).get(to):
             return False
-        for conn in getattr(ConnectManager, attr).get(to):
-            conn.request.send(process_msg(message, 1, info_from=self.conn.snow_key, **kwargs))
+        for conn in getattr(ConnectManager, attr).get(to).values():
+            try:
+                conn.request.send(process_msg(message, 1, info_from=self.conn.user_name, **kwargs))
+            except:
+                continue
 
     def finish(self):
         logger.warning('%s:%s Connect Close' % self.client_address)
-        ConnectManager.clear(self.conn)
+        ConnectManager.clear(self.conn.snow_key, self.conn.client_address)
 
 
 class MyServerThreadingTCPServer(socketserver.ThreadingTCPServer):
@@ -117,6 +121,8 @@ ws.onmessage = function (ev) {
 ws.send(JSON.stringify({'name':'ga', 'cookie':'test', 'message':'haha', 'to':'pa', 'state': 'w11'}))
 ws.send(JSON.stringify({'name':'pa', 'cookie':'test', 'message':'heihei', 'to':'ga'}))
 ws.send(JSON.stringify({'name':'sf', 'cookie':'test', 'message':'heihei', 'to':'ga'}))
+
+ws.send(JSON.stringify({'Cookie':document.cookie, 'message':'heihei', 'to':'big_home', 'state': 'w21'}))
 
 监听open事件，在成功建立websocket时向url发送纯文本字符串数据
 websocket.onopen = () => {

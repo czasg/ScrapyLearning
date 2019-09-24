@@ -21,13 +21,13 @@ class Switch:
     def w21(cls, request, message, to):
         if ConnectManager.group_exist(to):
             return '创建失败, %s 已存在' % to
-        ConnectManager.add_group(to, request.conn)
+        ConnectManager.add_group(to, request.conn.client_address, request.conn)
 
     @classmethod
     def w22(cls, request, message, to):
         if not ConnectManager.group_exist(to):
             return '加入失败, %s 不存在' % to
-        ConnectManager.add_group(to, request.conn)
+        ConnectManager.add_group(to, request.conn.client_address, request.conn)
 
     @classmethod
     def w99999(cls, request, message, to):
