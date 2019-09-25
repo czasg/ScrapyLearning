@@ -60,9 +60,7 @@
                     <a type="button" class="btn btn-info" data-toggle="modal" data-target="#WebSocket-Chat">
                         <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
                         {% if __user__ %}
-                        {% if __user__.unread_msg %}
-                        <span class="badge" >4</span>
-                        {% endif %}
+                        <span class="badge" id="UNREAD-MSG" v-if="msg" v-text="msg"></span>
                         {% endif %}
                     </a>
                 </form>
@@ -179,12 +177,17 @@
                     <div class="chatSidebar-list"></div>
                 </div>
                 <div class="chatMain">
-                    <div class="chatMain-TaskName">测试咯</div>
-                    <div class="chatMain-Message"></div>
+                    <div class="chatMain-TaskName" v-text="'Big Home' + '   当前在线人数:' + online"></div>
+                    <div class="chatMain-Message">
+                        <ul>
+                            <li v-for="msg in msgList">
+                                <p v-text="msg.content"></p>
+                            </li>
+                        </ul>
+                    </div>
                     <div class="chatMain-Text"></div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
@@ -232,41 +235,45 @@
     });
 </script>
 <script>
-    $(function(){
-        login_object = new Vue({
-            el: '#WebSocket-Chat',
-            data: {
-                email: '',
-                passwd: ''
-            },
-            methods: {
-                LOGINFunc: function(event){
-                    event.preventDefault();
-                    var
-                        $loginBody = $('#LOGIN-IN'),
-                        email = this.email.trim().toLowerCase(),
-                        data = {
-                            email: email,
-                            passwd: this.passwd==='' ? '' : CryptoJS.SHA1(email + ':' + this.passwd).toString()
-                        },
-                        opt = {
-                            type: 'POST',
-                            dataType: 'json',
-                            url: '/api/authenticate',
-                            contentType: 'application/json'
-                        };
-                    opt.data = JSON.stringify(data || {});
-                    $.ajax(opt).done(function(r){
-                        if (r && r.error){
-                            alert(r.error);
-                        } else {
-                            location.assign('/');
-                        }
-                    }).fail(function(jqXHR, textStatus){
-                        alert(textStatus);
-                    })
+    unread_msg = new Vue({
+        el: '#UNREAD-MSG',
+        data : {
+            msg: 0
+        }
+    })
+    webSocketChat = new Vue({
+        el: '#WebSocket-Chat',
+        data: {
+            ws: '',
+            unread_msg: unread_msg,
+            msgList: [],
+            online: 1,
+        },
+        mounted: function() {
+            this.ws = new WebSocket("ws://127.0.0.1:8022");
+            this.ws.onopen = () => {
+                if (this.ws.readyState === this.ws.OPEN) {
+                    this.ws.send(JSON.stringify({'Cookie':document.cookie, 'message':'connect', 'to':'big_home', 'state': 'w99999'}));
                 }
             }
-        });
+            this.ws.onmessage = (msg) => {
+                msg = JSON.parse(msg.data);
+                if (msg.state === 1) {
+                    if (msg.info_from === 'WebSocketServer') {
+                        this.online = msg.online
+                    } else {
+                        this.msgList.push(msg);
+                        this.unread_msg.msg += 1;
+                    }
+                } else {
+                    console.log(msg);
+                }
+            }
+        },
+        methods: {
+            say: function(msg, to='big_home') {
+                this.ws.send(JSON.stringify({'Cookie':document.cookie, 'message':msg, 'to':'big_home', 'state': 'w13'}));
+            },
+        }
     });
 </script>

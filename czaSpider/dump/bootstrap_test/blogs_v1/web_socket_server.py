@@ -31,18 +31,13 @@ class MyServerHandler(socketserver.BaseRequestHandler):
     def token_check(self):
         try:
             json_data = json.loads(self.get_recv_data())
-
             self.conn = Connector(TokenChecker.check(json_data['Cookie']), self.request, self.client_address)
             ConnectManager.add_connector(self.conn.snow_key, self.conn.client_address, self.conn)
-            return  # todo 此处为redis验证模块
-
-            # if json_data['cookie'] == 'test':  # todo Cookie验证
-            #     self.conn = Connector(json_data['name'], self.request)  # id_pool.next_id()
-            #     ConnectManager.add_connector(json_data['name'], self.conn)
-            #     return
+            Switch.case(self, 'w23', '-', '-')
+            return
         except:
             import traceback
-            print(traceback.format_exc())
+            logging.error(traceback.format_exc())
         raise AuthenticationError
 
     def handle(self):
@@ -79,15 +74,6 @@ class MyServerHandler(socketserver.BaseRequestHandler):
             self.failure('验证失败，已关闭连接', 0)
         except:
             pass
-
-    def send_msg_p2g(self, message, attr, to, **kwargs):
-        if not getattr(ConnectManager, attr).get(to):
-            return False
-        for conn in getattr(ConnectManager, attr).get(to).values():
-            try:
-                conn.request.send(process_msg(message, 1, info_from=self.conn.user_name, **kwargs))
-            except:
-                continue
 
     def finish(self):
         logger.warning('%s:%s Connect Close' % self.client_address)

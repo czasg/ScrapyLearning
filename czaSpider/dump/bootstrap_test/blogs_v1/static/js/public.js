@@ -166,7 +166,6 @@ function gotoTop(min_property, min_height) {
 };
 
 function getBlogType(type) {
-    console.log(type)
     if (type === 1) {
         current_type_text = '前端'
     } else if (type === 2) {

@@ -12,16 +12,14 @@ w11: p2p
 w12: p2g
 w21: create one group
 w22: add to one group
+w23: add big home
 
 # 测试码 #
 99999: return 'hello world'
 """
-state_code = ['w11', 'w12', 'w21', 'w22', 'w99999']
+state_code = ['w11', 'w12', 'w13', 'w21', 'w22', 'w23', 'w99999']
 
 ERROR_COUNT = 2
-
-KEY_MAP = {}
-VAL_MAP = {}
 
 
 class Connector:
@@ -29,12 +27,13 @@ class Connector:
         self.snow_key = snow_key
         self.request = request
         self.client_address = ':'.join([str(i) for i in client_address])
-        self.user_name = str(redis_handler.hget(REDIS_USER_SNOW_ID, snow_key))
+        self.user_name = redis_handler.hget(REDIS_USER_SNOW_ID, snow_key).decode()
 
 
 class ConnectManager:
     connectors = defaultdict(dict)
     groups = defaultdict(dict)
+    big_home = {'big_home': {}}
 
     @classmethod
     def online(cls):
@@ -42,10 +41,10 @@ class ConnectManager:
 
     @classmethod
     def clear(cls, name, key):
-        try:
+        if key in cls.connectors[name]:
             cls.connectors[name].pop(key)
-        except:
-            pass
+        if key in cls.big_home['big_home']:
+            cls.big_home['big_home'].pop(key)
 
     @classmethod
     def add_connector(cls, name, key, value):
@@ -53,8 +52,11 @@ class ConnectManager:
 
     @classmethod
     def add_group(cls, name, key, value):
-        # cls.groups[key].append(value)
         cls.groups[name][key] = value
+
+    @classmethod
+    def add_big_home(cls, key, value):
+        cls.big_home['big_home'][key] = value
 
     @classmethod
     def group_exist(cls, key):
