@@ -234,6 +234,7 @@
         });
     });
 </script>
+{% if __user__ %}
 <script>
     unread_msg = new Vue({
         el: '#UNREAD-MSG',
@@ -275,12 +276,22 @@
             }
         },
         methods: {
-            say: function(msg) {
-                this.ws.send(JSON.stringify({'Cookie':document.cookie, 'message':msg, 'to':'big_home', 'state': 'w13'}));
-            },
             say11: function(msg, to) {
-                this.ws.send(JSON.stringify({'Cookie':document.cookie, 'message':msg, 'to': to, 'state': 'w11'}));
-            }
+                this.ws.send(JSON.stringify({'message': msg, 'to': to, 'state': 'w11'}));
+            },
+            say12: function(msg, to) {
+                this.ws.send(JSON.stringify({'message': msg, 'to': to, 'state': 'w12'}));
+            },
+            say13: function(msg) {
+                this.ws.send(JSON.stringify({'message': msg, 'to':'big_home', 'state': 'w13'}));
+            },
+            say21: function(to) {
+                this.ws.send(JSON.stringify({'message': '', 'to': to, 'state': 'w21'}));
+            },
+            say22: function(to) {
+                this.ws.send(JSON.stringify({'message': '', 'to': to, 'state': 'w22'}));
+            },
         }
     });
 </script>
+{% endif %}

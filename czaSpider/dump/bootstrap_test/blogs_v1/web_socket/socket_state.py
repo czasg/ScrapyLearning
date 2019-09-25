@@ -44,6 +44,10 @@ class ConnectManager:
     def group_exist(cls, key):
         return key in cls.groups
 
+    @classmethod
+    def group_exist_key(cls, name, key):
+        return key in cls.groups[name]
+
 
 if __name__ == '__main__':
     print(redis_handler.hgetall(REDIS_USER_SNOW_ID))

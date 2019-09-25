@@ -12,9 +12,10 @@ from database.mongodb.database_mongodb import mongodb_handler
 ### 客户端 ###
 w11: p2p
 w12: p2g
+w13:
 w21: create new group
 w22: add in one group
-w23: add big home
+w23: -User Forbidden- add in big home
 w31: search unread msg from database cache
 
 ### 测试码 ###
@@ -27,8 +28,6 @@ class Switch:
 
     @classmethod
     def send_msg_p2a(cls, request, message, attr, to, save=False, **kwargs):
-        if not redis_handler.hexists(REDIS_USER_SNOW_ID, to):
-            return False
         online_socket = getattr(ConnectManager, attr).get(to)
         if online_socket:
             for conn in online_socket.values():
@@ -41,6 +40,8 @@ class Switch:
         elif save:
             mongodb_handler.insert_mongodb(attr, request.conn.snow_key, to, message, state=0,
                                            fromUserName=request.conn.user_name)
+        else:
+            return False
 
     @classmethod
     def send_unread_msg(cls, request, unread):
@@ -53,34 +54,37 @@ class Switch:
         return getattr(cls, state)(request, message, to)
 
     @classmethod
-    def w11(cls, request, message, to):
-        if cls.send_msg_p2a(request, message, 'connectors', to, save=True) is not None:
+    def w11(cls, request, message, to):  # pass
+        if not redis_handler.hexists(REDIS_USER_SNOW_ID, to):
             return '%s 不存在' % to
+        cls.send_msg_p2a(request, message, 'connectors', to, save=True)
 
     @classmethod
-    def w12(cls, request, message, to):
-        if cls.send_msg_p2a(request, message, 'groups', to, group_from=to) is not None:
+    def w12(cls, request, message, to):  # pass
+        if not ConnectManager.groups.get(to):
             return '%s 不存在' % to
+        if request.conn not in ConnectManager.groups.get(to).values():
+            return '%s 你不在此群组内，无法聊天' % to
+        cls.send_msg_p2a(request, message, 'groups', to, group_from=to)
 
     @classmethod
-    def w13(cls, request, message, to):
-        if cls.send_msg_p2a(request, message, 'big_home', to, group_from=to) is not None:
-            return '%s 不存在' % to
+    def w13(cls, request, message, to):  # pass
+        cls.send_msg_p2a(request, message, 'big_home', 'big_home', group_from=to)
 
     @classmethod
-    def w21(cls, request, message, to):
+    def w21(cls, request, message, to):  # pass
         if ConnectManager.group_exist(to):
             return '创建失败, %s 已存在' % to
         ConnectManager.add_group(to, request.conn.client_address, request.conn)
 
     @classmethod
-    def w22(cls, request, message, to):
+    def w22(cls, request, message, to):  # pass
         if not ConnectManager.group_exist(to):
             return '加入失败, %s 不存在' % to
         ConnectManager.add_group(to, request.conn.client_address, request.conn)
 
     @classmethod
-    def w23(cls, request, message, to):
+    def w23(cls, request, message, to):  # pass
         ConnectManager.add_big_home(request.conn.client_address, request.conn)
 
     @classmethod
