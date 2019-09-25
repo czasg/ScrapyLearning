@@ -70,7 +70,7 @@ def to_user(content, state, online=1, info_from='WebSocketServer', **kwargs):
         'info_from': info_from
     }
     info.update(kwargs)
-    return json.dumps(info).encode()
+    return json.dumps(info, ensure_ascii=False).encode()
 
 
 def process_msg(info, state, online=1, info_from='WebSocketServer', **kwargs):

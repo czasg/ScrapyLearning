@@ -246,6 +246,7 @@
         data: {
             ws: '',
             unread_msg: unread_msg,
+            unread_from_db: '',
             msgList: [],
             online: 1,
         },
@@ -253,7 +254,8 @@
             this.ws = new WebSocket("ws://127.0.0.1:8022");
             this.ws.onopen = () => {
                 if (this.ws.readyState === this.ws.OPEN) {
-                    this.ws.send(JSON.stringify({'Cookie':document.cookie, 'message':'connect', 'to':'big_home', 'state': 'w99999'}));
+                    this.ws.send(JSON.stringify({'Cookie':document.cookie, 'message':'connect', 'to':'big_home', 'state': 'w99999'}));  // 验证
+                    this.ws.send(JSON.stringify({'Cookie':document.cookie, 'message':'connect', 'to':'big_home', 'state': 'w31'}));
                 }
             }
             this.ws.onmessage = (msg) => {
@@ -261,6 +263,8 @@
                 if (msg.state === 1) {
                     if (msg.info_from === 'WebSocketServer') {
                         this.online = msg.online
+                    } else if (msg.info_from === 'WebSocketServerCache') {
+                        this.unread_from_db = msg
                     } else {
                         this.msgList.push(msg);
                         this.unread_msg.msg += 1;
@@ -271,9 +275,12 @@
             }
         },
         methods: {
-            say: function(msg, to='big_home') {
+            say: function(msg) {
                 this.ws.send(JSON.stringify({'Cookie':document.cookie, 'message':msg, 'to':'big_home', 'state': 'w13'}));
             },
+            say11: function(msg, to) {
+                this.ws.send(JSON.stringify({'Cookie':document.cookie, 'message':msg, 'to': to, 'state': 'w11'}));
+            }
         }
     });
 </script>

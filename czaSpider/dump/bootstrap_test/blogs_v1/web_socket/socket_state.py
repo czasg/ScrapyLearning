@@ -1,24 +1,6 @@
 from collections import defaultdict
 from database.redis.database_redis import *
 
-"""STATE INSTRUCTIONS
-# 服务端 #
-0: 关闭连接，具体原因见返回内容
-1: 请求成功
-2: 错误状态，具体原因见返回内容
-
-# 客户端 #
-w11: p2p
-w12: p2g
-w21: create one group
-w22: add to one group
-w23: add big home
-
-# 测试码 #
-99999: return 'hello world'
-"""
-state_code = ['w11', 'w12', 'w13', 'w21', 'w22', 'w23', 'w99999']
-
 ERROR_COUNT = 2
 
 
@@ -61,3 +43,7 @@ class ConnectManager:
     @classmethod
     def group_exist(cls, key):
         return key in cls.groups
+
+
+if __name__ == '__main__':
+    print(redis_handler.hgetall(REDIS_USER_SNOW_ID))

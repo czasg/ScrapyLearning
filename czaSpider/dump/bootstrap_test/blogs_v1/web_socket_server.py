@@ -3,12 +3,18 @@ import socketserver
 
 from web_socket.socket_error import AuthenticationError
 from web_socket.socket_token_check import TokenChecker
-from web_socket.socket_tools import *
 from web_socket.socket_switch import *
 
 logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(message)s")
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
+
+"""
+1176293097512894464 - test
+webSocketChat.say11('asd', '1176293097512894464')
+1176376872007630848 - root
+webSocketChat.say11('asd', '1176376872007630848')
+"""
 
 
 class MyServerHandler(socketserver.BaseRequestHandler):
@@ -69,15 +75,16 @@ class MyServerHandler(socketserver.BaseRequestHandler):
             self.failure('错误查询次数过多，已关闭连接', 0)
         except AuthenticationError:
             logger.warning('%s:%s Authentication Failed' % self.client_address)
-            import traceback
-            print(traceback.format_exc())
             self.failure('验证失败，已关闭连接', 0)
         except:
             pass
 
     def finish(self):
         logger.warning('%s:%s Connect Close' % self.client_address)
-        ConnectManager.clear(self.conn.snow_key, self.conn.client_address)
+        try:
+            ConnectManager.clear(self.conn.snow_key, self.conn.client_address)
+        except:
+            pass
 
 
 class MyServerThreadingTCPServer(socketserver.ThreadingTCPServer):
@@ -91,6 +98,7 @@ class MyServerThreadingTCPServer(socketserver.ThreadingTCPServer):
 
 
 def start_server(addrPort, handler=MyServerHandler, queue_size=500):
+    # ConnectManager.init()
     server = MyServerThreadingTCPServer(addrPort, handler, queue_size)
     server.serve_forever()
 
