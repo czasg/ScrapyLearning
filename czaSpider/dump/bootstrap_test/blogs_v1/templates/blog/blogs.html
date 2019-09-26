@@ -36,7 +36,7 @@ body{
                         </ol>
                         <div class="carousel-inner" role="listbox">
                             <div class="item active">
-                                <img src="/static/img/test.jpg" style="width: 100%;">
+                                <img src="/static/img/test.jpg" class="img-responsive center-block" style="width: 100%;">
                                 <div class="carousel-caption">
                                     <h4>This is Test Code</h4>
                                     <p>hei-hei</p>
@@ -64,7 +64,7 @@ body{
 <div class="panel-group" id="show-blogs" role="tablist" aria-multiselectable="true">
     <div class="panel" v-for="(blog, index) in blogs" style="margin-bottom: 15px;">
         <div class="panel-body">
-            <span style="float:left;width: 30%;overflow: hidden;margin-right: 20px;border-radius: 7px;"><img :src="blog.blog_image" class="img-responsive"></span>
+            <span style="float:left;width: 30%;overflow: hidden;margin-right: 20px;border-radius: 7px;"><img :src="blog.blog_image" class="img-responsive img-rounded"></span>
             <div class="blog-title" style="margin-top: -5px;overflow: hidden;text-overflow: ellipsis;"><h4 ><a :href="'/blog/detail/'+blog.id" v-text="blog.title" style="text-decoration: none;"></a></h4></div>
             <span class="glyphicon glyphicon-pushpin"></span>&nbsp;<span v-text="getBlogType(parseInt(blog.blog_type))"></span>&nbsp;&nbsp;&nbsp;
             <div class="blog-summary"><strong><span v-text="blog.summary"></span></strong></div>

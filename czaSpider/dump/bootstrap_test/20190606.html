@@ -1,150 +1,33 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-	<link href="static/css/bootstrap.min.css" rel="stylesheet">
-	<link href="static/css/bootstrap-theme.css" rel="stylesheet">
-	<link rel="stylesheet" href="style.css" />
-	<!-- jquery must be ahead of bootstrap -->
-	<script src="static/js/jquery.min.js"></script>
-	<script src="static/js/bootstrap.min.js"></script>
-	<script src="static/js/vue.js"></script>
-	<script src="huadong.js"></script>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<title>Test For BootStrap</title>
+<style>
+@screen-md-min： 768px;
+@media (min-width: @screen-md-min) {
+    body {
+        background-color: #263238;
+    }
+}
+</style>
 </head>
-<body style="padding-top: 70px;padding-bottom: 70px;">
-<nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#NAVBAR-HEADER" aria-expanded="false">
-                <span class="sr-only">Toggle Navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#" type="button" data-toggle="modal" data-target="#IOCO">IOCO</a>
-        </div>
-        <div class="collapse navbar-collapse" id="NAVBAR-HEADER">
-            <form class="navbar-form navbar-left">
-                <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                </div>
-                <button type="submit" class="btn">Submit</button>
-            </form>
-            <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list" aria-hidden="true"></span></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="#">登录</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-<div class="container-fluid">
+<body>
+<div class="container" style="height: 400px; background: #FFCDD2;">
     <div class="row">
-        <div class="col-md-2 col-sm-2 col-xs-2">
-            <ul class="nav nav-stacked" data-spy="affix">
-                <li ><a href="#" class="container">作者</a></li>
-                <li><a href="#">博客</a></li>
-                <li><a href="#">爬虫</a></li>
-            </ul>
-        </div>
-        <div class="col-md-8 col-sm-8 col-xs-8">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>
-                        <a href="#">This Is Blog Header</a>
-                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-                    </h4>
-                    <small>发表于2019.07.05</small>
-                </div>
-                <div class="panel-body">
-                    <dt>This Is Blog Body</dt>
-                    <a><small>继续阅读</small></a>
-                </div>
-            </div>
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>
-                        <a href="#">This Is Blog Header</a>
-                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-                    </h4>
-                    <small>发表于2019.07.05</small>
-                </div>
-                <div class="panel-body">
-                    <dt>This Is Blog Body</dt>
-                    <a><small>继续阅读</small></a>
-                </div>
-            </div>
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>
-                        <a href="#">This Is Blog Header</a>
-                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-                    </h4>
-                    <small>发表于2019.07.05</small>
-                </div>
-                <div class="panel-body">
-                    <dt>This Is Blog Body</dt>
-                    <a><small>继续阅读</small></a>
-                </div>
-            </div>
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>
-                        <a href="#">This Is Blog Header</a>
-                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-                    </h4>
-                    <small>发表于2019.07.05</small>
-                </div>
-                <div class="panel-body">
-                    <dt>This Is Blog Body</dt>
-                    <a><small>继续阅读</small></a>
-                </div>
-            </div>
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>
-                        <a href="#">This Is Blog Header</a>
-                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-                    </h4>
-                    <small>发表于2019.07.05</small>
-                </div>
-                <div class="panel-body">
-                    <dt>This Is Blog Body</dt>
-                    <a><small>继续阅读</small></a>
-                </div>
-            </div>
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4>
-                        <a href="#">This Is Blog Header</a>
-                        <img src="static/img/user.png" class="img-circle pull-right" style="width:50px;height:50px;">
-                    </h4>
-                    <small>发表于2019.07.05</small>
-                </div>
-                <div class="panel-body">
-                    <dt>This Is Blog Body</dt>
-                    <a><small>继续阅读</small></a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-2 col-sm-2 col-xs-2"></div>
+        <div class="col-xs-6 col-sm-4" style="height: 400px; background: #C5CAE9;"></div>
+        <div class="col-xs-6 col-sm-4 hidden-sm" style="height: 400px; background: #FFF59D;"></div>
+        <!--<div class="clearfix visible-xs-block"></div>-->
+        <div class="col-xs-6 col-xs-offset-3 col-sm-4 col-sm-offset-0" style="height: 400px; background: #E57373;"></div>
     </div>
 </div>
-<div class="modal fade" id="IOCO" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">This Is Title</h4>
-            </div>
-        </div>
-    </div>
-</div>
-<nav class="navbar navbar-inverse navbar-fixed-bottom">
-    <div class="container"></div>
-</nav>
+<!--<div class="wrapper">-->
+  <!--<div class="content-main" style="height: 400px; background: #FFCDD2;"></div>-->
+  <!--<div class="content-secondary" style="height: 400px; background: #FFF59D;"></div>-->
+<!--</div>-->
+
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 </html>
