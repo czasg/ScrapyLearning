@@ -143,7 +143,7 @@
                 (async () => {
                     var logintype = await islogin();
                     if (logintype) {
-                        this.getteamname();
+                        this.getteamname();  // 执行者两个方法
                         this.bar_eachart();
                     }
                 })()
@@ -214,7 +214,7 @@
                                 }
                                 data_res_a[e] = data_res_o
                             }
-                            this.bardatachart(data_res_a, type_arr, date_arr);
+                            this.bardatachart(data_res_a, type_arr, date_arr);  // 这里很重要了，要开始画图了
                         } else {
                             this.$message({
                                 type: "error",
@@ -326,7 +326,7 @@
                                 var classname = "linecanvas" + q;
                                 this.linecharts.push(classname);
                             }
-                            this.$nextTick(() => {
+                            this.$nextTick(() => {  // 这里开始画图了，很强
                                 for (var e = 0; e < data.info.length; e++) {
                                     var chartName = "linecanvas" + e;
                                     // console.log(echarts.init(document.getElementById(chartName)))
