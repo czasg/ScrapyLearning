@@ -29,7 +29,10 @@ vm.$watch('counter', function(newValue, oldValue) {  //两个值
 # 属于Vue之内的监控，直接对属性进行监控了啊
 vm = new Vue({
     el: '#id',
-    data: {a: 0, b: 0},
+    data: {
+        a: 0, 
+        b: 0
+    },
     watch: {
         a: function (val) {this.a = 0; this.b = 0},
         b: function (val) {this.a = 0; this.b = 0}

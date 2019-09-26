@@ -121,7 +121,7 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="LOGIN-IN" tabindex="-1" role="dialog">
+<div class="modal fade" id="LOGIN-IN" tabindex="-1" role="dialog" @keyup.enter="LOGINFunc">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -165,7 +165,8 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="WebSocket-Chat" tabindex="-1" role="dialog">
+<div id="WebSocket-Chat-Container">
+    <div class="modal fade" id="WebSocket-Chat" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document" style="width: 900px;">
         <div class="modal-content">
             <div style="height: 600px;">
@@ -190,6 +191,7 @@
             </div>
         </div>
     </div>
+</div>
 </div>
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -242,6 +244,9 @@
             msg: 0
         }
     })
+    $('#WebSocket-Chat-Container').on('show.bs.modal', function () {
+        unread_msg.msg = 0;
+    })
     webSocketChat = new Vue({
         el: '#WebSocket-Chat',
         data: {
@@ -268,7 +273,9 @@
                         this.unread_from_db = msg
                     } else {
                         this.msgList.push(msg);
-                        this.unread_msg.msg += 1;
+                        if (this.$el.style.display.includes('none')) {
+                            this.unread_msg.msg += 1;
+                        }
                     }
                 } else {
                     console.log(msg);
@@ -291,6 +298,9 @@
             say22: function(to) {
                 this.ws.send(JSON.stringify({'message': '', 'to': to, 'state': 'w22'}));
             },
+            test: function() {
+                alert(this.$el.style.display);
+            }
         }
     });
 </script>
