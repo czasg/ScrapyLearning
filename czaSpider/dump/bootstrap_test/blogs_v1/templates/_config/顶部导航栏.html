@@ -1,100 +1,107 @@
-<style>
-.chatSidebar,
-.chatMain { height: 100%; }
-.chatSidebar {
-    float: left;
-    width: 200px;
-    color: #f4f4f4;
-    background-color: #2e3238;
-}
-.chatMain {
-    position: relative;
-    overflow: hidden;
-    background-color: #eee;
-    height: 100%;
-}
-.chatSidebar-card {
-    padding: 12px;
-    border-bottom: solid 1px #24272C;
-}
-.chatSidebar-card-img {
-    margin: 0 10px 0 0;
-    border-radius: 3px;
-}
-.chatSidebar-card-name {
-    display: inline-block;
-    margin: 0 0 0 15px;
-    vertical-align: middle;
-    font-size: 16px;
-}
-.chatMain-TaskName {
-    font-size: 15px;
-    padding: 15px 0;
-    padding-left: 20px;
-    box-sizing: border-box;
-    background-color: #fdfdfd;
-    border-bottom: 1px solid #dcdcdc;
-}
-</style>
+<!--<style>-->
+<!--.chatSidebar,-->
+<!--.chatMain { height: 100%; }-->
+<!--.chatSidebar {-->
+    <!--float: left;-->
+    <!--width: 200px;-->
+    <!--color: #f4f4f4;-->
+    <!--background-color: #2e3238;-->
+<!--}-->
+<!--.chatMain {-->
+    <!--position: relative;-->
+    <!--overflow: hidden;-->
+    <!--background-color: #eee;-->
+    <!--height: 100%;-->
+<!--}-->
+<!--.chatSidebar-card {-->
+    <!--padding: 12px;-->
+    <!--border-bottom: solid 1px #24272C;-->
+<!--}-->
+<!--.chatSidebar-card-img {-->
+    <!--margin: 0 10px 0 0;-->
+    <!--border-radius: 3px;-->
+<!--}-->
+<!--.chatSidebar-card-name {-->
+    <!--display: inline-block;-->
+    <!--margin: 0 0 0 15px;-->
+    <!--vertical-align: middle;-->
+    <!--font-size: 16px;-->
+<!--}-->
+<!--.chatMain-TaskName {-->
+    <!--font-size: 15px;-->
+    <!--padding: 15px 0;-->
+    <!--padding-left: 20px;-->
+    <!--box-sizing: border-box;-->
+    <!--background-color: #fdfdfd;-->
+    <!--border-bottom: 1px solid #dcdcdc;-->
+<!--}-->
+<!--</style>-->
+
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#NAVBAR-HEADER"
-                aria-expanded="false">
-            <span class="sr-only">Toggle Navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#" type="button" data-toggle="modal" data-target="#IOCO">IOCO</a>
-    </div>
-    <div class="collapse navbar-collapse" id="NAVBAR-HEADER">
-        <form class="navbar-form navbar-left" id="top-search">
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" v-model="content">
-            </div>
-            <a type="button" class="btn btn-info" @click="topSearch">Submit</a>
-        </form>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <form class="navbar-form">
-                    <a type="button" class="btn btn-info" data-toggle="modal" data-target="#WebSocket-Chat">
-                        <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#NAVBAR-HEADER"
+                    aria-expanded="false">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="" type="button" data-toggle="modal" data-target="#IOCO">IOCO</a>
+        </div>
+        <div class="collapse navbar-collapse" id="NAVBAR-HEADER">
+            <ul class="nav navbar-nav navbar-left"><li><a href="#">Link</a></li></ul>
+            <form class="navbar-form navbar-left" id="top-search" style="outline: none; border: 0px;box-sizing: 0;">
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Search" v-model="content">
+                </div>
+                <a type="button" class="btn btn-info" @click="topSearch">Submit</a>
+            </form>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="dropdown">
+                    <a href="" class="dropdown-toggle btn btn-info" id="NAV-TOP-MENU" data-toggle="dropdown"
+                       role="button"
+                       aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list"
+                                                                        aria-hidden="true">&nbsp;</span></a>
+                    <ul class="dropdown-menu">
                         {% if __user__ %}
-                        <span class="badge" id="UNREAD-MSG" v-if="msg" v-text="msg"></span>
+                        {% if __user__.admin %}
+                        <li class="dropdown-header">超级用户: {{ __user__.name }}</li>
+                        <li><a href="/root/manage/users">账号管理</a></li>
+                        <li><a href="/blog/manage">博客管理</a></li>
+                        <li><a href="#">爬虫管理</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
+                        {% else %}
+                        <li class="dropdown-header">当前用户: {{ __user__.name }}</li>
+                        <li><a href="/blog/blogs">博客首页</a></li>
+                        <li><a href="/blog/manage">个人博客管理</a></li>
+                        <li><a href="/blog/new">创建个人博客</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
                         {% endif %}
-                    </a>
-                </form>
-            </li>
-            <li class="dropdown">
-                <a href="javascript:void(0)" class="dropdown-toggle" id="NAV-TOP-MENU" data-toggle="dropdown"
-                   role="button"
-                   aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list"
-                                                                    aria-hidden="true">&nbsp;</span></a>
-                <ul class="dropdown-menu flag1">
+                        {% else %}
+                        <li><a href="#" type="button" data-toggle="modal" data-target="#LOGIN-IN">登录</a></li>
+                        {% endif %}
+                    </ul>
+                </li>
+            </ul>
+            <form class="navbar-form navbar-right" style="outline: none">
+                <a type="button" class="btn btn-info" data-toggle="modal" data-target="#WebSocket-Chat">
+                    <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
                     {% if __user__ %}
-                    {% if __user__.admin %}
-                    <li class="dropdown-header">超级用户: {{ __user__.name }}</li>
-                    <li><a href="/root/manage/users">账号管理</a></li>
-                    <li><a href="/blog/manage">博客管理</a></li>
-                    <li><a href="#">爬虫管理</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
-                    {% else %}
-                    <li class="dropdown-header">当前用户: {{ __user__.name }}</li>
-                    <li><a href="/blog/blogs">博客首页</a></li>
-                    <li><a href="/blog/manage">个人博客管理</a></li>
-                    <li><a href="/blog/new">创建个人博客</a></li>
-                    <li role="separator" class="divider"></li>
-                    <li><a href="#" data-toggle="modal" data-target="#LOGIN-OUT">登出</a></li>
+                    <span class="badge" id="UNREAD-MSG" v-if="msg" v-text="msg"></span>
                     {% endif %}
-                    {% else %}
-                    <li><a href="#" type="button" data-toggle="modal" data-target="#LOGIN-IN">登录</a></li>
-                    {% endif %}
-                </ul>
-            </li>
-        </ul>
+                </a>
+                <a type="button" class="btn btn-info" data-toggle="modal" data-target="#WebSocket-Chat">
+                    <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
+                </a>
+            </form>
+        </div>
     </div>
 </nav>
+
 <div class="modal fade" id="IOCO" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -178,7 +185,8 @@
                     <div class="chatSidebar-list"></div>
                 </div>
                 <div class="chatMain">
-                    <div class="chatMain-TaskName" v-text="'Big Home' + '   当前在线人数:' + online"></div>
+                    <!--<div class="chatMain-TaskName" v-text="'Big Home' + '   当前在线人数:' + online"></div>-->
+                    <div class="chatMain-TaskName" v-html="'<h5>'+'Big Home' + '   当前在线人数:' + online+'<span class=close>&times;</span></h5>'"></div>
                     <div class="chatMain-Message">
                         <ul>
                             <li v-for="msg in msgList">
@@ -198,6 +206,12 @@
 <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
 <script src="/static/js/sha1.min.js"></script>
 <script>
+    //$(document).ready(function(){
+    //    var dynamicNav = $('#NAV-TOP-MENU');
+    //    dynamicNav.click(function(){
+    //        $('.flag1').toggle(300);
+    //    })
+    //})
     $(function(){
         login_object = new Vue({
             el: '#LOGIN-IN',

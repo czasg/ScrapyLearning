@@ -23,13 +23,13 @@
         padding-bottom: 70px;
     }
     .top-hidden {
-        -webkit-animation: topHidden .6s ease both;
-        -moz-animation: topHidden .6s ease both;
+         -webkit-animation: topHidden .6s ease both;
+         -moz-animation: topHidden .6s ease both;
         animation: topHidden .6s ease both;
     }
     .bottom-show {
-        -webkit-animation: bottomShow .6s ease both;
-        -moz-animation: bottomShow .6s ease both;
+         -webkit-animation: bottomShow .6s ease both;
+         -moz-animation: bottomShow .6s ease both;
         animation: bottomShow .6s ease both;
     }
     .index-top-container {
@@ -187,18 +187,9 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
 <script src="https://echarts.baidu.com/examples/vendors/echarts/echarts.min.js"></script>
 <script src="/static/js/public.js"></script>
 <script>
-    $(document).ready(function(){
-        var dynamicNav = $('#NAV-TOP-MENU');
-        dynamicNav.click(function(){
-            $('.flag1').toggle(300);
-        })
-    })
     function drawCanvas(id, api, api_data, text, dataZoom) {
         const dom = document.getElementById(id);
         const myChart = echarts.init(dom);
