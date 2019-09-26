@@ -42,7 +42,7 @@ var {a=true} = person        // 还支持默认赋值，也就是没有查找到
 ({a=true} = person)          // 当a在此之前已经被声明了，则直接赋值会报错，应该使用()括号包起来
 [x, y] = [y, x]              // 和python中的 x,y = y,x 一个意思
 var {hostname:domain, pathname:path} = location;  //快速获取当前页面的域名和路径。卧槽WC这个太狠了。
-"""
+"""# todo 看到了 函数-方法 章节
 """
 JS的对象对应着python中的dict。绑定到对象上的函数称之为方法。在函数中使用this会指向当前对象，没有话会指向全局变量window
 不适用var声明变量则会变为全局变量，这样很nice呀
