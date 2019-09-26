@@ -17,10 +17,22 @@ webSocketChat.say11('asd', '1176376872007630848')
 """
 
 
-class MyServerHandler(socketserver.BaseRequestHandler):
+class MyServerThreadingMixIn(socketserver.ThreadingMixIn):
+    """连接开启新线程"""
 
-    def setup(self):
-        self.request.send(WebSocketProtocol.encode(self.request.recv(1024)))
+
+class MyServerTCPServer(socketserver.TCPServer):
+
+    def verify_request(self, request, client_address):
+        """验证是否为WebSocket升级连接"""
+        try:
+            request.send(WebSocketProtocol.encode(request.recv(1024)))
+        except:
+            return False
+        return True
+
+
+class MyServerHandler(socketserver.BaseRequestHandler):
 
     def get_recv_data(self, size=1024):
         return WebSocketProtocol.decode(self.request.recv(size))
@@ -87,7 +99,7 @@ class MyServerHandler(socketserver.BaseRequestHandler):
             pass
 
 
-class MyServerThreadingTCPServer(socketserver.ThreadingTCPServer):
+class MyServerThreadingTCPServer(MyServerThreadingMixIn, MyServerTCPServer):
 
     def __init__(self, server_address, RequestHandlerClass, request_queue_size=5):
         logger.info('Server Start ...')
@@ -98,7 +110,6 @@ class MyServerThreadingTCPServer(socketserver.ThreadingTCPServer):
 
 
 def start_server(addrPort, handler=MyServerHandler, queue_size=500):
-    # ConnectManager.init()
     server = MyServerThreadingTCPServer(addrPort, handler, queue_size)
     server.serve_forever()
 
