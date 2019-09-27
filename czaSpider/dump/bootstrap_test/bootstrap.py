@@ -19,6 +19,7 @@ col-sm-offset-2 col-md-offset-0                              // 偏移。有必�
 <select class="form-control"><option>1</option></select>     // 下拉列表
 <span class="caret"></span>                                  // 下三角符号
 <div class="clearfix"></div>                                 // 清除浮动
+<button><span class="标签"></span></button>
 
 class="lead"                                                 
 class="text-left"
