@@ -20,6 +20,13 @@ col-sm-offset-2 col-md-offset-0                              // 偏移。有必�
 <span class="caret"></span>                                  // 下三角符号
 <div class="clearfix"></div>                                 // 清除浮动
 <button><span class="标签"></span></button>
+<div class="btn"><button><div class="btn-group">   // 按钮组内的下拉菜单需要放到一个btn-group中
+<div class="btn-group btn-group-justified"><div class="btn-group">  // 需要btn-group里面嵌套btn-group
+<div class="dropdown">  // 下拉菜单
+<div class="btn-group"> // 按钮式下拉菜单
+<div class="btn-group"><button><button><ul>  // 这就可以形成分裂式按钮下拉菜单
+<div class="input-group"><input><span class="input-group-btn"><button>  // 在输入框组中作为额外的按钮
+
 
 class="lead"                                                 
 class="text-left"
@@ -42,33 +49,74 @@ class="img-rounded"
 class="img-circle"
 class="img-thumbnail"
 class="img-responsive"
-class="text-primary"
-class="text-success"
-class="text-info"
-class="text-warning"
-class="text-danger"
-class="bg-primary"
-class="bg-success"
-class="bg-info"
-class="bg-warning"
-class="bg-danger"
+class="text-primary text-success text-info text-warning text-danger"
+class="bg-primary bg-success bg-info bg-warning bg-danger"
 class="pull-left"   // 浮动，当时不能用于导航条中，应该使用.navbar-left
 class="center-block"   // 让内容块居中
 class="hidden"
 class="show"
 class="hidden-xs hidden-sm hidden-md hidden-lg visible-lg-12"  // hidden就是仅仅隐藏哪一个，而visible就是仅这一行，没padding都没有吗
+class="btn-group-vertical"  // 垂直堆叠排列显示的按钮组
+class="nav nav-tabs"    // 用于ul标签，比较普通的标签页
+class="nav nav-pills"   // 也是用于ul，这个就是胶囊式标签
+class="nav nav-pills nav-stacked"  // 垂直式的胶囊标签
+class="nav-justified"  //配合上述nav使用，可以使用标签两段对齐
+class="navbar-btn"   // 这玩意可以直接在bavbar中使用，会垂直居中
+class="navbar-text"  // 可以直接用在文本中，通常使用p标签
+class="navbar-link"  //费导航的连接
+body { padding-top: 70px; }  // 推荐使用此，因为导航条会挡住
+class="navbar-static-top"  //静止在顶部
+class="label label-default"  // 用于span上，表示标签
+class="badge"   // 表示徽章
+class="page-header"  // 增加一个页头的样式
+class="list-group"
+class="list-group-item"
+
 """
 
 
 
 
 """全局CSS样式
+<div class="panel panel-default">
+    <div class="panel-heading"></div>
+    <div class="panel-body"></div>
+    <div class="panel-footer"></div>
+</div>
+
+
+<ul class="media-list">
+    <li class="media">
+        <div class="media-left">
+            <a>
+                <img src="", style="30*30">
+            </a>
+        </div>
+        <div class="media-body">
+            <h4 class="media-heading"></h4>
+        </div>
+    </li>
+</ul>
+
+
+
+<div class="alert alert-warning alert-dismissible" role="alert">
+    <button type="button" class="close" data-dismiss="alert"><span>&times;</span></button>
+    <strong>Warning!</strong>Please Check You Config
+</div>  // 警告框，很有用
+
+下拉菜单可以是
+<div class="dropdown">  // 后接button或者a，然后就是下拉的内容
+<div class="btn-group">  // 后接button，然后是下载的内容，一般都是ul+li
+<ul class="nav nav-pills"><li class="dropdown">  // 导航里面只能接li了
+
 页面设置为HTML5文档类型
 <!DOCTYPE html>
 <html lang="zh-CN"></html>
 
 移动设备优先，其中user-scalable表示禁止用户缩放
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
 
 布局容器
 .container   固定宽度并支持响应式布局，这个固定宽度可以说是非常棒了
