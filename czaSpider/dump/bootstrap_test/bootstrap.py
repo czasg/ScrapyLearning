@@ -1,5 +1,66 @@
 __file__ = ''
 
+"""
+<!DOCTYPE html>
+<html lang="zh-CN"></html>                                   //前提设置
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">    // 支持移动设备，其中user-scalable表示禁止用户缩放
+col-xs-12                                                    // auto
+col-sm-12                                                    // 750px
+col-md-12                                                    // 970px
+col-lg-12                                                    // 1170px
+col-sm-offset-2 col-md-offset-0                              // 偏移。有必要时，后面应覆盖前面
+<h1><small></small></h1>                                     // 这种字体挺漂亮的
+<blockquote><p></p></blockquote>                             // 表示引用，里面最好用p
+<dl class="dl-horizontal"><dt><dd></dl></dt></dd>            // 带有描述的短语列表，dt是加粗的标题，dd是内容
+<form><div class="form-group"><label></label><input type="text"></div><button type="submit"></button></form>  // 每一个input都需要from-group
+<textarea class="form-control" rows="3">                     // 文本域
+<div class="checkbox"><label><input type="checkbox"></label></div>
+<div class="checkbox"><label><input type="radio" name="only-name"></label></div>  // 对于圆点，只要定义同一个name就ok了，保证唯一
+<select class="form-control"><option>1</option></select>     // 下拉列表
+<span class="caret"></span>                                  // 下三角符号
+<div class="clearfix"></div>                                 // 清除浮动
+
+class="lead"                                                 
+class="text-left"
+class="text-center"
+class="text-right"
+class="text-lowercase"
+class="text-uppercase"
+class="text-capitalize"
+class="table-bordered table-hover table-condensed table-responsive"
+class="form-control"  // width: 100%;
+class="form-group"
+class="form-inline"   // 内联表单，也就是显示在一行内咯
+class="input-group-addon"  // 放在input前面或者后面，可以实现固定输出显示
+class="input-group"        // 用来与class="input-group-addon"组合的
+class="form-horizontal"    // 定义水平表单，在这里每一个form-group就是一行。一行内可以使用col-sm-2来设定对应的大小
+class="checkbox-inline"
+class="radio-inline"       // 这个是用造label中的，包裹input就可以
+class="btn-block"          // 可以让按钮的width:100%
+class="img-rounded"
+class="img-circle"
+class="img-thumbnail"
+class="img-responsive"
+class="text-primary"
+class="text-success"
+class="text-info"
+class="text-warning"
+class="text-danger"
+class="bg-primary"
+class="bg-success"
+class="bg-info"
+class="bg-warning"
+class="bg-danger"
+class="pull-left"   // 浮动，当时不能用于导航条中，应该使用.navbar-left
+class="center-block"   // 让内容块居中
+class="hidden"
+class="show"
+class="hidden-xs hidden-sm hidden-md hidden-lg visible-lg-12"  // hidden就是仅仅隐藏哪一个，而visible就是仅这一行，没padding都没有吗
+"""
+
+
+
+
 """全局CSS样式
 页面设置为HTML5文档类型
 <!DOCTYPE html>
@@ -90,3 +151,56 @@ space-between	项目位于各行之间留有空白的容器内。
 space-around	项目位于各行之前、之间、之后都留有空白的容器内。
 
 """
+
+"""
+p、h1、div叫块级元素。定义为一个块，拥有块框
+strong、span叫行内元素。定义显示在行内，拥有行内框
+
+定位三种方式：
+普通流、浮动流、绝对定位
+
+普通流：元素框的位置由元素在HTML中的位置决定
+块级框从上到下一个接一个垂直排列
+行内框在一行中水平排列，框内元素不影响行框的高度
+
+text-overflow: clip|ellipsis|string;
+
+height:400px; overflow-x:hidden; overflow-y:scroll;  廖老师就这一句解惑
+"""
+
+""" 上传本地文件的方法
+var
+    fileInput = document.getElementById('test-image-file'),
+    info = document.getElementById('test-file-info'),
+    preview = document.getElementById('test-image-preview');
+// 监听change事件:
+fileInput.addEventListener('change', function () {
+    // 清除背景图片:
+    preview.style.backgroundImage = '';
+    // 检查文件是否选择:
+    if (!fileInput.value) {
+        info.innerHTML = '没有选择文件';
+        return;
+    }
+    // 获取File引用:
+    var file = fileInput.files[0];
+    // 获取File信息:
+    info.innerHTML = '文件: ' + file.name + '<br>' +
+                     '大小: ' + file.size + '<br>' +
+                     '修改: ' + file.lastModifiedDate;
+    if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+        alert('不是有效的图片文件!');
+        return;
+    }
+    // 读取文件:
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var
+            data = e.target.result; // 'data:image/jpeg;base64,/9j/4AAQSk...(base64编码)...'            
+        preview.style.backgroundImage = 'url(' + data + ')';
+    };
+    // 以DataURL的形式读取文件:
+    reader.readAsDataURL(file);
+});
+"""
+

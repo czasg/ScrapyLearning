@@ -183,6 +183,7 @@ js转化平台          http://tool.oschina.net/codeformat/js
 爬虫学习            https://github.com/Jack-Cherish/python-spider/commit/10610ab354fc1bb8264edc566766df6588111914     https://cuijiahua.com/blog/ml/
 百度AI开放平台      https://ai.baidu.com/docs#/Face-Detect-V3/top
 JS                  https://github.com/SUNNERCMS/30daysJavascript
+17素材网            https://www.17sucai.com/
 
 """
 

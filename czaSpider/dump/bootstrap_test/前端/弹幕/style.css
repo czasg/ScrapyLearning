@@ -1,0 +1,356 @@
+* {
+    padding:0;
+    margin:0;
+    list-style: none;
+    text-decoration: none;
+}
+#zz
+{
+    background-color: #000000;
+    width:900px;
+    height: 400px;
+    margin: 0 auto;
+    margin-top: 15px;
+    color:#ffffff;
+}
+#ds
+{
+    position: relative;
+    background-color: #000000;
+    width:900px;
+    height: 100%;
+    margin: 0 auto;
+    margin-top: 15px;
+    color:#ffffff;
+    overflow: hidden;
+}
+.ss
+{
+    display: block;
+    width: 100%;
+    text-align: right;
+    position: absolute;
+    top:10px;
+    left: 20px;
+}
+#sent
+{
+    width:898px;
+    height:70px;
+    margin:0 auto;
+    background: #ffffff;
+    border-style:inset;
+    border: 1px solid #d5d5d5;
+    border-top:none;
+    box-shadow:-2px 0  #dddddd,
+    2px 0  #dddddd,
+    0 2px  #dddddd;
+    position: relative;
+}
+#dm
+{
+    width:498px;
+    height:32px;
+    margin:20px 0px 20px 10px;
+    border:1px solid #d5d5d5;
+    color:#6e6e6e;
+}
+#st
+{
+    line-height: 30px;
+    color:#ffffff;
+    border:none;
+    background: #00A2D6;
+    padding:0px 15px;
+    text-align: center;
+    cursor: pointer;
+}
+#dw
+{
+    position: absolute;
+    left:400px;
+    top:27px;
+    font-size: 14px;
+    color:#6e6e6e;
+}
+#yc
+{
+    position: relative;
+}
+#rr
+{
+    line-height: 30px;
+    color:#ffffff;
+    border:none;
+    background: #006600;
+    padding:0px 15px;
+    text-align: center;
+    cursor: pointer;
+}
+span
+{
+    color:#ffa178;
+    cursor: pointer;
+    font-size: 20px;
+}
+input
+{
+    background: #ffffff;
+    color:#3c3c3c;
+    border:1px solid #d5d5d5;
+    padding-left: 10px;
+    padding-right: 10px;
+    line-height: 30px;
+    outline: none;
+}
+
+.colorDiv ul.colorDivUl li p.name, .colorDiv ul.colorDivUl li .fontSizeDiv, .colorDiv ul.colorDivUl li .fontSizeDiv a, .colorDiv ul.colorDivUl li .backColorDiv, .colorDiv ul.colorDivUl li .backColorDiv p.backColor, .colorDiv ul.colorDivUl li .backColorDiv p.colorText, .colorDiv ul.colorDivUl li .backColorDiv .colorDivs a  , a.colorHint{ float: left; }
+
+.clear { clear: both; }
+
+a.colorHint { display: block; width: 60px; height: 30px; line-height: 30px; margin: 22px 5px 0 70px; text-align: center; color: white; background: #990000;}
+
+.colorDiv { width: 280px; height: 220px; background: white; border: 1px solid #ccc; border-radius: 4px; padding-top: 15px; position: absolute; left: 0; bottom: 74px; z-index: 9999; display: none; }
+.colorDiv ul.colorDivUl { width: 100%; height: 100%; }
+.colorDiv ul.colorDivUl li { margin-bottom: 15px; }
+.colorDiv ul.colorDivUl li p.name { width: 50px; height: 27px; line-height: 27px; text-align: center; font-size: 14px; }
+.colorDiv ul.colorDivUl li .fontSizeDiv { width: 210px; height: 27px; }
+.colorDiv ul.colorDivUl li .fontSizeDiv a { display: block; width: 30px; height: 23px; line-height: 23px; text-align: center; font-size: 13px; border: 1px solid white; border-radius: 4px; color:#333; margin: 0 5px;}
+.colorDiv ul.colorDivUl li .fontSizeDiv a.active { border-color: #ff0066; background: #ffedee; }
+.colorDiv ul.colorDivUl li .backColorDiv { width: 210px; height: 27px; }
+.colorDiv ul.colorDivUl li .backColorDiv p.backColor, .colorDiv ul.colorDivUl li .backColorDiv p.colorText { width: 55px; height: 25px; line-height: 25px; text-align: center; }
+.colorDiv ul.colorDivUl li .backColorDiv p.backColor { border: 1px solid #ccc; background: #ffffff; margin-right: 12px; }
+.colorDiv ul.colorDivUl li .backColorDiv p.colorText { font-size: 12px; border: 1px solid #ccc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs { width: 210px; height: 132px; border-left: 1px solid #333; border-bottom: 1px solid #333; margin-top: 10px; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a { width: 10px; height: 10px; border: 1px solid #333; border-bottom: none; border-left: none; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a:hover { border-top: 1px solid white; border-right: 1px solid white; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a000000 { background: #000000; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a003300 { background: #003300; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a006600 { background: #006600; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a009900 { background: #009900; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00cc00 { background: #00cc00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00ff00 { background: #00ff00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a3a0000 { background: #3a0000; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a333300 { background: #333300; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a336600 { background: #336600; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a339900 { background: #339900; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a339900 { background: #339900; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33cc00 { background: #33cc00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33ff00 { background: #33ff00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a660000 { background: #660000; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a663300 { background: #663300; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a666600 { background: #666600; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a669900 { background: #669900; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66cc00 { background: #66cc00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66ff00 { background: #66ff00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a333333 { background: #333333; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a000033 { background: #000033; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a003333 { background: #003333; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a006633 { background: #006633; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a009933 { background: #009933; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00cc33 { background: #00cc33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00ff33 { background: #00ff33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a330033 { background: #330033; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a333333 { background: #333333; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a336633 { background: #336633; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a339933 { background: #339933; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33cc33 { background: #33cc33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33ff33 { background: #33ff33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a660033 { background: #660033; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a663333 { background: #663333; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a666633 { background: #666633; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a669933 { background: #669933; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66cc33 { background: #66cc33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66ff33 { background: #66ff33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a666666 { background: #666666; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a000066 { background: #000066; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a003366 { background: #003366; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a006666 { background: #006666; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a009966 { background: #009966; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00cc66 { background: #00cc66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00ff66 { background: #00ff66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a330066 { background: #330066; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a333366 { background: #333366; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a336666 { background: #336666; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a339966 { background: #339966; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33cc66 { background: #33cc66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33ff66 { background: #33ff66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a660066 { background: #660066; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a663366 { background: #663366; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a666666 { background: #666666; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a669966 { background: #669966; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66cc66 { background: #66cc66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66ff66 { background: #66ff66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a999999 { background: #999999; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a000099 { background: #000099; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a003399 { background: #003399; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a006699 { background: #006699; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a009999 { background: #009999; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00cc99 { background: #00cc99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00ff99 { background: #00ff99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a330099 { background: #330099; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a333399 { background: #333399; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a336699 { background: #336699; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a339999 { background: #339999; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33cc99 { background: #33cc99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33ff99 { background: #33ff99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a660099 { background: #660099; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a663399 { background: #663399; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a666699 { background: #666699; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a669999 { background: #669999; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66cc99 { background: #66cc99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66ff99 { background: #66ff99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acccccc { background: #cccccc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a0000cc { background: #0000cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a0033cc { background: #0033cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a0066cc { background: #0066cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a0099cc { background: #0099cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00cccc { background: #00cccc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00ffcc { background: #00ffcc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a3300cc { background: #3300cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a3333cc { background: #3333cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a3366cc { background: #3366cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a3399cc { background: #3399cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33cccc { background: #33cccc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33ffcc { background: #33ffcc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a6600cc { background: #6600cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a6633cc { background: #6633cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a6666cc { background: #6666cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a6699cc { background: #6699cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66cccc { background: #66cccc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66ffcc { background: #66ffcc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affffff { background: #ffffff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a0000ff { background: #0000ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a0033ff { background: #0033ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a0066ff { background: #0066ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a0099ff { background: #0099ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00ccff { background: #00ccff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00ffff { background: #00ffff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a3300ff { background: #3300ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a3333ff { background: #3333ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a3366ff { background: #3366ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a3399ff { background: #3399ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33ccff { background: #33ccff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a33ffff { background: #33ffff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a6600ff { background: #6600ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a6633ff { background: #6633ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a6666ff { background: #6666ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a6699ff { background: #6699ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66ccff { background: #66ccff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a66ffff { background: #66ffff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff0000 { background: #ff0000; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a990000 { background: #990000; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a993300 { background: #993300; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a996600 { background: #996600; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a999900 { background: #999900; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99cc00 { background: #99cc00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99ff00 { background: #99ff00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc0000 { background: #cc0000; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc3300 { background: #cc3300; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc6600 { background: #cc6600; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc9900 { background: #cc9900; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acccc00 { background: #cccc00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.accff00 { background: #ccff00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff0000 { background: #ff0000; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff3300 { background: #ff3300; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff6600 { background: #ff6600; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff9900 { background: #ff9900; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affcc00 { background: #ffcc00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affff00 { background: #ffff00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00ff00 { background: #00ff00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a990033 { background: #990033; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a993333 { background: #993333; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a996633 { background: #996633; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a999933 { background: #999933; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99cc33 { background: #99cc33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99ff33 { background: #99ff33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc0033 { background: #cc0033; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc3333 { background: #cc3333; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc6633 { background: #cc6633; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc9933 { background: #cc9933; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acccc33 { background: #cccc33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.accff33 { background: #ccff33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff0033 { background: #ff0033; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff3333 { background: #ff3333; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff6633 { background: #ff6633; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff9933 { background: #ff9933; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affcc33 { background: #ffcc33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affff33 { background: #ffff33; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a0000ff { background: #0000ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a990066 { background: #990066; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a993366 { background: #993366; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a996666 { background: #996666; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a999966 { background: #999966; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99cc66 { background: #99cc66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99ff66 { background: #99ff66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc0066 { background: #cc0066; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc3366 { background: #cc3366; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc6666 { background: #cc6666; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc9966 { background: #cc9966; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acccc66 { background: #cccc66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.accff66 { background: #ccff66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff0066 { background: #ff0066; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff3366 { background: #ff3366; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff6666 { background: #ff6666; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff9966 { background: #ff9966; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affcc66 { background: #ffcc66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affff66 { background: #ffff66; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affff00 { background: #ffff00; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a990099 { background: #990099; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a993399 { background: #993399; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a996699 { background: #996699; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a999999 { background: #999999; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99cc99 { background: #99cc99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99ff99 { background: #99ff99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc0099 { background: #cc0099; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc3399 { background: #cc3399; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc6699 { background: #cc6699; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc9999 { background: #cc9999; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acccc99 { background: #cccc99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.accff99 { background: #ccff99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff0099 { background: #ff0099; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff3399 { background: #ff3399; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff6699 { background: #ff6699; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff9999 { background: #ff9999; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affcc99 { background: #ffcc99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affff99 { background: #ffff99; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a00ffff { background: #00ffff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a9900cc { background: #9900cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a9933cc { background: #9933cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a9966cc { background: #9966cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a9999cc { background: #9999cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99cccc { background: #99cccc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99ffcc { background: #99ffcc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc00cc { background: #cc00cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc33cc { background: #cc33cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc66cc { background: #cc66cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc99cc { background: #cc99cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acccccc { background: #cccccc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.accffcc { background: #ccffcc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff00cc { background: #ff00cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff33cc { background: #ff33cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff66cc { background: #ff66cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff99cc { background: #ff99cc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affcccc { background: #ffcccc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affffcc { background: #ffffcc; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff00ff { background: #ff00ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a9900ff { background: #9900ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a9933ff { background: #9933ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a9966ff { background: #9966ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a9999ff { background: #9999ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99ccff { background: #99ccff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.a99ffff { background: #99ffff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc00ff { background: #cc00ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc33ff { background: #cc33ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc66ff { background: #cc66ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.acc99ff { background: #cc99ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.accccff { background: #ccccff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.accffff { background: #ccffff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff00ff { background: #ff00ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff33ff { background: #ff33ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff66ff { background: #ff66ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.aff99ff { background: #ff99ff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affccff { background: #ffccff; }
+.colorDiv ul.colorDivUl li .backColorDiv .colorDivs a.affffff { background: #ffffff; }
+
+/*# sourceMappingURL=css.css.map */
