@@ -26,6 +26,9 @@ class MyServerTCPServer(socketserver.TCPServer):
     def verify_request(self, request, client_address):
         """验证是否为WebSocket升级连接"""
         try:
+            print(request)
+            print(dir(request))
+            print(request.recvfrom_into)
             request.send(WebSocketProtocol.encode(request.recv(1024)))
         except:
             return False
@@ -54,8 +57,7 @@ class MyServerHandler(socketserver.BaseRequestHandler):
             Switch.case(self, 'w23', '-', '-')
             return
         except:
-            import traceback
-            logging.error(traceback.format_exc())
+            pass
         raise AuthenticationError
 
     def handle(self):
@@ -109,7 +111,7 @@ class MyServerThreadingTCPServer(MyServerThreadingMixIn, MyServerTCPServer):
         super(MyServerThreadingTCPServer, self).__init__(server_address, RequestHandlerClass)
 
 
-def start_server(addrPort, handler=MyServerHandler, queue_size=500):
+def start_server(addrPort, handler=MyServerHandler, queue_size=5):
     server = MyServerThreadingTCPServer(addrPort, handler, queue_size)
     server.serve_forever()
 

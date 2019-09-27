@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>123</title>
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+</head>
+
+<body>
+<script>
+    $(function(){
+        vm = new Vue({
+            el: '#TEST',
+            data: {
+                box1_val: '',
+                box2_val: [],
+            }
+        })
+    })
+</script>
+<div class="container" id="TEST">
+    <div class="checkbox">
+        <label for="box1"><input id="box1" type="checkbox" value="box1" v-model="box2_val">box1</label>
+    </div>
+    <label class="radio">
+        <input type="checkbox" id="box2" value="box2" v-model="box2_val">
+    </label>
+    <label class="radio">
+        <input type="checkbox" id="box3" value="box3" v-model="box2_val">
+    </label>
+    <label v-text="box2_val"></label>
+</div>
+
+<script>
+    $(function(){
+        vm = new Vue({
+            el: '#TEST',
+            data: {
+                inputData: '',
+                result: ''
+            },
+            filters: {
+                testFilters: function(value){ return 'test OK!' }
+            },
+            computed: {
+                calculate2: function(){
+                    console.log('每次点击都执行一次嘛');
+                    return this.inputData;
+                }
+            },
+            methods: {
+                calculate1: function(){
+                    console.log('每次点击都执行一次嘛');
+                    this.result = this.inputData;
+                }
+            },
+            watch: {}
+        })
+    })
+</script>
+</body>
+</html>

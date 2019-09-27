@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>123</title>
+<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" />
+<script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <!--<script src="https://cdn.staticfile.org/axios/0.18.0/axios.min.js"></script>-->
+</head>
+
+<body>
+    <header class="navbar navbar-static-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="/" class="navbar-brand">Learn JavaScript</a>
+            </div>
+            <nav class="collapse navbar-collapse" id="bs-navbar">
+                <ul class="nav navbar-nav">
+                    <li><a target="_blank" href="">Get Courses</a></li>
+                    <li><a target="_blank" href="">Source Code</a></li>
+                    <li><a target="_blank" href="">Resource</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="">Sign Out</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div id="important" style="color:#cdbfe3; background-color:#6f5499; padding:30px 0; margin:-20px 0 20px 0;">
+        <div class="container">
+            <h1 style="color:#fff; font-size:60px">Getting started with WebSocket!</h1>
+            <p style="font-size:24px; line-height:48px">Learn JavaScript, Node.js, WebSocket, npm, koa2, nunjucks, babel, etc. at liaoxuefeng.com.</p>
+        </div>
+    </div>
+
+
+<script>
+function addToUserList(list, user) {
+    var i;
+    for (i=0; i<list.length; i++) {
+        if (list[i].id === user.id) {
+            return;
+        }
+    }
+    list.push(user);
+}
+function removeFromUserList(list, user) {
+    var i, target = -1;
+    for (i=0; i<list.length; i++) {
+        if (list[i].id === user.id) {
+            target = i;
+            break;
+        }
+    }
+    if (target >= 0) {
+        list.splice(target, 1);
+    }
+}
+function addMessage(list, msg) {  // 牛逼
+    list.push(msg);
+    $('#message-list').parent().animate({
+        scrollTop: $('#message-list').height()
+    }, 1000);
+}
+$(function () {
+    var vmMessageList = new Vue({
+        el: '#message-list',
+        data: {
+            messages: []
+        }
+    });
+    var vmUserList = new Vue({
+        el: '#user-list',
+        data: {
+            users: []
+        }
+    });
+    var ws = new WebSocket('ws://localhost:3000/ws/chat');
+    ws.onmessage = function(event) {
+        var data = event.data;
+        console.log(data);
+        var msg = JSON.parse(data);
+        if (msg.type === 'list') {
+            vmUserList.users = msg.data;
+        } else if (msg.type === 'join') {
+            addToUserList(vmUserList.users, msg.user);
+            addMessage(vmMessageList.messages, msg);
+        } else if (msg.type === 'left') {
+            removeFromUserList(vmUserList.users, msg.user);
+            addMessage(vmMessageList.messages, msg);
+        } else if (msg.type === 'chat') {
+            addMessage(vmMessageList.messages, msg);
+        }
+    };
+    ws.onclose = function (evt) {
+        console.log('[closed] ' + evt.code);
+        var input = $('#form-chat').find('input[type=text]');
+        input.attr('placeholder', 'WebSocket disconnected.');
+        input.attr('disabled', 'disabled');
+        $('#form-chat').find('button').attr('disabled', 'disabled');
+    }; // 牛皮哦
+    ws.onerror = function (code, msg) {
+        console.log('[ERROR] ' + code + ': ' + msg);
+    };
+    $('#form-chat').submit(function (e) {
+        e.preventDefault();
+        var input = $(this).find('input[type=text]');
+        var text = input.val().trim();
+        console.log('[chat] ' + text);
+        if (text) {
+            input.val('');
+            ws.send(text);
+        }
+    });
+});
+</script>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="glyphicon glyphicon-th-list"></span> Room</h3>
+                </div>
+                <div class="panel-body">
+                    <div style="height:400px; overflow-x:hidden; overflow-y:scroll;">
+                        <div id="message-list">
+                            <div style="margin-bottom:25px;" v-for="msg in messages">
+                                <div v-if="msg.type === 'join' || msg.type === 'left'">
+                                    <div class="media-left">
+                                        <img class="media-object" style="width:20px; height:20px;" v-bind:src="'/static/images/' + msg.user.image + '.png'">
+                                    </div>
+                                    <div class="media-body">
+                                        <h4 class="media-heading" v-text="msg.data"></h4>
+                                    </div>
+                                </div>
+                                <div v-if="msg.type === 'chat'">
+                                    <div class="media">
+                                        <div class="media-left">
+                                            <img class="media-object" style="width:48px; height:48px;" v-bind:src="'/static/images/' + msg.user.image + '.png'">
+                                        </div>
+                                        <div class="media-body">
+                                            <h4 class="media-heading" v-text="msg.user.name"></h4>
+                                            <span v-text="msg.data"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <form id="form-chat" action="#0">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="A good day, isn't it?">
+                                <span class="input-group-btn"><button class="btn btn-default" type="submit">Go</button></span>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><span class="glyphicon glyphicon-user"></span> Users</h3>
+                </div>
+                <div class="panel-body">
+                    <div style="height:434px; overflow-x:hidden; overflow-y:scroll;">
+                        <div id="user-list">
+                            <div class="media" v-for="user in users">
+                                <div class="media-left">
+                                    <img class="media-object" style="width:20px; height:20px;" v-bind:src="'/static/images/' + user.image + '.png'">
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading" v-text="user.name + ' (' + user.id + ')'"></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Get more courses...</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">JavaScript</h3>
+                </div>
+                <div class="panel-body">
+                    <p>full-stack JavaScript course</p>
+                    <p><a target="_blank" href="http://www.liaoxuefeng.com/wiki/001434446689867b27157e896e74d51a89c25cc8b43bdb3000">Read more</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Python</h3>
+                </div>
+                <div class="panel-body">
+                    <p>the latest Python course</p>
+                    <p><a target="_blank" href="http://www.liaoxuefeng.com/wiki/0014316089557264a6b348958f449949df42a6d3a2e542c000">Read more</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">git</h3>
+                </div>
+                <div class="panel-body">
+                    <p>A course about git version control</p>
+                    <p><a target="_blank" href="http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000">Read more</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <footer style="background-color:#ddd; padding: 20px 0;">
+        <div class="container">
+            <p>
+                <a target="_blank" href="http://www.liaoxuefeng.com">Website</a> -
+                <a target="_blank" href="https://github.com/michaelliao/learn-javascript">GitHub</a> -
+                <a target="_blank" href="http://weibo.com/liaoxuefeng">Weibo</a>
+            </p>
+            <p>This JavaScript course is created by <a target="_blank" href="http://weibo.com/liaoxuefeng">@廖雪峰</a>.</p>
+            <p>Code licensed <a target="_blank" href="https://github.com/michaelliao/learn-javascript/blob/master/LICENSE">Apache</a>.</p>
+        </div>
+    </footer>
+</body>
+</html>

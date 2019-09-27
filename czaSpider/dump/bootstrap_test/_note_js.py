@@ -41,8 +41,77 @@ var {a,b:new_id} = person;   // 快速赋值，直接抽取person对象中的a�
 var {a=true} = person        // 还支持默认赋值，也就是没有查找到的时候赋值为true
 ({a=true} = person)          // 当a在此之前已经被声明了，则直接赋值会报错，应该使用()括号包起来
 [x, y] = [y, x]              // 和python中的 x,y = y,x 一个意思
-var {hostname:domain, pathname:path} = location;  //快速获取当前页面的域名和路径。卧槽WC这个太狠了。
-"""# todo 看到了 函数-方法 章节
+var {hostname:domain, pathname:path} = location;  // 快速获取当前页面的域名和路径。卧槽WC这个太狠了。
+(function (x) { return x*x })(i)                  // 这是一个匿名函数。对应着python中的 lambda x: x*x
+var fn = x => x * x;         // 箭头函数看着也好难受。箭头函数优于匿名函数，修复了this指向问题，总是指向外层调用者而不是单独开一个域出来
+(x, y) => x + y              //
+() => 3.14159                // 无参数
+(x, y, ...rest) => x         // 可变参数
+x => ({ foo: x })            // 单独返回一个对象需要使用括号
+function* foo(x) { yield x } // 生成器generator 
+generator.next()             // 调用方法 返回一个这么奇怪的东西{value: 0, done: false} 这种就需要自己手动判断下生成器是否结束，也就是判断done为true
+for (var x of generator)     // 使用for+of实现
+parseInt()                   // parseInt('123')
+parseFloat()                 // parseFloat('123')
+String()                     // String(123)
+toString()                   // 123..toString()不能直接点，会报错，或者使用括号(123).toString()
+Array.isArray(arr)           // 判断Array的方法
+typeof window.myVar === 'undefined'                // 判断全局变量是否存在
+new RegExp('ABC\\-001').test('cza')                // 正则 test表示是否匹配
+/^\d{3}\-\d{3,8}$/.test('cza')                     //
+/^\d{3}\-\d{3,8}$/g.exec('cza')                     // 分组，后面的g表示全局匹配。第一个元素是整个字符串，后面才是匹配到的数据
+JSON.stringify()             // 
+JSON.stringify(obj, null, ' ')  // 输出好看点
+JSON.stringify(obj, ['name', 'skills'], ' ')  // 可以指定输出，也可以传入函数处理键值对
+toJSON                       // 定义此方法后只输出对应的属性
+JSON.parse()                 // 反序列化
+Student.prototype            // 可以直接得到Student的构造函数
+class Son extends Fat { constructor(name){super(name);} hello(){alert('hello world');} }
+"""
+"""
+var Student = { name: 'cza', height: 1.5 }
+var hj = { name: 'csa' };
+hj.__proto__ = Student;  // 把hj的原型指向了对象Student，就是hj是从student继承得到的一样。构成了一个原型链 （prototype: 原型的单词）。当然这是错误的方法
+
+创建对象，使用new
+function Student (name) { this.name=name; this.hello=function () { alert('hello'+name); } }
+s = new Student('cza')
+s.constructor  // 指向函数Student本身
+xiaoming.constructor === Student.prototype.constructor; // true，Student.prototype.constructor这玩意就是指向本身嘛，没什么意义
+Student.prototype.constructor === Student; // true。原来是他们公用一个构造函数。小明和学生都共同维护一个constructor构造函数
+比如这个时候盗用s.__proto__，我们得到不是Student，而是Student的构造函数constructor，更骚的是Student的prototype也是这玩意
+其实不用想的name复杂，一个对象Student，创建实例小明，那么小明的原型对象就是Student的构造函数，而不是Student本身，他本身有一个prototype可以找到这个对象，这个对象也有constructor可以找到Student。
+用python来解释就是class Student:... 小明=Student() 创建一个实例后，小明就是Student的一个实例，Student()可以使用__class__找到原类。这里的__class__就是constructor，这个prototype就是实例化，这
+
+原型继承：用最新的class算了，以前的打扰
+class Student {
+    constructor(name) {
+        this.name = name;
+    }
+    hello() {
+        alert('cza')
+    }
+}
+class SonStudent extends Student {
+    constructor(name, grade) {
+        super(name);
+        this.grade = grade;
+    }
+    myGrade() {
+        alert('cza')
+    }
+}
+
+$(document).ready(function () {
+    // on('submit', function)也可以简化:
+    $('#testForm).submit(function () {
+        alert('submit!');
+    });
+});
+$(function () {
+    // init...
+});
+"""
 """
 JS的对象对应着python中的dict。绑定到对象上的函数称之为方法。在函数中使用this会指向当前对象，没有话会指向全局变量window
 不适用var声明变量则会变为全局变量，这样很nice呀
@@ -60,8 +129,37 @@ function test(a, b, c) {
         c = b; b = null;
     }
 }
-"""
 
+装饰器?
+var count = 0, old = parseInt;
+window.parseInt = function () { count+=1; return old.apply(null, arguments); }
+
+闭包:  怎么会这样啊，看着真是难受
+function count(init) {
+    var x = init || 0;
+    return { inc: function () { x += 1; return x; } }
+} 
+"""
+"""
+var now = new Date();
+now; // Wed Jun 24 2015 19:49:22 GMT+0800 (CST)
+now.getFullYear(); // 2015, 年份
+now.getMonth(); // 5, 月份，注意月份范围是0~11，5表示六月  对象月份值从0开始，牢记0=1月，1=2月，2=3月，……，11=12月。
+now.getDate(); // 24, 表示24号
+now.getDay(); // 3, 表示星期三
+now.getHours(); // 19, 24小时制
+now.getMinutes(); // 49, 分钟
+now.getSeconds(); // 22, 秒
+now.getMilliseconds(); // 875, 毫秒数
+now.getTime(); // 1435146562875, 以number形式表示的时间戳
+
+location.protocol; // 'http'
+location.host; // 'www.example.com'
+location.port; // '8080'
+location.pathname; // '/path/index.html'
+location.search; // '?a=1&b=2'
+location.hash; // 'TOP'
+"""
 
 
 """
@@ -119,4 +217,38 @@ legend: { // 图的说明栏，可以定义在左边或右边
 
 """
 
-
+""" 上传本地文件的方法
+var
+    fileInput = document.getElementById('test-image-file'),
+    info = document.getElementById('test-file-info'),
+    preview = document.getElementById('test-image-preview');
+// 监听change事件:
+fileInput.addEventListener('change', function () {
+    // 清除背景图片:
+    preview.style.backgroundImage = '';
+    // 检查文件是否选择:
+    if (!fileInput.value) {
+        info.innerHTML = '没有选择文件';
+        return;
+    }
+    // 获取File引用:
+    var file = fileInput.files[0];
+    // 获取File信息:
+    info.innerHTML = '文件: ' + file.name + '<br>' +
+                     '大小: ' + file.size + '<br>' +
+                     '修改: ' + file.lastModifiedDate;
+    if (file.type !== 'image/jpeg' && file.type !== 'image/png' && file.type !== 'image/gif') {
+        alert('不是有效的图片文件!');
+        return;
+    }
+    // 读取文件:
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        var
+            data = e.target.result; // 'data:image/jpeg;base64,/9j/4AAQSk...(base64编码)...'            
+        preview.style.backgroundImage = 'url(' + data + ')';
+    };
+    // 以DataURL的形式读取文件:
+    reader.readAsDataURL(file);
+});
+"""

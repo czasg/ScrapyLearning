@@ -1,6 +1,33 @@
 __file__ = 'Vue学习笔记'
 
 """
+$(function(){
+    var vm = new Vue({  // 我可能用到的应该就是一下几种了
+        el: '',
+        data: {},
+        computed: {},
+        mounted: {},
+        methods: {},
+        
+        el: '',
+        data(){ return {} },
+        computed: {},
+        mounted(){ (async () => 匿名函数执行嘛)() },
+        methods: {},
+    });
+    window.vm = vm;  // 这句话很重要
+})
+
+@keyup.enter="LOGINFunc"  // 按键监听 .up.down.left.right
+
+mounted(){
+    (async () => {
+        var location = await isLogin();
+    })()
+}
+"""
+
+"""
 过滤器函数{{ message | capitalize }}
 filters: {
     test: function (value) { return '' }
