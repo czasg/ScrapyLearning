@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>czaOrz</title>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico"/>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css"/>
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <script src="test.js"></script>
+</head>
+<body>
+
+
+<div class="container-fluid" id="TEST" @keyup.enter="saying">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">Cza<button type="button" class="close" data-dismiss="modal" aria-label="Close" id="TTTTT"><span aria-hidden="true">&times;</span></button></h4>
+        </div>
+        <div class="row">
+            <div class="col-xs-2">
+                <div class="panel-body">
+                    <ul class="media-list">
+                        <li class="media" v-for="msg in chat_msg">
+                            <div class="media-left">
+                                <a><img :src="msg.user_image" class="media-object" style="width: 20px; height: 20px;"></a>
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading"  v-text="msg.user_name"></h4>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-xs-10" style="border-left: solid 1px #3a3a3a;">
+                <div class="panel-body" style="height: 400px; overflow-x: hidden; overflow-y: scroll;">
+                    <ul class="media-list" id="chat-media-list">
+                        <li class="media" v-for="msg in chat_msg">
+                            <div v-if="msg.is_master">
+                                <div class="media-body">
+                                    <h4 class="media-heading text-right"  v-text="msg.user_name"></h4>
+                                    <div class="pull-right" style="max-width: 80%;">
+                                        <p v-text="msg.user_say "  style="margin-bottom: 0;"></p>
+                                    </div>
+                                </div>
+                                <div class="media-right">
+                                <a><img :src="msg.user_image" class="media-object" style="width: 20px; height: 20px;"></a>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div class="media-left">
+                                <a><img :src="msg.user_image" class="media-object" style="width: 20px; height: 20px;"></a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading"  v-text="msg.user_name"></h4>
+                                    <div style="max-width: 80%;">
+                                        <p v-text="msg.user_say"  style="margin-bottom: 0;"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                <div class="input-group">
+                    <input type="text" class="form-control" v-model="sayingWord">
+                    <label class="input-group-btn">
+                        <button class="btn" @click="saying">Send</button>
+                    </label>
+                </div>
+            </div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+
+
+</body>
+</html>
