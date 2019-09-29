@@ -23,22 +23,32 @@
         <div class="row">
             <div class="col-xs-2">
                 <div class="panel-body">
-                    <ul class="media-list">
-                        <li class="media" v-for="msg in chat_msg">
+                    <div class="list-group">
+                        <a v-if="users['big_home']" @click.prevent="choose_session('big_home')" class="list-group-item">
+                            <span class="badge">14</span>
                             <div class="media-left">
-                                <a><img :src="msg.user_image" class="media-object" style="width: 20px; height: 20px;"></a>
+                                <img :src="users['big_home'].user_image" class="media-object" style="width: 20px; height: 20px;">
                             </div>
                             <div class="media-body">
-                                <h4 class="media-heading"  v-text="msg.user_name"></h4>
+                                <h4 class="media-heading"  v-text="users['big_home'].user_name"></h4>
                             </div>
-                        </li>
-                    </ul>
+                        </a>
+                        <a href="" @click.prevent="choose_session(session)"  class="list-group-item" v-for="session in sessions">
+                            <span class="badge">14</span>
+                            <div class="media-left">
+                                <img :src="users[session].user_image" class="media-object" style="width: 20px; height: 20px;">
+                            </div>
+                            <div class="media-body">
+                                <h4 class="media-heading"  v-text="users[session].user_name"></h4>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="col-xs-10" style="border-left: solid 1px #3a3a3a;">
                 <div class="panel-body" style="height: 400px; overflow-x: hidden; overflow-y: scroll;">
                     <ul class="media-list" id="chat-media-list">
-                        <li class="media" v-for="msg in chat_msg">
+                        <li class="media" v-for="msg in messages[current_chat]">
                             <div v-if="msg.is_master">
                                 <div class="media-body">
                                     <h4 class="media-heading text-right"  v-text="msg.user_name"></h4>
@@ -74,12 +84,7 @@
             </div>
             </div>
         </div>
-
-
     </div>
 </div>
-
-
-
 </body>
 </html>
