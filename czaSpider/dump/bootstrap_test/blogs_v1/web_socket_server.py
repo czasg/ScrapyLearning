@@ -1,3 +1,4 @@
+import socket
 import logging
 import socketserver
 
@@ -17,19 +18,41 @@ webSocketChat.say11('asd', '1176376872007630848')
 """
 
 
+class Socket(socket.socket):
+    def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
+        super(Socket, self).__init__(family, type, proto, fileno)
+
+    def accept(self):
+        fd, addr = self._accept()
+        sock = Socket(self.family, self.type, self.proto, fileno=fd)
+        if socket.getdefaulttimeout() is None and self.gettimeout():
+            sock.setblocking(True)
+        return sock, addr
+
+
 class MyServerThreadingMixIn(socketserver.ThreadingMixIn):
     """连接开启新线程"""
 
 
 class MyServerTCPServer(socketserver.TCPServer):
 
+    def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
+        socketserver.BaseServer.__init__(self, server_address, RequestHandlerClass)
+        self.socket = Socket(self.address_family, self.socket_type)
+        if bind_and_activate:
+            try:
+                self.server_bind()
+                self.server_activate()
+            except:
+                self.server_close()
+                raise
+
     def verify_request(self, request, client_address):
         """验证是否为WebSocket升级连接"""
         try:
-            print(request)
-            print(dir(request))
-            print(request.recvfrom_into)
-            request.send(WebSocketProtocol.encode(request.recv(1024)))
+            path, key = WebSocketProtocol.encode(request.recv(1024))
+            request.send(key)
+            request.__path__ = path
         except:
             return False
         return True

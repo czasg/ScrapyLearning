@@ -6,7 +6,7 @@ from web_socket.socket_error import WebSocketProtocolError
 class ProtocolProperty:
     LOCATION = None
     MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
-    REGEX = re.compile(r'Sec-WebSocket-Key:\s*(.*?)\r\n')
+    REGEX = re.compile(r'GET\s+([^\s]+).*Sec-WebSocket-Key:\s*(.*?)\r\n', re.S)
     RESPONSE_TEMPLATE = "HTTP/1.1 101 Switching Protocols\r\n" \
                         "Upgrade:websocket\r\n" \
                         "Connection: Upgrade\r\n" \
@@ -23,18 +23,23 @@ class WebSocketProtocol(ProtocolProperty):
 
     @classmethod
     def check_header(cls, headers):
-        if 'Sec-WebSocket-Key' not in headers:
-            raise WebSocketProtocolError
-        return cls.REGEX.search(headers).group(1)
+        try:
+            path, key = cls.REGEX.search(headers).groups()
+            if all((path, key)):
+                return path, key
+        except:
+            pass
+        raise WebSocketProtocolError
 
     @classmethod
     def get_ac_str(cls, data):
-        value = cls.check_header(str(data, encoding="utf-8")) + cls.MAGIC_STRING
-        return base64.b64encode(hashlib.sha1(value.encode('utf-8')).digest()).decode('utf-8')
+        path, value = cls.check_header(str(data, encoding="utf-8"))
+        return path, base64.b64encode(hashlib.sha1((value + cls.MAGIC_STRING).encode('utf-8')).digest()).decode('utf-8')
 
     @classmethod
     def encode(cls, data):
-        return bytes(cls.RESPONSE_TEMPLATE % cls.get_ac_str(data), encoding='utf-8')
+        path, key = cls.get_ac_str(data)
+        return path, bytes(cls.RESPONSE_TEMPLATE % key, encoding='utf-8')
 
     @classmethod
     def decode(cls, data):
