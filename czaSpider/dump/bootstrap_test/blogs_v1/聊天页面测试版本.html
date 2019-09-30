@@ -34,7 +34,7 @@
                             </div>
                         </a>
                         <a href="" @click.prevent="choose_session(session)"  class="list-group-item" v-for="session in sessions">
-                            <span class="badge">14</span>
+                            <span class="badge" v-if="users[session].unreadInfo" v-text="users[session].unreadInfo"></span>
                             <div class="media-left">
                                 <img :src="users[session].user_image" class="media-object" style="width: 20px; height: 20px;">
                             </div>

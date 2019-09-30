@@ -27,29 +27,54 @@ $(function(){
             var users_info = [
                     {
                         user_image: 'static/img/user.png',
+                        user_name: 'big_home',
+                        user_say: 'hello world',
+                        is_master: false,
+                        snow_key: '1234567890',
+                        to: 'big_home',
+                    },{
+                        user_image: 'static/img/user.png',
+                        user_name: 'big_home',
+                        user_say: 'are you ok',
+                        is_master: false,
+                        snow_key: '1234567890',
+                        to: 'big_home',
+                    },{
+                        user_image: 'static/img/user.png',
+                        user_name: 'xiaoming',
+                        user_say: 'i am very ok',
+                        is_master: true,
+                        snow_key: '123456',
+                        to: '1234567890',
+                    },{
+                        user_image: 'static/img/user.png',
                         user_name: 'cza',
                         user_say: 'hello world',
                         is_master: false,
                         snow_key: '123',
                         to: '123456',
-                    },
-                    {
+                    },{
                         user_image: 'static/img/user.png',
                         user_name: 'xiaoming',
                         user_say: 'welcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChat',
                         is_master: true,
                         snow_key: '123456',
                         to: '123',
-                    },
-                    {
+                    },{
+                        user_image: 'static/img/user.png',
+                        user_name: 'xiaoming',
+                        user_say: 'welcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChatwelcome to WebChat',
+                        is_master: true,
+                        snow_key: '123456',
+                        to: '123',
+                    },{
                         user_image: 'static/img/user.png',
                         user_name: 'lihong',
                         user_say: 'This is a Test Chat',
                         is_master: false,
                         snow_key: '123123',
                         to: '123456',
-                    },
-                    {
+                    },{
                         user_image: 'static/img/user.png',
                         user_name: 'lihong',
                         user_say: 'Are You OK!',
@@ -72,6 +97,7 @@ $(function(){
                     this.messages[user_info.to].push(user_info);
                 } else {
                     this.messages[user_info.snow_key].push(user_info);
+                    this.users[user_info.snow_key].unreadInfo += 1;
                 }
             })
         },
@@ -94,6 +120,7 @@ $(function(){
             },
             choose_session: function(snow_key){
                 this.current_chat = snow_key;
+                this.users[snow_key].unreadInfo = 0;
             }
         }
     })
