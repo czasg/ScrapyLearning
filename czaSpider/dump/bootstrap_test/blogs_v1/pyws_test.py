@@ -1,7 +1,10 @@
 import json
 from pyws import Pyws
 from pyws.route import route
-
+"""
+每个开发人员应可以创建自己的数据字段
+那么我就又需要类似一种field的机制咯，这玩意该怎么写呀
+"""# todo
 
 @route('/new')
 def new(request, data):
