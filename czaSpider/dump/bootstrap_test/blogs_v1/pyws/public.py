@@ -1,3 +1,11 @@
+ERROR_FLAG = object()
+
+
+class PublicConfig:
+    DEFAULT_REPLY = "Hello WebSocket"
+    ERROR_COUNT_MAX = 10
+
+
 class AuthenticationError(Exception):
     """Cookie认证失败"""
 
@@ -16,3 +24,8 @@ class InvalidPath(Exception):
 
 class MiddlewareError(Exception):
     """中间件错误"""
+
+class DataMiddlewareAbnormal(Exception):
+    """数据"""
+class DaemonMiddlewareError(Exception):
+    """数据"""

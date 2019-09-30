@@ -1,5 +1,6 @@
 import socketserver
 import logging
+import json
 
 from socket import socket, getdefaulttimeout
 
@@ -7,18 +8,16 @@ from pyws.protocol import WebSocketProtocol, ProtocolProperty
 from pyws.route import Route
 from pyws.middlewares import mwManager
 from pyws.connector import Connector, ConnectManager
+from pyws.public import *
 
 logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(message)s")
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
-ERROR_COUNT = 4
+
 
 
 class Socket(socket):
-    """
-    这玩意是为了重写取出slots，以便拿到后序的的__path__属性
-    """
-    __slots__ = ["_io_refs", "_closed", "__route__"]
+    __slots__ = ["_io_refs", "_closed", "__route__", "ws_sock"]
 
     def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
         super(Socket, self).__init__(family, type, proto, fileno)
@@ -28,7 +27,16 @@ class Socket(socket):
         sock = Socket(self.family, self.type, self.proto, fileno=fd)
         if getdefaulttimeout() is None and self.gettimeout():
             sock.setblocking(True)
+        sock.ws_sock = sock  # 绑定目标
         return sock, addr
+
+    def ws_recv(self, bufsize: int, flags: int = ...):
+        return WebSocketProtocol.decode_msg(self.ws_sock.recv(bufsize))
+
+    def ws_send(self, data, flags: int = ...):
+        self.ws_sock.send(WebSocketProtocol
+                          .encode_msg(json.dumps(data, ensure_ascii=False)
+                                      .encode('utf-8')))
 
 
 class MyServerTCPServer(socketserver.TCPServer):
@@ -65,40 +73,37 @@ class MyServerThreadingMixIn(socketserver.ThreadingMixIn):
 
 
 class SocketHandler:
-    """这玩意就应该自己重写一个
-    用来管控从进入的所有socket
-
-    这里放置中间件，不对，中间件需要初始化的过程添加进去。，所以在前面应该还有一个初始化的过程，把配置参数，中间件，处理间都加载机那里。
-    配置参数的获取方式感觉可以参考Scrpay的setting构造，那玩意我还是没看懂，明天快乐呀，可以看看这玩意
-    """
 
     def __init__(self, request, client_address, server):
         self.request = request
         self.client_address = client_address
+        self.func = Route.get(self.request.__route__)
         try:
             self.setup()
-            self.handle()  # 在这里循环
+            self.handle()
         except:
             pass
         finally:
             self.finish()
 
-    def setup(self):  # 这里走一次性中间件的处理
-        self.conn = mwManager.daemon_process(self, self.request)  # 如果有验证，就创建一个验证的用户
+    def setup(self):
+        self.conn = mwManager.daemon_process(self, self.request)
         if not self.conn:
-            self.conn = Connector(self.request, self.client_address)  # 没有验证，就自己随机一个字串作为唯一id，不是很推荐呀
+            self.conn = Connector(self.request, self.client_address)
         ConnectManager.add_connector(self.conn.name, self.conn.client_address, self.conn)
         logger.info('Connect From %s:%s' % self.client_address)
 
     def handle(self):
         error_count = 0
-        func = Route.get(self.request.__route__)
         try:
-            while error_count < ERROR_COUNT:
-                info = mwManager.process(self.request, self.request.recv(1024), func)  # 中间件最后就返回一个这样的玩意嘛
-                if info:
-                    self.request.send(info)
-                    continue
+            while error_count < PublicConfig.ERROR_COUNT_MAX:
+                info = mwManager.process(self.request, self.request.ws_recv(1024), self.func)
+                if info is ERROR_FLAG:
+                    error_count += 1
+                elif info:
+                    self.request.ws_send(info)
+                else:
+                    error_count += 4
         except:
             pass
 

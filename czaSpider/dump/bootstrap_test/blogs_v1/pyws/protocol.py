@@ -1,6 +1,6 @@
 import base64, hashlib, struct, re
 
-from pyws.errors import WebSocketProtocolError
+from pyws.public import WebSocketProtocolError
 
 
 class ProtocolProperty:

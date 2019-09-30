@@ -30,7 +30,6 @@ class ConnectManager:
                 cls.connectors.pop(name)
             else:
                 cls.connectors[name].pop(key)
-        print(cls.connectors)
 
     @classmethod
     def add_connector(cls, name, key, value):

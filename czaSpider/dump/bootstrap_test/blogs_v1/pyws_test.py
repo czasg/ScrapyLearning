@@ -1,25 +1,34 @@
-import json
 from pyws import Pyws
 from pyws.route import route
+from pyws.public import AuthenticationError
+from pyws.middlewares import DaemonMiddleware
+import json
 """
 每个开发人员应可以创建自己的数据字段
 那么我就又需要类似一种field的机制咯，这玩意该怎么写呀
 """# todo
-
-@route('/new')
-def new(request, data):
-    print(type(data), data)
-    return data
-
 
 @route('/test')
 def test(request, data):
     print(type(data), data)
     return 'hello world'
 
+class CookieMiddleware(DaemonMiddleware):
+
+    def process_input(self, request, input_msg):
+        json_data = json.loads(input_msg)
+        if 'name' not in json_data:
+            raise AuthenticationError
+        return str(json_data['name'])
+
+@route('/test2')
+def test2(request, data):
+    import json
+    print(json.loads(data))  # todo, Cookie验证也是ok，那么就是可以多点进行接触的，怎么实现他们之间的交互呢，这是一个问题
 
 if __name__ == '__main__':
     test = Pyws(__name__)
+    test.add_middleware(CookieMiddleware)
     test.serve_forever()
 
 """
