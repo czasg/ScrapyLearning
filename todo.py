@@ -46,6 +46,7 @@ __FILE__ = "Unfinished Schedule"
 2019.09.16 - socket使用socketserver这个原生库，然后加入websocket的解析，然后使用数据局对用户的访问进行保存与读取，目前暂定redis和mongodb，这两个在同一个线程里面会不会有有危险啊
              用户名就使用雪花算法的id，mongodb库名和redis名字都想一下就行，插入什么的应该都不是问题。
 2019.09.28 - 前端使用Vue汇总一个总的绘图函数，然后加入滚动监听，感觉可以的。聊天那玩意也是一个坑
+2019.09.30 - https://blog.csdn.net/cc7756789w/article/details/45974301项目发布的方法，或许会用到呢
 """
 
 """DONE!
