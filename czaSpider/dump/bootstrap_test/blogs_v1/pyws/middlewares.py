@@ -1,7 +1,6 @@
 from collections import deque
 from collections.abc import Iterable
 
-from pyws.protocol import WebSocketProtocol
 from pyws.public import *
 from pyws.connector import Connector
 
@@ -50,6 +49,11 @@ class MiddlewareManager:
         return middle_type
 
     @classmethod
+    def _add_middleware(cls, attr, middleware):
+        getattr(cls, attr)['process_input'].append(getattr(middleware, 'process_input'))
+        getattr(cls, attr)['process_output'].appendleft(getattr(middleware, 'process_output'))
+
+    @classmethod
     def add_middleware(cls, middleware=None):
         if isinstance(middleware, type):
             middleware = middleware()
@@ -60,11 +64,6 @@ class MiddlewareManager:
             else:
                 cls.daemon_middleware_count += 1
                 cls._add_middleware('daemon_middleware', middleware)
-
-    @classmethod
-    def _add_middleware(cls, attr, middleware):
-        getattr(cls, attr)['process_input'].append(getattr(middleware, 'process_input'))
-        getattr(cls, attr)['process_output'].appendleft(getattr(middleware, 'process_output'))
 
     @classmethod
     def add_middlewares(cls, middlewares=None):
@@ -90,7 +89,6 @@ class MiddlewareManager:
             return data
         except DataMiddlewareAbnormal:
             return ERROR_FLAG
-
 
     @classmethod
     def daemon_process(cls, handler, request):

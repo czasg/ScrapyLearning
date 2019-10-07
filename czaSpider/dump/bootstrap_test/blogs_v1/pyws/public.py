@@ -25,7 +25,10 @@ class InvalidPath(Exception):
 class MiddlewareError(Exception):
     """中间件错误"""
 
+
 class DataMiddlewareAbnormal(Exception):
     """数据"""
+
+
 class DaemonMiddlewareError(Exception):
     """数据"""
