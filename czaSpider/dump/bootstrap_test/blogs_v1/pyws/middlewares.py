@@ -8,10 +8,18 @@ from pyws.connector import Connector
 class BaseMiddleware:
 
     @classmethod
-    def process_input(self, request, input_msg): return input_msg
+    def process_input(cls, request, input_msg): return input_msg
 
     @classmethod
-    def process_output(self, request, output_msg): return output_msg
+    def process_output(cls, request, output_msg): return output_msg
+
+
+class CircleMiddleware:  # todo, 可以在此处加一个在主线程就挂起的循环，不过这玩意用线程不知道怎么样，应该也还行把
+    data = None
+
+    @classmethod
+    def process_data(cls):
+        cls.data = None
 
 
 class DaemonMiddleware(BaseMiddleware):
