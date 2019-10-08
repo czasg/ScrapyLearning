@@ -21,6 +21,7 @@
         background: #F5F5F5;
         padding-top: 50px;
         padding-bottom: 70px;
+        overflow-x:hidden;
     }
     .top-hidden {
          -webkit-animation: topHidden .6s ease both;
@@ -55,6 +56,7 @@
         justify-content: center;
         text-align: center;
         color:white;
+        margin-bottom: 0;
         background-size: cover;
         background-position: center;
         box-shadow:inset 0 0 0 5px rgba(255,255,255,0.1);
@@ -145,7 +147,7 @@
 </head>
 <body>
 {% include '_config/顶部导航栏.html' %}
-<div class="container-fluid">
+<div class="container-fluid" id="INDEX-CONTAINER">
     <div class="row">
         <div class="index-top-container">
             <div class="index-top">
@@ -153,7 +155,7 @@
                     <div class="panel panel1">
                         <p>数据展示</p>
                         <p class="panel-toggle">data</p>
-                        <a href="javascript:void(0)" onclick="toBottom()"><p>enter&nbsp;</p></a>
+                        <a href="javascript:void(0)" @click="toBottom"><p>enter&nbsp;</p></a>
                     </div>
                     <div class="panel panel2">
                         <p>爬虫</p>
@@ -180,95 +182,107 @@
         </div>
         <div class="index-bottom">
             <div class="canvas-container">
+                <div id="index-canvas4"></div><br>
                 <div id="index-canvas3"></div><br>
                 <div id="index-canvas2"></div><br>
                 <div id="index-canvas1"></div>
             </div>
+            {% include '_config/底部导航栏.html' %}
         </div>
     </div>
 </div>
 <script src="https://echarts.baidu.com/examples/vendors/echarts/echarts.min.js"></script>
 <script src="/static/js/public.js"></script>
 <script>
-    function drawCanvas(id, api, api_data, text, dataZoom) {
-        const dom = document.getElementById(id);
-        const myChart = echarts.init(dom);
-        myChart.setOption({
-            title: { text: text },
-            tooltip: { trigger: 'axis' },
-            xAxis: {
-                type: 'category',
-                data: []
-            },
-            yAxis: { type: 'value' },
-            dataZoom: dataZoom,
-            series: {
-                data: [],
-                type: 'line'
-            }
-        });
-        myChart.showLoading();
-        getJSON(api, api_data, function(data){
-            myChart.hideLoading();
-            myChart.setOption({
-                xAxis: data.timeline,
-                series: data.dataSet
-            });
-        })
-    }
-    function toBottom() {
-        var
-            top_content_container = document.querySelector('.index-top-container'),
-            top_content = document.querySelector('.index-top'),
-            bottom_content = document.querySelector('.index-bottom');
-        bottom_content.style.visibility = 'visible';
-        bottom_content.style.display = 'block';
-        //bottom_content.style.width = '300px';
-        top_content_container.classList.toggle('top-hidden');
-        bottom_content.classList.toggle('bottom-show');
-        function recoverBodyToAuto() { document.body.style.overflow = 'auto'; };
-        bottom_content.addEventListener('animationend', recoverBodyToAuto);
-    }
-    function toggleOpen() {
-        this.parentElement.classList.toggle('open');
-    }
-    function toggleOenActive(e) {
-        if (e.propertyName.includes('flex')) {
-            this.classList.toggle('open-active');
+    $(function(){
+        function toggleOpen() {
+            this.parentElement.classList.toggle('open');
         }
-    }
-    const
-        panels_toggle = document.querySelectorAll('.panel-toggle'),
-        panels = document.querySelectorAll('.panel'),
-        ajax_data_f = [
-            {'housePrice': 'ziru'},
-            {'job': 'boss'},
-            {'zufang': 'fangtx'}
-        ],
-        ajax_data = {
-            dbNames_and_collectionNames: JSON.stringify(ajax_data_f),
-            limit: 15
-        },
-        dataZoom = [
-            {
-                show: true,
-                realtime: true,
-                start: 25,
-                end: 100
-            },
-            {
-                type: 'inside',
-                realtime: true,
-                start: 5,
-                end: 95
+        function toggleOenActive(e) {
+            if (e.propertyName.includes('flex')) {
+                this.classList.toggle('open-active');
             }
-        ];
-    panels_toggle.forEach(panel => panel.addEventListener('click', toggleOpen));
-    panels.forEach(panel => panel.addEventListener('transitionend', toggleOenActive));
-    drawCanvas('index-canvas1', '/api/get/blogs/statistic', {}, '补给站', []);
-    drawCanvas('index-canvas2', '/api/get/multi/statistic', ajax_data, '在线爬虫', dataZoom);
-    drawCanvas('index-canvas3', '/api/get/multi/statistic/github_info', {}, 'github-commits', []);
-    gotoTop('.container-fluid', 600);
+        }
+        new Vue({
+            el: '#INDEX-CONTAINER',
+            mounted(){
+                const
+                    panels_toggle = document.querySelectorAll('.panel-toggle'),
+                    panels = document.querySelectorAll('.panel'),
+                    ajax_data_f = [
+                        {'housePrice': 'ziru'},
+                        {'job': 'boss'},
+                        {'zufang': 'fangtx'}
+                    ],
+                    ajax_data = {
+                        dbNames_and_collectionNames: JSON.stringify(ajax_data_f),
+                        limit: 15
+                    },
+                    dataZoom = [
+                        {
+                            show: true,
+                            realtime: true,
+                            start: 25,
+                            end: 100
+                        },
+                        {
+                            type: 'inside',
+                            realtime: true,
+                            start: 5,
+                            end: 95
+                        }
+                    ];
+                panels_toggle.forEach(panel => panel.addEventListener('click', toggleOpen));
+                panels.forEach(panel => panel.addEventListener('transitionend', toggleOenActive));
+                gotoTop('.container-fluid', 300);
+                this.drawCanvas('index-canvas1', '/api/get/blogs/statistic', {}, '补给站', []);
+                this.drawCanvas('index-canvas2', '/api/get/multi/statistic', ajax_data, '在线爬虫', dataZoom);
+                this.drawCanvas('index-canvas3', '/api/get/multi/statistic/github_info', {}, 'github-commits', []);
+                this.drawCanvas('index-canvas4', '/api/get/multi/statistic/github_info', {}, 'github-commits', []);
+            },
+            methods: {
+                drawCanvas: function(id, api, api_data, text, dataZoom) {
+                    const dom = document.getElementById(id);
+                    const myChart = echarts.init(dom);
+                    myChart.setOption({
+                        title: { text: text },
+                        tooltip: { trigger: 'axis' },
+                        xAxis: {
+                            type: 'category',
+                            data: []
+                        },
+                        yAxis: { type: 'value' },
+                        dataZoom: dataZoom,
+                        series: {
+                            data: [],
+                            type: 'line'
+                        }
+                    });
+                    myChart.showLoading();
+                    getJSON(api, api_data, function(data){
+                        myChart.hideLoading();
+                        myChart.setOption({
+                            xAxis: data.timeline,
+                            series: data.dataSet
+                        });
+                    })
+                },
+                toBottom: function(){
+                    var
+                        top_content_container = document.querySelector('.index-top-container'),
+                        top_content = document.querySelector('.index-top'),
+                        bottom_content = document.querySelector('.index-bottom');
+                    bottom_content.style.visibility = 'visible';
+                    bottom_content.style.display = 'block';
+                    top_content_container.classList.toggle('top-hidden');
+                    bottom_content.classList.toggle('bottom-show');
+                    function recoverBodyToAuto() { document.body.style.overflow = 'auto'; };
+                    bottom_content.addEventListener('animationend', recoverBodyToAuto);
+                }
+            }
+        })
+    })
+
 </script>
 </body>
 </html>

@@ -1,42 +1,3 @@
-<!--<style>-->
-<!--.chatSidebar,-->
-<!--.chatMain { height: 100%; }-->
-<!--.chatSidebar {-->
-    <!--float: left;-->
-    <!--width: 200px;-->
-    <!--color: #f4f4f4;-->
-    <!--background-color: #2e3238;-->
-<!--}-->
-<!--.chatMain {-->
-    <!--position: relative;-->
-    <!--overflow: hidden;-->
-    <!--background-color: #eee;-->
-    <!--height: 100%;-->
-<!--}-->
-<!--.chatSidebar-card {-->
-    <!--padding: 12px;-->
-    <!--border-bottom: solid 1px #24272C;-->
-<!--}-->
-<!--.chatSidebar-card-img {-->
-    <!--margin: 0 10px 0 0;-->
-    <!--border-radius: 3px;-->
-<!--}-->
-<!--.chatSidebar-card-name {-->
-    <!--display: inline-block;-->
-    <!--margin: 0 0 0 15px;-->
-    <!--vertical-align: middle;-->
-    <!--font-size: 16px;-->
-<!--}-->
-<!--.chatMain-TaskName {-->
-    <!--font-size: 15px;-->
-    <!--padding: 15px 0;-->
-    <!--padding-left: 20px;-->
-    <!--box-sizing: border-box;-->
-    <!--background-color: #fdfdfd;-->
-    <!--border-bottom: 1px solid #dcdcdc;-->
-<!--}-->
-<!--</style>-->
-
 <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -60,10 +21,10 @@
 
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="" class="dropdown-toggle btn btn-info" id="NAV-TOP-MENU" data-toggle="dropdown"
+                    <a href="" class="dropdown-toggle btn" id="NAV-TOP-MENU" data-toggle="dropdown"
                        role="button"
                        aria-expanded="false" aria-haspopup="true"><span class="glyphicon glyphicon-th-list"
-                                                                        aria-hidden="true">&nbsp;</span></a>
+                                                                        aria-hidden="true"></span></a>
                     <ul class="dropdown-menu">
                         {% if __user__ %}
                         {% if __user__.admin %}
@@ -87,17 +48,17 @@
                     </ul>
                 </li>
             </ul>
+            {% if __user__ %}
             <form class="navbar-form navbar-right" style="outline: none">
                 <a type="button" class="btn btn-info" data-toggle="modal" data-target="#WebSocket-Chat">
                     <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                    {% if __user__ %}
                     <span class="badge" id="UNREAD-MSG" v-if="msg" v-text="msg"></span>
-                    {% endif %}
                 </a>
                 <a type="button" class="btn btn-info" data-toggle="modal" data-target="#WebSocket-Chat">
                     <span class="glyphicon glyphicon-share" aria-hidden="true"></span>
                 </a>
             </form>
+            {% endif %}
         </div>
     </div>
 </nav>
@@ -174,44 +135,37 @@
 </div>
 <div id="WebSocket-Chat-Container">
     <div class="modal fade" id="WebSocket-Chat" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document" style="width: 900px;">
-        <div class="modal-content">
-            <div style="height: 600px;">
-                <div class="chatSidebar">
-                    <div class="chatSidebar-card">
-                        <img src="/static/img/user.png" class="chatSidebar-card-img" style="height:40px; width: 40px;">
-                        <p class="chatSidebar-card-name">陈子昂</p>
+        <div class="modal-dialog" role="document" style="width: 900px;">
+            <div class="modal-content">
+                <div style="height: 600px;">
+                    <div class="chatSidebar">
+                        <div class="chatSidebar-card">
+                            <img src="/static/img/user.png" class="chatSidebar-card-img" style="height:40px; width: 40px;">
+                            <p class="chatSidebar-card-name">陈子昂</p>
+                        </div>
+                        <div class="chatSidebar-list"></div>
                     </div>
-                    <div class="chatSidebar-list"></div>
-                </div>
-                <div class="chatMain">
-                    <!--<div class="chatMain-TaskName" v-text="'Big Home' + '   当前在线人数:' + online"></div>-->
-                    <div class="chatMain-TaskName" v-html="'<h5>'+'Big Home' + '   当前在线人数:' + online+'<span class=close>&times;</span></h5>'"></div>
-                    <div class="chatMain-Message">
-                        <ul>
-                            <li v-for="msg in msgList">
-                                <p v-text="msg.content"></p>
-                            </li>
-                        </ul>
+                    <div class="chatMain">
+                        <div class="chatMain-TaskName" v-html="'<h5>'+'Big Home' + '   当前在线人数:' + online+'<span class=close>&times;</span></h5>'"></div>
+                        <div class="chatMain-Message">
+                            <ul>
+                                <li v-for="msg in msgList">
+                                    <p v-text="msg.content"></p>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="chatMain-Text"></div>
                     </div>
-                    <div class="chatMain-Text"></div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 </div>
 <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
 <script src="/static/js/sha1.min.js"></script>
 <script>
-    //$(document).ready(function(){
-    //    var dynamicNav = $('#NAV-TOP-MENU');
-    //    dynamicNav.click(function(){
-    //        $('.flag1').toggle(300);
-    //    })
-    //})
     $(function(){
         login_object = new Vue({
             el: '#LOGIN-IN',

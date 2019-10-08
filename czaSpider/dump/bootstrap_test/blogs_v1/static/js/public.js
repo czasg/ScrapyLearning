@@ -4,6 +4,12 @@ if (! String.prototype.trim) {
     };
 }
 
+if (! String.prototype.limit) {
+    String.prototype.limit = function() {
+        return this.replace(/<.*?>/g, '').substring(0, 100);
+    };
+}
+
 if (! Number.prototype.toDateTime) {
     var replaces = {
         'yyyy': function(dt) {

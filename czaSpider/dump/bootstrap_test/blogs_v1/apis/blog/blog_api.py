@@ -16,7 +16,7 @@ async def api_get_blogs(request, *, page='1', page_size=None, user_id=None):
     p = Pager(num, page_index, get_page_size(page_size)) if page_size else Pager(num, page_index)
     if num == 0:
         return dict(page=0, blogs=())
-    if request.__user__.admin:
+    if request.__user__ and request.__user__.admin:
         blogs = await Blog.findAll(orderBy='created_at desc', limit=(p.offset, p.limit))
     elif user_id:
         blogs = await Blog.findAll('user_id=?', [user_id], orderBy='created_at desc', limit=(p.offset, p.limit))
