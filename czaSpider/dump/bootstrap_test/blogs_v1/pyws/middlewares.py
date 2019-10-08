@@ -25,22 +25,21 @@ class BaseMiddleware:
 
 
 class RadioMiddleware(BaseMiddleware):
-    """广播中间件"""
+    """广播中间件，从此处继承，并重写process_data方法"""
+
+    @classmethod
+    def process_data(cls): raise MiddlewareError
 
 
 class DaemonMiddleware(BaseMiddleware):
-    """在整个流程中有一次起作用"""
+    """在新连接建立后仅起一次作用"""
 
 
 class DataMiddleware(BaseMiddleware):
-    """数据流程执行的中间件"""
+    """在新连接建立后，每次数据交互时均起作用"""
 
 
 class MiddlewareManager:
-    """
-    这个中间件的输入，首先会被第一道中间件给处理，以便获取最初的数据
-    最后处理的是也是这个中间件，会将数据润色，能够直接send出去的那种
-    """
     radio_middleware = []
     daemon_middleware = {
         'process_input': deque(),
@@ -107,7 +106,7 @@ class MiddlewareManager:
             for process_output in cls.data_middleware['process_output']:
                 data = process_output(request, data)
             return data
-        except DataMiddlewareAbnormal:
+        except MiddlewareError:
             return ERROR_FLAG
 
     @classmethod

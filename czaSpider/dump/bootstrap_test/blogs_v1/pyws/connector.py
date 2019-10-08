@@ -1,6 +1,10 @@
+import logging
+
 from collections import defaultdict
 
 from pyws.snow_key import id_pool
+
+logger = logging.getLogger(__name__)
 
 
 class Connector:
@@ -46,6 +50,17 @@ class ConnectManager:
     @classmethod
     def group_exist_key(cls, name, key):
         return key in cls.groups[name]
+
+    @classmethod
+    def send_to_connector(cls, name, msg):
+        try:
+            for connectors in cls.connectors[name]:
+                for connector in connectors.values():
+                    connector.ws_send(msg)
+            logger.info('发送成功')
+            return 1
+        except:
+            return 0
 
     @classmethod
     def next_user(cls):

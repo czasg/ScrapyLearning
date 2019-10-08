@@ -1,10 +1,8 @@
 import socketserver
-import selectors
 import logging
 import json
 
 from socket import socket, getdefaulttimeout
-from socketserver import _ServerSelector
 
 from pyws.protocol import WebSocketProtocol, ProtocolProperty
 from pyws.route import Route
@@ -14,7 +12,6 @@ from pyws.public import *
 
 logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(message)s")
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
 
 
 class WsSocket(socket):
@@ -28,7 +25,7 @@ class WsSocket(socket):
         sock = WsSocket(self.family, self.type, self.proto, fileno=fd)
         if getdefaulttimeout() is None and self.gettimeout():
             sock.setblocking(True)
-        sock.ws_sock = sock  # 绑定目标
+        sock.ws_sock = sock
         return sock, addr
 
     def ws_recv(self, bufsize: int, flags: int = ...):
@@ -59,7 +56,6 @@ class MyServerTCPServer(socketserver.TCPServer):
         super(MyServerTCPServer, self).serve_forever(poll_interval)
 
     def verify_request(self, request, client_address):
-        """验证是否为WebSocket升级连接"""
         try:
             path, key = WebSocketProtocol.parsing(request.recv(1024))
             if path in Route.routes:
@@ -72,10 +68,7 @@ class MyServerTCPServer(socketserver.TCPServer):
 
 
 class MyServerThreadingMixIn(socketserver.ThreadingMixIn):
-    """连接开启新线程
-    process_request函数是入口，开启一个线程进行后序的处理
-    就是开启一个新的线程然后使用Handler去处理相关的数据
-    """
+    """开启新线程处理socket"""
 
 
 class SocketHandler:
@@ -122,17 +115,15 @@ class SocketHandler:
 
 
 class Pyws(MyServerThreadingMixIn, MyServerTCPServer):
-    """
-    路径加载完了
-    中间件也加载完了
-    """
 
     def __init__(self,
                  routes_module,
                  address='127.0.0.1', port=8866,
                  RequestHandlerClass=SocketHandler,
                  request_queue_size=5,
-                 middleware=None):
+                 middleware=None,
+                 logging_level=logging.INFO):
+        logger.setLevel(logging_level)
         logger.info('Server Start ...')
         logger.info('Server Address is %s:%d' % (address, port))
         server_address = (address, port)
