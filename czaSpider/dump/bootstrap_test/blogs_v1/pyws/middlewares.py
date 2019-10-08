@@ -1,11 +1,21 @@
+import threading
+import logging
+import time
+
 from collections import deque
 from collections.abc import Iterable
 
 from pyws.public import *
-from pyws.connector import Connector
+from pyws.connector import Connector, ConnectManager
+from pyws.public import PublicConfig
+
+logger = logging.getLogger(__name__)
 
 
 class BaseMiddleware:
+
+    @classmethod
+    def process_data(cls): ...
 
     @classmethod
     def process_input(cls, request, input_msg): return input_msg
@@ -14,12 +24,8 @@ class BaseMiddleware:
     def process_output(cls, request, output_msg): return output_msg
 
 
-class CircleMiddleware:  # todo, 可以在此处加一个在主线程就挂起的循环，不过这玩意用线程不知道怎么样，应该也还行把
-    data = None
-
-    @classmethod
-    def process_data(cls):
-        cls.data = None
+class RadioMiddleware(BaseMiddleware):
+    """广播中间件"""
 
 
 class DaemonMiddleware(BaseMiddleware):
@@ -35,6 +41,7 @@ class MiddlewareManager:
     这个中间件的输入，首先会被第一道中间件给处理，以便获取最初的数据
     最后处理的是也是这个中间件，会将数据润色，能够直接send出去的那种
     """
+    radio_middleware = []
     daemon_middleware = {
         'process_input': deque(),
         'process_output': deque(),
@@ -52,6 +59,8 @@ class MiddlewareManager:
             middle_type = 0
         elif isinstance(middleware, DataMiddleware):
             middle_type = 1
+        elif isinstance(middleware, RadioMiddleware):
+            middle_type = 2
         else:
             raise MiddlewareError
         return middle_type
@@ -65,13 +74,15 @@ class MiddlewareManager:
     def add_middleware(cls, middleware=None):
         if isinstance(middleware, type):
             middleware = middleware()
-        if middleware:
-            if cls.check_base(middleware):
-                cls.data_middleware_count += 1
-                cls._add_middleware('data_middleware', middleware)
-            else:
-                cls.daemon_middleware_count += 1
-                cls._add_middleware('daemon_middleware', middleware)
+        middleware_type = cls.check_base(middleware)
+        if not middleware_type:
+            cls.daemon_middleware_count += 1
+            cls._add_middleware('daemon_middleware', middleware)
+        elif middleware_type is 1:
+            cls.data_middleware_count += 1
+            cls._add_middleware('data_middleware', middleware)
+        elif middleware_type is 2:
+            cls.radio_middleware.append(getattr(middleware, 'process_data'))
 
     @classmethod
     def add_middlewares(cls, middlewares=None):
@@ -81,10 +92,11 @@ class MiddlewareManager:
 
     @classmethod
     def auto_add(cls, middle):
-        if isinstance(middle, Iterable):
-            cls.add_middlewares(middle)
-        else:
-            cls.add_middleware(middle)
+        if middle:
+            if isinstance(middle, Iterable):
+                cls.add_middlewares(middle)
+            else:
+                cls.add_middleware(middle)
 
     @classmethod
     def process(cls, request, data, func=None):
@@ -111,10 +123,27 @@ class MiddlewareManager:
         except:
             raise AuthenticationError
 
+    @classmethod
+    def radio_process(cls):
+        t = threading.Thread(target=cls._process_radio)
+        t.daemon = True
+        logger.info('开启广播模式')
+        t.start()
+
+    @classmethod
+    def _process_radio(cls):
+        while True:
+            logger.info('广播轮询中...')
+            for middleware_func in cls.radio_middleware:
+                data = middleware_func()
+                if not data:
+                    continue
+                for user in ConnectManager.next_user():
+                    try:
+                        user.ws_send(data)
+                    except:
+                        continue
+            time.sleep(PublicConfig.RADIO_TIME)
+
 
 mwManager = MiddlewareManager()
-
-if __name__ == '__main__':
-    mwManager.auto_add(DaemonMiddleware)
-    print(mwManager.daemon_middleware_count)
-    print(mwManager.data_middleware_count)

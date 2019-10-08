@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from pyws.idgen import id_pool
+from pyws.snow_key import id_pool
 
 
 class Connector:
@@ -46,3 +46,8 @@ class ConnectManager:
     @classmethod
     def group_exist_key(cls, name, key):
         return key in cls.groups[name]
+
+    @classmethod
+    def next_user(cls):
+        yield from (connector for connectors in cls.connectors.values()
+                    for connector in connectors.values())

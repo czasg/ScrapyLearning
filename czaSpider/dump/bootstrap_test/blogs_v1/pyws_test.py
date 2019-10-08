@@ -1,7 +1,7 @@
 from pyws import Pyws
 from pyws.route import route
 from pyws.public import AuthenticationError
-from pyws.middlewares import DaemonMiddleware
+from pyws.middlewares import DaemonMiddleware, RadioMiddleware
 import json
 """
 每个开发人员应可以创建自己的数据字段
@@ -20,7 +20,9 @@ class CookieMiddleware(DaemonMiddleware):
         if 'name' not in json_data:
             raise AuthenticationError
         return str(json_data['name'])
-
+class Radio(RadioMiddleware):
+    def process_data(cls):
+        return None
 @route('/test2')
 def test2(request, data):
     import json
@@ -28,7 +30,7 @@ def test2(request, data):
 
 if __name__ == '__main__':
     test = Pyws(__name__)
-    test.add_middleware(CookieMiddleware)
+    # test.add_middleware([CookieMiddleware, Radio])
     test.serve_forever()
 
 """

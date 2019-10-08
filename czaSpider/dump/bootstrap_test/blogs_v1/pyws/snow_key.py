@@ -4,7 +4,7 @@ import time
 def get_current_timestamp(): return int(time.time() * 1000)
 
 
-class IdGen:
+class SnowKey:
     def __init__(self, workerId, datacenterId):
         self.workerId = workerId
         self.datacenterId = datacenterId
@@ -46,4 +46,4 @@ class IdGen:
         return next_timestamp
 
 
-id_pool = IdGen.from_node()
+id_pool = SnowKey.from_node()

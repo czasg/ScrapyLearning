@@ -4,6 +4,7 @@ ERROR_FLAG = object()
 class PublicConfig:
     DEFAULT_REPLY = "Hello WebSocket"
     ERROR_COUNT_MAX = 10
+    RADIO_TIME = 10
 
 
 class AuthenticationError(Exception):

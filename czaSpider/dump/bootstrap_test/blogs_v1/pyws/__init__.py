@@ -1,8 +1,10 @@
 import socketserver
+import selectors
 import logging
 import json
 
 from socket import socket, getdefaulttimeout
+from socketserver import _ServerSelector
 
 from pyws.protocol import WebSocketProtocol, ProtocolProperty
 from pyws.route import Route
@@ -15,16 +17,15 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 
-
-class Socket(socket):
+class WsSocket(socket):
     __slots__ = ["_io_refs", "_closed", "__route__", "ws_sock"]
 
     def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
-        super(Socket, self).__init__(family, type, proto, fileno)
+        super(WsSocket, self).__init__(family, type, proto, fileno)
 
     def accept(self):
         fd, addr = self._accept()
-        sock = Socket(self.family, self.type, self.proto, fileno=fd)
+        sock = WsSocket(self.family, self.type, self.proto, fileno=fd)
         if getdefaulttimeout() is None and self.gettimeout():
             sock.setblocking(True)
         sock.ws_sock = sock  # 绑定目标
@@ -43,7 +44,7 @@ class MyServerTCPServer(socketserver.TCPServer):
 
     def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True):
         socketserver.BaseServer.__init__(self, server_address, RequestHandlerClass)
-        self.socket = Socket(self.address_family, self.socket_type)
+        self.socket = WsSocket(self.address_family, self.socket_type)
         if bind_and_activate:
             try:
                 self.server_bind()
@@ -51,6 +52,11 @@ class MyServerTCPServer(socketserver.TCPServer):
             except:
                 self.server_close()
                 raise
+
+    def serve_forever(self, poll_interval=0.5):
+        if mwManager.radio_middleware:
+            mwManager.radio_process()
+        super(MyServerTCPServer, self).serve_forever(poll_interval)
 
     def verify_request(self, request, client_address):
         """验证是否为WebSocket升级连接"""
