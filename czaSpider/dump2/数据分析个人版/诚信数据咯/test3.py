@@ -80,13 +80,7 @@ abandoned_tasks_4_value = {}
 for spiderName, spider_task in event_name_value.items():
     if spiderName in abandoned_tasks_4_keys:
         abandoned_tasks_4_value[spiderName] = spider_task
-print(abandoned_tasks_3)
-print(abandoned_tasks_4)
-
 abandoned_tasks_4 = sorted(abandoned_tasks_4.values(), key=lambda x: x[1])
 print(abandoned_tasks_4)
-from datetime import datetime
-a = datetime.fromtimestamp(1570583426).month
-b = datetime.fromtimestamp(1570583452).year
-print(a<b)
-print(datetime(b,a,1).timestamp())
+import matplotlib
+print(matplotlib.matplotlib_fname())
