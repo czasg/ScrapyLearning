@@ -20,6 +20,7 @@ __FILE__ = "Unfinished Schedule"
 2019.09.30 - https://blog.csdn.net/cc7756789w/article/details/45974301项目发布的方法，或许会用到呢
 2019.10.08 - blog是逐渐的在完善，但是还是差了太多，让人难受，希望可以坚持下去。慢慢来，别慌
 2019.10.08 - 今天还算不错。框架子基本上是搭建出来了。明天把相关数据给填进去就差不多了。这里会设计到后端的接口，有点烦人。
+2019.10.09 - pip install graphviz 画流程图还挺不错的，很nice很棒
 """
 
 """DONE!
@@ -189,6 +190,7 @@ js转化平台          http://tool.oschina.net/codeformat/js
 百度AI开放平台      https://ai.baidu.com/docs#/Face-Detect-V3/top
 JS                  https://github.com/SUNNERCMS/30daysJavascript
 17素材网            https://www.17sucai.com/
+JS前端              https://github.com/phodal/sherlock
 
 """
 
