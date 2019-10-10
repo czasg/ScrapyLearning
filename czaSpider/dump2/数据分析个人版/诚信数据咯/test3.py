@@ -1,5 +1,5 @@
 import json, numpy as np
-from collections import defaultdict
+from collections import defaultdict, OrderedDict
 tasks = ("诚信数据",)
 demand_states = {'任务已分发', '驳回运维意见', '待处理'}
 developer_states = {'初爬通过', '正在开发', '自查完成', '正在下载源码', '正在修改', '代码完成',
@@ -81,11 +81,57 @@ for spiderName, spider_task in event_name_value.items():
     if spiderName in abandoned_tasks_4_keys:
         abandoned_tasks_4_value[spiderName] = spider_task
 abandoned_tasks_4 = sorted(abandoned_tasks_4.values(), key=lambda x: x[1])
-print(abandoned_tasks_4)
-import matplotlib
-print(matplotlib.matplotlib_fname())
-print(np.array([[0,0, 0],[0,0,0]]).shape)
-# print(storage_tasks)
+# print(abandoned_tasks_4)
+# import matplotlib
+# print(matplotlib.matplotlib_fname())
+# print(np.array([[0,0, 0],[0,0,0]]).shape)
 
+life_time = {}
+for spiderName, spider_task in abandoned_tasks_2.items():  # 遍历每一个爬虫
+    start_time = None  #
+    first = None  #
+    last = None  #
+    total_times = 0  # 这个应该是用时间算出来的
+    abnormal_times = None  #
+    life_time_statistics = dict()
+    for task in spider_task:  # 遍历所有的任务。
+        if first and task['rwzt'] in operations_states:
+            life_time_statistics.setdefault('last_time', task['time'])
+            life_time_statistics['abnormal_times'] = life_time_statistics.get('abnormal_times', 0) + 1
+            continue
+        if start_time and task['rwzt'] in operations_states:
+            first = True
+            life_time_statistics.setdefault('first_time', task['time'])
+            life_time_statistics.setdefault('last_time', task['time'])
+            life_time_statistics['abnormal_times'] = life_time_statistics.get('abnormal_times', 0) + 1
+        if task['rwzt'] in complete_states:
+            start_time = True
+            life_time_statistics.setdefault('start_time', task['time'])  # 记录第一次的时间
+    if not life_time_statistics.get('first_time'):
+        continue
+    life_time_statistics['total_times'] = ((life_time_statistics['last_time'] - life_time_statistics['start_time']) // 2592000) or 1
+    if life_time_statistics['total_times'] >= life_time_statistics['abnormal_times']:
+        life_time.setdefault(spiderName, life_time_statistics)
+# print(life_time)
 
-
+from datetime import datetime
+abnormal_analysis = {}
+for spiderName, spider_task in storage_tasks.items():  # 遍历每一个爬虫
+    start_time = None
+    _abnormal_analysis = {}
+    time_format = '%d年%d月'
+    for task in spider_task:  # 遍历所有的任务。
+        if not start_time and task['rwzt'] in complete_states:
+            start_time = task['time']  # 拿到了开始时间，到最后一次结束，自动补全
+            continue
+        if start_time:
+            current_time = datetime.fromtimestamp(task['time'])
+            current_year = current_time.year
+            current_month = current_time.month
+            current = time_format % (current_year, current_month)
+            if task['rwzt'] in operations_states:
+                _abnormal_analysis[current] = 1
+            _abnormal_analysis.setdefault(current, 0)
+    if _abnormal_analysis:
+        abnormal_analysis.setdefault(spiderName, _abnormal_analysis)
+print(abnormal_analysis)
