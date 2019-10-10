@@ -84,3 +84,5 @@ abandoned_tasks_4 = sorted(abandoned_tasks_4.values(), key=lambda x: x[1])
 print(abandoned_tasks_4)
 import matplotlib
 print(matplotlib.matplotlib_fname())
+print(np.array([[0,0, 0],[0,0,0]]).shape)
+
