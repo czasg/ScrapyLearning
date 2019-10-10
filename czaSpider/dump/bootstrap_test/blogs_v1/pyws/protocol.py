@@ -4,19 +4,12 @@ from pyws.public import WebSocketProtocolError
 
 
 class ProtocolProperty:
-    LOCATION = None
     MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
     REGEX = re.compile(r'GET\s+([^\s]+).*Sec-WebSocket-Key:\s*(.*?)\r\n', re.S)
     RESPONSE_TEMPLATE = "HTTP/1.1 101 Switching Protocols\r\n" \
                         "Upgrade:websocket\r\n" \
                         "Connection: Upgrade\r\n" \
-                        "Sec-WebSocket-Accept: %s\r\n" \
-                        "WebSocket-Location: ws://{location}\r\n\r\n"
-
-    @classmethod
-    def set_location(cls, location):
-        cls.LOCATION = '%s:%s/' % location
-        cls.RESPONSE_TEMPLATE = cls.RESPONSE_TEMPLATE.format(location=cls.LOCATION)
+                        "Sec-WebSocket-Accept: %s\r\n\r\n"
 
 
 class WebSocketProtocol(ProtocolProperty):
@@ -39,7 +32,7 @@ class WebSocketProtocol(ProtocolProperty):
     @classmethod
     def parsing(cls, data):
         path, key = cls.get_ac_str(data)
-        return path.strip('/').replace('/', '_'), bytes(cls.RESPONSE_TEMPLATE % key, encoding='utf-8')
+        return path, bytes(cls.RESPONSE_TEMPLATE % key, encoding='utf-8')
 
     @classmethod
     def decode_msg(cls, data):
@@ -58,9 +51,9 @@ class WebSocketProtocol(ProtocolProperty):
     @classmethod
     def encode_msg(cls, msg_bytes, token=b"\x81"):
         length = len(msg_bytes)
-        if length < 0b1111110:
+        if length <= 125:
             token += struct.pack("B", length)
-        elif length <= 0xFFFF:
+        elif length <= 65535:
             token += struct.pack("!BH", 126, length)
         else:
             token += struct.pack("!BQ", 127, length)

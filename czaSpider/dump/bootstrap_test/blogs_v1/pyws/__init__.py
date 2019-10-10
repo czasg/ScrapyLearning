@@ -15,26 +15,23 @@ logger = logging.getLogger(__name__)
 
 
 class WsSocket(socket):
-    __slots__ = ["_io_refs", "_closed", "__route__", "ws_sock"]
+    __slots__ = ["_io_refs", "_closed", "__route__"]
 
     def __init__(self, family=-1, type=-1, proto=-1, fileno=None):
         super(WsSocket, self).__init__(family, type, proto, fileno)
 
     def accept(self):
         fd, addr = self._accept()
-        sock = WsSocket(self.family, self.type, self.proto, fileno=fd)
+        sock = WsSocket(self.family, self.type, self.proto, fileno=fd)  # 修改此处
         if getdefaulttimeout() is None and self.gettimeout():
             sock.setblocking(True)
-        sock.ws_sock = sock
         return sock, addr
 
     def ws_recv(self, bufsize: int, flags: int = ...):
-        return WebSocketProtocol.decode_msg(self.ws_sock.recv(bufsize))
+        return WebSocketProtocol.decode_msg(self.recv(bufsize))
 
     def ws_send(self, data, flags: int = ...):
-        self.ws_sock.send(WebSocketProtocol
-                          .encode_msg(json.dumps(data, ensure_ascii=False)
-                                      .encode('utf-8')))
+        self.send(WebSocketProtocol.encode_msg(json.dumps(data, ensure_ascii=False).encode('utf-8')))
 
 
 class MyServerTCPServer(socketserver.TCPServer):
@@ -127,7 +124,6 @@ class Pyws(MyServerThreadingMixIn, MyServerTCPServer):
         logger.info('Server Start ...')
         logger.info('Server Address is %s:%d' % (address, port))
         server_address = (address, port)
-        ProtocolProperty.set_location(server_address)
         self.add_routes(routes_module)
         self.add_middleware(middleware)
         self.request_queue_size = request_queue_size

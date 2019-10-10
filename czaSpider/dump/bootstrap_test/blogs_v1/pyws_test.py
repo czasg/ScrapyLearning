@@ -11,10 +11,13 @@ import json
 
 
 @route('/test')
-def test(request, data):
+def test_gagagagagagagag(request, data):
     print(type(data), data)
     return 'hello world'  # 这里的return是直接返回给自己本身的，但是怎么与别人交互呢，这是一个大问题。
-
+@route('/')
+def index_geigei(request, data):
+    print(type(data), data)
+    return 'hello world'
 
 # class CookieMiddleware(DaemonMiddleware):
 #

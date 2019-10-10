@@ -33,7 +33,7 @@ class Route:
             func = getattr(mod, attr)
             path = getattr(func, '__route__', None)
             if path and callable(func):
-                cls.routes.setdefault(path.strip('/').replace('/', '_'), func)
+                cls.routes.setdefault(path, func)
 
     @classmethod
     def get(cls, path):
