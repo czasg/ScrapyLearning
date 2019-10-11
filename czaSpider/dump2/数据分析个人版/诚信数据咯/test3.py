@@ -1,4 +1,4 @@
-import json, numpy as np
+import json, numpy as np, re, time
 from collections import defaultdict, OrderedDict
 tasks = ("诚信数据",)
 demand_states = {'任务已分发', '驳回运维意见', '待处理'}
@@ -23,6 +23,7 @@ def merge_data(*args):
         sta.append(len(data))
     return res, sta
 fina, stat = merge_data(*[data for data in get_data(*tasks)])
+print(stat)
 stat = dict(zip(tasks, stat))  # todo {'诚信数据': 25024}  这表示记录
 def get_spider_tasks(data_list, dupefilter=()):
     spider_tasks = defaultdict(list)
@@ -86,7 +87,7 @@ abandoned_tasks_4 = sorted(abandoned_tasks_4.values(), key=lambda x: x[1])
 # print(matplotlib.matplotlib_fname())
 # print(np.array([[0,0, 0],[0,0,0]]).shape)
 
-life_time = {}
+life_time = {}  # todo 这是一个总统计图，很不错
 for spiderName, spider_task in abandoned_tasks_2.items():  # 遍历每一个爬虫
     start_time = None  #
     first = None  #
@@ -109,29 +110,215 @@ for spiderName, spider_task in abandoned_tasks_2.items():  # 遍历每一个爬�
             life_time_statistics.setdefault('start_time', task['time'])  # 记录第一次的时间
     if not life_time_statistics.get('first_time'):
         continue
-    life_time_statistics['total_times'] = ((life_time_statistics['last_time'] - life_time_statistics['start_time']) // 2592000) or 1
+    if spiderName in abandoned_tasks_3:
+        life_time_statistics['total_times'] = ((life_time_statistics['last_time'] - life_time_statistics['start_time']) // 2592000) or 1
+    else:
+        life_time_statistics['total_times'] = ((time.time() - life_time_statistics['start_time']) // 2592000) or 1
     if life_time_statistics['total_times'] >= life_time_statistics['abnormal_times']:
         life_time.setdefault(spiderName, life_time_statistics)
 # print(life_time)
 
-from datetime import datetime
+# from datetime import datetime
+import datetime
 abnormal_analysis = {}
-for spiderName, spider_task in storage_tasks.items():  # 遍历每一个爬虫
-    start_time = None
-    _abnormal_analysis = {}
-    time_format = '%d年%d月'
-    for task in spider_task:  # 遍历所有的任务。
-        if not start_time and task['rwzt'] in complete_states:
-            start_time = task['time']  # 拿到了开始时间，到最后一次结束，自动补全
-            continue
-        if start_time:
-            current_time = datetime.fromtimestamp(task['time'])
+for spiderName, spider_task in abandoned_tasks_2.items():  # 遍历每一个已入库爬虫
+    if len(spider_task) > 1:
+        start_time = None
+        _abnormal_analysis = {}
+        time_format = '%d年%d月'
+        for task in spider_task:  # 遍历所有的任务。
+            # if not start_time and task['rwzt'] in complete_states:
+            #     start_time = task['time']  # 拿到了开始时间，到最后一次结束，自动补全
+            #     if spiderName in abandoned_tasks_3:  # 这里表示此爬虫是属于废弃爬虫的
+            #         ...
+            #     continue
+            # if start_time:
+            current_time = datetime.datetime.fromtimestamp(task['time'])
             current_year = current_time.year
             current_month = current_time.month
             current = time_format % (current_year, current_month)
             if task['rwzt'] in operations_states:
                 _abnormal_analysis[current] = 1
-            _abnormal_analysis.setdefault(current, 0)
-    if _abnormal_analysis:
-        abnormal_analysis.setdefault(spiderName, _abnormal_analysis)
-print(abnormal_analysis)
+        if _abnormal_analysis:
+            abnormal_analysis.setdefault(spiderName, _abnormal_analysis)
+# print(abnormal_analysis)
+# print(abandoned_tasks_3)
+abnormal_analysis_statistics = {}  # todo 这里装的是运维次数
+for spiderName, abnormal_task in abnormal_analysis.items():
+    for task in abnormal_task:
+        abnormal_analysis_statistics[task] = abnormal_analysis_statistics.get(task, 0) + 1
+# print(abnormal_analysis_statistics)
+# print(len(abandoned_tasks_2))
+
+def get_time_format(timestamp):
+    time_format_1 = '%d年%d月'
+    time_format_2 = '%d年%d月%d日'
+    import datetime
+    current_time = datetime.datetime.fromtimestamp(timestamp)
+    return time_format_1 % (current_time.year, current_time.month), time_format_2 % (current_time.year, current_time.month, current_time.day)
+def sorted_tasks(tasks: list, key=lambda task: task['time']) -> list:
+    return sorted(tasks, key=key)
+# def get_month_statistics(tasks):
+#     time_format = '%d年%d月'
+#     statistics_tasks_4 = dict()
+#     for spiderName, spider_task in tasks.items():
+#         if len(spider_task) > 1:
+#             _abnormal_analysis = {}
+#             for task in spider_task:
+#                 if task['rwzt'] in operations_states:
+#                     current_time = datetime.fromtimestamp(task['time'])
+#                     current_year = current_time.year
+#                     current_month = current_time.month
+#                     current = time_format % (current_year, current_month)
+#                     _abnormal_analysis[current] = _abnormal_analysis
+#             statistics_tasks_4.setdefault(spiderName, [time_diff//2592000, sorted(spider_task, key=lambda task: task['time'])[-1]['time']])# z怎么是最后一次的时间
+#     plot_line_x_values = []
+#     plot_line_y_values = []
+#     statistics_tasks_4 = sorted(statistics_tasks_4.values(), key=lambda x: x[1])
+#     for spider_task in statistics_tasks_4:
+#         plot_line_x_values.append(spider_task[1])
+#         plot_line_y_values.append(spider_task[0])
+#     time_format = '%d年%d月'
+#     statistics = OrderedDict()
+#     for index, value in enumerate(plot_line_x_values):
+#         current = datetime.fromtimestamp(value)
+#         current_year = current.year
+#         current_month = current.month
+#         current = time_format % (current_year, current_month)
+#         statistics[current] = statistics.get(current, 0) + 1
+#     return statistics
+# print(get_month_statistics(abandoned_tasks_2))
+def get_month_statistics(tasks):
+    statistics = dict()
+    for spiderName, spider_task in tasks.items():
+        normal_info = OrderedDict()
+        detail_info = OrderedDict()
+        start = None
+        for task in sorted_tasks(spider_tasks[spiderName]):
+            if not start and task['rwzt'] in complete_states:
+                start = task['time']
+                _time = get_time_format(task['time'])
+                normal_info[_time[0]] = 0
+                detail_info[_time[1]] = 0
+                continue
+            if start and task['rwzt'] in operations_states:
+                _time = get_time_format(task['time'])
+                normal_info[_time[0]] = 1
+                detail_info[_time[1]] = 1
+        statistics[spiderName] = [normal_info, detail_info]
+    return statistics
+# print(get_month_statistics(abandoned_tasks_2))
+
+def get_abandoned_spider_statistics(tasks):
+    abandoned_tasks = dict()
+    for spiderName, spider_task in tasks.items():
+        abandoned_tasks.setdefault(spiderName, sorted(spider_task, key=lambda task: task['time'])[-1]['time'])
+    abandoned_tasks = sorted(abandoned_tasks.values(), key=lambda x: x)
+    statistics = OrderedDict()
+    for value in abandoned_tasks:
+        current = get_time_format(value)[0]
+        statistics[current] = statistics.get(current, 0) + 1
+    return statistics
+abandoned_tasks_3_month_statistics = get_abandoned_spider_statistics(abandoned_tasks_3)  # 废弃爬虫统计
+
+# storage_tasks
+import datetime
+def completion_time(operations):
+    date_template = OrderedDict()
+    start = operations.pop('start')
+    last = operations.pop('last')
+    time_format_1 = '%d年%d月'
+    start = datetime.datetime.fromtimestamp(start)
+    last = datetime.datetime.fromtimestamp(last)
+    year = start.year
+    month = start.month
+    now_year = last.year
+    now_month = last.month
+    while year <= now_year:
+        if month < 13:
+            date_template[time_format_1 % (year, month)] = 0
+            if year == now_year and month == now_month:
+                break
+            month += 1
+        else:
+            year += 1
+            month = 1
+            date_template[time_format_1 % (year, month)] = 0
+    return date_template
+
+def get_all_operations_times(tasks):
+    all_operations = dict()
+    for spiderName, spider_task in tasks.items():  # 遍历每一个已入库的爬虫
+        start = None
+        operations = dict()
+        spider_task = sorted(spider_task, key=lambda task: task['time'])
+        for task in spider_task:
+            if not start and task['rwzt'] in complete_states:
+                start = task['time']
+                operations['start'] = task['time']
+                continue
+            if start:
+                if spiderName in abandoned_tasks_3:
+                    operations['last'] = spider_task[-1]['time']
+                else:
+                    operations['last'] = time.time()
+                break
+        if start and len(operations) == 1:
+            operations['last'] = time.time()
+        operations = completion_time(operations)
+        all_operations[spiderName] = operations
+    return all_operations
+all_tasks_3_month_statistics = get_all_operations_times(storage_tasks)
+
+def get_abnormal_spider_tasks_statistics(tasks):
+    all_abnormal_statistics = dict()
+    for spiderName, spider_task in tasks.items():
+        start = None
+        abnormal_statistics = dict()
+        for task in spider_task:
+            if not start and task['rwzt'] in complete_states:
+                start = True
+                continue
+            if start and task['rwzt'] in operations_states:
+                cur = get_time_format(task['time'])[0]
+                abnormal_statistics[cur] = abnormal_statistics.get(cur, 0) + 1
+        if abnormal_statistics:
+            all_abnormal_statistics[spiderName] = abnormal_statistics
+    return all_abnormal_statistics
+abnormal_spider_tasks_statistics = get_abnormal_spider_tasks_statistics(abandoned_tasks_2)
+
+def get_date_template(check_start_year, check_start_month):
+    date_template = OrderedDict()
+    time_format_1 = '%d年%d月'
+    now = datetime.datetime.now()
+    year, month = now.year, now.month
+    while check_start_year <= year:
+        if check_start_month < 13:
+            date_template[time_format_1 % (check_start_year, check_start_month)] = 0
+            if check_start_year == year and check_start_month == month:
+                break
+            check_start_month += 1
+        else:
+            check_start_year += 1
+            check_start_month = 1
+            date_template[time_format_1 % (check_start_year, check_start_month)] = 0
+    return date_template
+date_template = get_date_template(2018, 1)
+
+from copy import deepcopy
+def get_statistics_into_template(date_template, tasks, add=True):
+    _date_template = deepcopy(date_template)
+    for spiderName, spider_task in tasks.items():
+        if isinstance(spider_task, int):
+            _date_template[spiderName] = _date_template.get(spiderName, 0) + spider_task
+            continue
+        for task, value in spider_task.items():
+            if task in _date_template:
+                if add:
+                    _date_template[task] = _date_template.get(task, 0) + value
+                else:
+                    _date_template[task] = _date_template.get(task, 0) + 1
+    return _date_template
+print(get_statistics_into_template(date_template, all_tasks_3_month_statistics, add=False))
+print(get_statistics_into_template(date_template, abnormal_spider_tasks_statistics))
+print(get_statistics_into_template(date_template, abandoned_tasks_3_month_statistics))
