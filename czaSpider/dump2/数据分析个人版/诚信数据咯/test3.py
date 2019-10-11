@@ -319,6 +319,9 @@ def get_statistics_into_template(date_template, tasks, add=True):
                 else:
                     _date_template[task] = _date_template.get(task, 0) + 1
     return _date_template
-print(get_statistics_into_template(date_template, all_tasks_3_month_statistics, add=False))
-print(get_statistics_into_template(date_template, abnormal_spider_tasks_statistics))
-print(get_statistics_into_template(date_template, abandoned_tasks_3_month_statistics))
+# print(get_statistics_into_template(date_template, all_tasks_3_month_statistics, add=False))
+# print(get_statistics_into_template(date_template, abnormal_spider_tasks_statistics))
+# print(get_statistics_into_template(date_template, abandoned_tasks_3_month_statistics))
+
+import pandas as pd
+print(pd.DataFrame(np.array([[1,2,3], [1,2,3]])).drop(labels=0))
