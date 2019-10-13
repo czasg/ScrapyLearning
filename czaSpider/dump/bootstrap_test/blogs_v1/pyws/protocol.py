@@ -1,23 +1,24 @@
-import base64, hashlib, struct, re
+import re
+import struct
+import base64
+import hashlib
 
 from pyws.public import WebSocketProtocolError
 
-
-class ProtocolProperty:
-    MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
-    REGEX = re.compile(r'GET\s+([^\s]+).*Sec-WebSocket-Key:\s*(.*?)\r\n', re.S)
-    RESPONSE_TEMPLATE = "HTTP/1.1 101 Switching Protocols\r\n" \
-                        "Upgrade:websocket\r\n" \
-                        "Connection: Upgrade\r\n" \
-                        "Sec-WebSocket-Accept: %s\r\n\r\n"
+MAGIC_STRING = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
+REGEX = re.compile(r'GET\s+([^\s]+).*Sec-WebSocket-Key:\s*(.*?)\r\n', re.S)
+RESPONSE_TEMPLATE = "HTTP/1.1 101 Switching Protocols\r\n" \
+                    "Upgrade:websocket\r\n" \
+                    "Connection: Upgrade\r\n" \
+                    "Sec-WebSocket-Accept: %s\r\n\r\n"
 
 
-class WebSocketProtocol(ProtocolProperty):
+class WebSocketProtocol:
 
     @classmethod
     def check_header(cls, headers):
         try:
-            path, key = cls.REGEX.search(headers).groups()
+            path, key = REGEX.search(headers).groups()
             if all((path, key)):
                 return path, key
         except:
@@ -27,12 +28,12 @@ class WebSocketProtocol(ProtocolProperty):
     @classmethod
     def get_ac_str(cls, data):
         path, value = cls.check_header(str(data, encoding="utf-8"))
-        return path, base64.b64encode(hashlib.sha1((value + cls.MAGIC_STRING).encode('utf-8')).digest()).decode('utf-8')
+        return path, base64.b64encode(hashlib.sha1((value + MAGIC_STRING).encode('utf-8')).digest()).decode('utf-8')
 
     @classmethod
     def parsing(cls, data):
         path, key = cls.get_ac_str(data)
-        return path, bytes(cls.RESPONSE_TEMPLATE % key, encoding='utf-8')
+        return path, bytes(RESPONSE_TEMPLATE % key, encoding='utf-8')
 
     @classmethod
     def decode_msg(cls, data):

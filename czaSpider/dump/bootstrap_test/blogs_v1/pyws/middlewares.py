@@ -139,7 +139,7 @@ class MiddlewareManager:
                     continue
                 for user in ConnectManager.next_user():
                     try:
-                        user.ws_send(data)
+                        user.request.ws_send(data)
                     except:
                         continue
             time.sleep(PublicConfig.RADIO_TIME)

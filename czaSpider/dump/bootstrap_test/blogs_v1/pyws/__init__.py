@@ -4,7 +4,7 @@ import json
 
 from socket import socket, getdefaulttimeout
 
-from pyws.protocol import WebSocketProtocol, ProtocolProperty
+from pyws.protocol import WebSocketProtocol
 from pyws.route import Route
 from pyws.middlewares import mwManager
 from pyws.connector import Connector, ConnectManager
@@ -87,7 +87,7 @@ class SocketHandler:
         if not self.conn:
             self.conn = Connector(self.request, self.client_address)
         ConnectManager.add_connector(self.conn.name, self.conn.client_address, self.conn)
-        logger.info('Connect From %s:%s' % self.client_address)
+        logger.info('New Connect {} From {}'.format(self.conn.name, self.conn.client_address))
 
     def handle(self):
         error_count = 0

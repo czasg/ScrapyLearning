@@ -54,9 +54,8 @@ class ConnectManager:
     @classmethod
     def send_to_connector(cls, name, msg):
         try:
-            for connectors in cls.connectors[name]:
-                for connector in connectors.values():
-                    connector.ws_send(msg)
+            for connector in cls.connectors[name].values():
+                connector.request.ws_send(msg)
             logger.info('发送成功')
             return 1
         except:
