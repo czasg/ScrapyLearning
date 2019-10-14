@@ -118,7 +118,8 @@ class MiddlewareManager:
                     data = process_input(request, data)
                 for process_output in cls.daemon_middleware['process_output']:
                     data = process_output(request, data)
-                return Connector(request, handler.client_address, data)
+                name, clear_level = data if isinstance(data, tuple) else (data, None)
+                return Connector(request, handler.client_address, name=name, clear_level=clear_level)
         except:
             raise AuthenticationError
 
@@ -133,15 +134,11 @@ class MiddlewareManager:
     def _process_radio(cls):
         while True:
             logger.info('广播轮询中...')
-            for middleware_func in cls.radio_middleware:
+            for middleware_func in cls.radio_middleware:  # todo，这样广播太台僵硬了
                 data = middleware_func()
                 if not data:
                     continue
-                for user in ConnectManager.next_user():
-                    try:
-                        user.request.ws_send(data)
-                    except:
-                        continue
+                ConnectManager.send_to_all(data)
             time.sleep(PublicConfig.RADIO_TIME)
 
 

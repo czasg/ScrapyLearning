@@ -23,6 +23,7 @@ def p2p_test_example_1(request, data):
     ws.onclose = function (ev) {
         console.log('断开连接')
     }
+    发送请求:
     ws.send('hello world')
     """
     print('Has Receive: ', data)
@@ -41,6 +42,7 @@ def p2p_test_example_2(request, data):
     ws.onclose = function (ev) {
         console.log('断开连接')
     }
+    发送请求
     ws.send(JSON.stringify({'name': 'xxx', 'msg': 'xxx'}))
     """
     data = json.loads(data)
@@ -56,6 +58,21 @@ def p2p_test_example_2(request, data):
 
 
 # 点对多交互
+@route('/p2g/test/example/3')
+def p2g_test_example_3(request, data):
+    """
+    Client Code:
+    ws =new WebSocket("ws://127.0.0.1:8866/p2g/test/example/3");
+    ws.onmessage = function (ev) {
+        console.log(JSON.parse(ev.data));
+    }
+    ws.onclose = function (ev) {
+        console.log('断开连接')
+    }
+    发送请求
+    ws.send('all people will see this')
+    """
+    ConnectManager.send_to_all(data)
 
 
 # 广播轮询
@@ -82,25 +99,41 @@ class AuthenticationMiddleware(DaemonMiddleware):
 
     def process_input(self, request, input_msg):
         json_data = json.loads(input_msg)
-        if 'name' not in json_data:
-            raise AuthenticationError
-        return str(json_data['name'])
+        if 'name' in json_data:
+            return str(json_data['name'])
+        if 'test' in json_data:
+            return str(json_data['test']), 1
 
 
 # 加入数据处理
 class DataProcessMiddleware(DataMiddleware):
 
     def process_input(self, request, input_msg):
-        json_data = json.loads(input_msg)
-        if 'name' not in json_data:
+        try:
+            json_data = json.loads(input_msg)
+            return json_data
+        except:
             raise AuthenticationError
-        return str(json_data['name'])
+
+@route('/test/example/5')
+def example_5(request, data):
+    """Client Code:
+    ws =new WebSocket("ws://127.0.0.1:8866/test/example/5");
+    ws.onmessage = function (ev) {
+        console.log(JSON.parse(ev.data));
+    }
+    ws.onclose = function (ev) {
+        console.log('断开连接')
+    }
+    """
+    print(data, type(data))
 
 
 if __name__ == '__main__':
     test = Pyws(__name__)
-    # test.add_middleware([CookieMiddleware, Radio])
+    test.add_middleware([AuthenticationMiddleware])
     # test.add_middleware(Radio)
+    # test.add_middleware(DataProcessMiddleware)
     test.serve_forever()
 
 """
