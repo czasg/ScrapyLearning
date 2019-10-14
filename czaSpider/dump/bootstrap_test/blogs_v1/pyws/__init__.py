@@ -5,10 +5,10 @@ import json
 from socket import socket, getdefaulttimeout
 
 from pyws.protocol import WebSocketProtocol
-from pyws.route import Route
 from pyws.middlewares import mwManager
 from pyws.connector import Connector, ConnectManager
 from pyws.public import *
+from pyws.route import *
 
 logging.basicConfig(format="%(asctime)s %(funcName)s[lines-%(lineno)d]: %(message)s")
 logger = logging.getLogger(__name__)

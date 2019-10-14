@@ -1,4 +1,5 @@
 from pyws import Pyws
+# from pyws import route
 from pyws.route import route
 from pyws.public import AuthenticationError, ERROR_FLAG
 from pyws.middlewares import DaemonMiddleware, RadioMiddleware, DataMiddleware
