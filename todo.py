@@ -23,6 +23,7 @@ __FILE__ = "Unfinished Schedule"
 2019.10.09 - pip install graphviz 画流程图还挺不错的，很nice很棒
 2019.10.13 - pyws测试要进行了呀，可以先把项目提交进去再说。看看那这个该怎么高。
 2019.10.13 - 测试内容主要四个。自动回复内容。点对点回复内容。点对多回复内容。广播轮询。 
+2019.10.15 - 协议好文https://blog.csdn.net/qq_33616529/article/details/78288883
 """
 
 """DONE!
