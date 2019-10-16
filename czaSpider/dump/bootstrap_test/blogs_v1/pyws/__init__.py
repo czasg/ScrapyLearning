@@ -1,12 +1,11 @@
 import socketserver
-import logging
 import json
 
 from socket import socket, getdefaulttimeout
 
 from pyws.protocol import WebSocketProtocol
-from pyws.middlewares import mwManager
 from pyws.connector import Connector, ConnectManager
+from pyws.middlewares import *
 from pyws.public import *
 from pyws.route import *
 
@@ -88,6 +87,8 @@ class SocketHandler:
             self.conn = Connector(self.request, self.client_address)
         ConnectManager.add_connector(self.conn.name, self.conn.client_address, self.conn)
         logger.info('New Connect {} From {}'.format(self.conn.name, self.conn.client_address))
+        if not radio_queue.qsize():
+            radio_queue.put(RADIO_START)
 
     def handle(self):
         error_count = 0

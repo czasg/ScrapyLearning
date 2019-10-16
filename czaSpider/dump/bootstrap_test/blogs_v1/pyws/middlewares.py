@@ -7,7 +7,6 @@ from collections.abc import Iterable
 
 from pyws.public import *
 from pyws.connector import Connector, ConnectManager
-from pyws.public import PublicConfig
 
 logger = logging.getLogger(__name__)
 
@@ -133,13 +132,17 @@ class MiddlewareManager:
     @classmethod
     def _process_radio(cls):
         while True:
-            logger.info('广播轮询中...')
-            for middleware_func in cls.radio_middleware:  # todo，这样广播太台僵硬了
-                data = middleware_func()
-                if not data:
-                    continue
-                ConnectManager.send_to_all(data)
-            time.sleep(PublicConfig.RADIO_TIME)
+            command = radio_queue.get()
+            if command is RADIO_START and ConnectManager.online():
+                while ConnectManager.online():
+                    logger.info('广播轮询中...')
+                    for middleware_func in cls.radio_middleware:
+                        data = middleware_func()
+                        if not data:
+                            continue
+                        ConnectManager.send_to_all(data)
+                    time.sleep(PublicConfig.RADIO_TIME)
+                logger.info('广播停止轮询...')
 
 
 mwManager = MiddlewareManager()
