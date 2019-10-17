@@ -20,6 +20,7 @@ __FILE__ = "Unfinished Schedule"
 2019.10.09 - pip install graphviz 画流程图还挺不错的，很nice很棒
 2019.10.15 - 协议好文https://blog.csdn.net/qq_33616529/article/details/78288883
 2019.10.16 - 回去把简书的文章写好吧，github上面的readme也要好好写下，总感觉不太对，别人看不懂就很尴尬
+2019.10.17 - python好文 https://docs.python.org/3/reference/datamodel.html
 """
 
 """DONE!
