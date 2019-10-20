@@ -22,6 +22,7 @@ __FILE__ = "Unfinished Schedule"
 2019.10.16 - 回去把简书的文章写好吧，github上面的readme也要好好写下，总感觉不太对，别人看不懂就很尴尬
 2019.10.17 - python好文 https://docs.python.org/3/reference/datamodel.html
 2019.10.17 - asyncio好文 https://docs.python.org/zh-cn/3/library/asyncio-task.html
+2019.10.21 - aiohttp好文 https://www.bookstack.cn/read/aiohttp-chinese-documentation/aiohttp%E6%96%87%E6%A1%A3-ClientUsage.md
 """
 
 """DONE!
