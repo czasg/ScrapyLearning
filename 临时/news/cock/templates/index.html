@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>新闻</title>
+	<!--<link rel="stylesheet" href="/static/css/bootstrap.min.css">-->
+	<link rel="stylesheet" href="../static/css/bootstrap.min.css">
+<style>
+	body {
+		padding-top: 70px;
+	}
+</style>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-body" aria-expanded="false">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="javascript:void(0)">新闻</a>
+		</div>
+		<div class="collapse navbar-collapse" id="nav-body">
+			<ul class="nav navbar-nav">
+				<!--<li><a href="javascript:void(0)">Test</a></li>-->
+			</ul>
+		</div>
+	</div>
+</nav>
+<div class="container-fluid">
+	<div class="row">
+		<!--<div class="col-md-3"></div>-->
+		<div class="col-sm-offset-2 col-sm-8">
+			<ul class="list-group">
+				<li class="list-group-item"><div id="china-map" style="height: 800px; width: 100%;"></div></li>
+			</ul>
+			<!--<ul class="list-group">-->
+				<!--<li class="list-group-item"><div style="height: 800px; width: 100%;">hahaha</div></li>-->
+			<!--</ul>-->
+			<ul class="list-group">
+				<li class="list-group-item"><div id="main" style="height: 800px; width: 100%;"></div></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<!--<script src="/static/js/jquery-1.11.1.min.js"></script>-->
+<!--<script src="/static/js/echarts.min.js"></script>-->
+<!--<script src="/static/js/china.js"></script>-->
+<!--<script src="/static/js/bootstrap.min.js"></script>-->
+<!--<script src="/static/js/echarts-wordclound.min.js"></script>-->
+<!--<script src="/static/js/vue.min.js"></script>-->
+<script src="../static/js/jquery-1.11.1.min.js"></script>
+<script src="../static/js/echarts.min.js"></script>
+<script src="../static/js/china.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="../static/js/echarts-wordclound.min.js"></script>
+<script src="../static/js/vue.min.js"></script>
+<script type="text/javascript">
+function randomData() {  
+	return Math.round(Math.random()*500);
+} 
+var dataMap =[  
+    {name: '北京',value: '599' },{name: '天津',value: randomData() },  
+    {name: '上海',value: randomData() },{name: '重庆',value: randomData() },  
+    {name: '河北',value: randomData() },{name: '河南',value: randomData() },  
+    {name: '云南',value: randomData() },{name: '辽宁',value: randomData() },  
+    {name: '黑龙江',value: randomData() },{name: '湖南',value: randomData() },  
+    {name: '安徽',value: randomData() },{name: '山东',value: randomData() },  
+    {name: '新疆',value: randomData() },{name: '江苏',value: randomData() },  
+    {name: '浙江',value: randomData() },{name: '江西',value: randomData() },  
+    {name: '湖北',value: randomData() },{name: '广西',value: randomData() },  
+    {name: '甘肃',value: randomData() },{name: '山西',value: randomData() },  
+    {name: '内蒙古',value: randomData() },{name: '陕西',value: randomData() },  
+    {name: '吉林',value: randomData() },{name: '福建',value: randomData() },  
+    {name: '贵州',value: randomData() },{name: '广东',value: randomData() },  
+    {name: '青海',value: randomData() },{name: '西藏',value: randomData() },  
+    {name: '四川',value: randomData() },{name: '宁夏',value: randomData() },  
+    {name: '海南',value: randomData() },{name: '台湾',value: randomData() },  
+    {name: '香港',value: randomData() },{name: '澳门',value: randomData() },{name: '南海诸岛',value: randomData() }];
+var specialMap = ['浙江', '云南', '陕西'];
+    // 对dataMap进行处理，使其可以直接在页面上展示
+for (var i = 0; i < specialMap.length; i++) {
+    for (var j = 0; j < dataMap.length; j++) {
+        if (specialMap[i] == dataMap[j].name) {
+            dataMap[j].selected = true;
+            break;
+        }
+
+    }
+}
+// 绘制图表，准备数据
+var option = {
+	title: {
+		text: '新闻热度图'
+	},
+    tooltip: {
+        // formatter: function (params) {
+        //     var info = '<p style="font-size:18px">' + params.name + '</p><p style="font-size:14px">这里可以写一些，想展示在页面上的别的信息</p>'
+        //     return info;
+        // },
+        // backgroundColor: "#ff7f50",//提示标签背景颜色
+        // textStyle: { color: "#fff" } //提示标签字体颜色
+    },
+	visualMap: {
+		show: true,
+		x: 'right',
+		y: 'top',
+		splitList: [
+			{start: 500, end:600},{start: 400, end: 500}, 
+			{start: 300, end: 400},{start: 200, end: 300}, 
+			{start: 100, end: 200},{start: 0, end: 100}, 
+		],
+		color: ['#B71C1C', '#9feaa5', '#85daef','#74e2ca', '#FFA726', '#FFFDE7'] 
+	},
+    series: [
+        {
+            name: '中国',
+            type: 'map',
+            mapType: 'china',
+            // selectedMode: 'multiple',
+            label: {
+                normal: {
+                    show: true,//显示省份标签
+                    // textStyle:{color:"#c71585"}//省份标签字体颜色
+                },
+                emphasis: {
+                    show: true,//对应的鼠标悬浮效果
+                    // textStyle:{color:"#800080"}
+                }
+            },
+
+            itemStyle: {
+                normal: {
+                    borderWidth: .5,//区域边框宽度
+                    // borderColor: '#009fe8',//区域边框颜色
+                    // areaColor:"#ffefd5",//区域颜色
+                },
+                emphasis: {
+                    borderWidth: .5,
+                    borderColor: '#4b0082',
+                    areaColor: "#ffdead",
+                }
+            },
+            data: dataMap
+        }
+    ]
+};
+//初始化echarts实例
+var myChart = echarts.init(document.getElementById('china-map'));
+//使用制定的配置项和数据显示图表
+myChart.setOption(option);
+</script>
+<script>
+var chart = echarts.init(document.getElementById('main'));
+var keywords = {
+              "visualMap": 22199,
+              "continuous": 10288,
+              "contoller": 620,
+              "series": 274470,
+              "gauge": 12311,
+              "detail": 1206,
+              "piecewise": 4885,
+              "textStyle": 32294,
+              "markPoint": 18574,
+              "pie": 38929,
+              "roseType": 969,
+              "label": 37517,
+              "emphasis": 12053,
+              "yAxis": 57299,
+              "name": 15418,
+              "type": 22905,
+              "gridIndex": 5146,
+              "normal": 49487,
+              "itemStyle": 33837,
+              "min": 4500,
+              "silent": 5744,
+              "animation": 4840,
+              "offsetCenter": 232,
+              "inverse": 3706,
+              "borderColor": 4812,
+              "markLine": 16578,
+              "line": 76970,
+              "radiusAxis": 6704,
+              "radar": 15964,
+              "data": 60679,
+              "dataZoom": 24347,
+              "tooltip": 43420,
+              "toolbox": 25222,
+              "geo": 16904,
+              "parallelAxis": 4029,
+              "parallel": 5319,
+              "max": 3393,
+              "bar": 43066,
+              "heatmap": 3110,
+              "map": 20285,
+              "animationDuration": 3425,
+              "animationDelay": 2431,
+              "splitNumber": 5175,
+              "axisLine": 12738,
+              "lineStyle": 19601,
+              "splitLine": 7133,
+              "axisTick": 8831,
+              "axisLabel": 17516,
+              "pointer": 590,
+              "color": 23426,
+              "title": 38497,
+              "formatter": 15214,
+              "slider": 7236,
+              "legend": 66514,
+              "grid": 28516,
+              "smooth": 1295,
+              "smoothMonotone": 696,
+              "sampling": 757,
+              "feature": 12815,
+              "saveAsImage": 2616,
+              "polar": 6279,
+              "calculable": 879,
+              "backgroundColor": 9419,
+              "excludeComponents": 130,
+              "show": 20620,
+              "text": 2592,
+              "icon": 2782,
+              "dimension": 478,
+              "inRange": 1060,
+              "animationEasing": 2983,
+              "animationDurationUpdate": 2259,
+              "animationDelayUpdate": 2236,
+              "animationEasingUpdate": 2213,
+              "xAxis": 89459,
+              "angleAxis": 5469,
+              "showTitle": 484,
+              "dataView": 2754,
+              "restore": 932,
+              "timeline": 10104,
+              "range": 477,
+              "value": 5732,
+              "precision": 878,
+              "target": 1433,
+              "zlevel": 5361,
+              "symbol": 8718,
+              "interval": 7964,
+              "symbolSize": 5300,
+              "showSymbol": 1247,
+              "inside": 8913,
+              "xAxisIndex": 3843,
+              "orient": 4205,
+              "boundaryGap": 5073,
+              "nameGap": 4896,
+              "zoomLock": 571,
+              "hoverAnimation": 2307,
+              "legendHoverLink": 3553,
+              "stack": 2907,
+              "throttle": 466,
+              "connectNulls": 897,
+              "clipOverflow": 826,
+              "startValue": 551,
+              "minInterval": 3292,
+              "opacity": 3097,
+              "splitArea": 4775,
+              "filterMode": 635,
+              "end": 409,
+              "left": 6475,
+              "funnel": 2238,
+              "lines": 6403,
+              "baseline": 431,
+              "align": 2608,
+              "coord": 897,
+              "nameTextStyle": 7477,
+              "width": 4338,
+              "shadowBlur": 4493,
+              "effect": 929,
+              "period": 225,
+              "areaColor": 631,
+              "borderWidth": 3654,
+              "nameLocation": 4418,
+              "position": 11723,
+              "containLabel": 1701,
+              "scatter": 10718,
+              "areaStyle": 5310,
+              "scale": 3859,
+              "pieces": 414,
+              "categories": 1000,
+              "selectedMode": 3825,
+              "itemSymbol": 273,
+              "effectScatter": 7147,
+              "fontStyle": 3376,
+              "fontSize": 3386,
+              "margin": 1034,
+              "iconStyle": 2257,
+              "link": 1366,
+              "axisPointer": 5245,
+              "showDelay": 896,
+              "graph": 22194,
+              "subtext": 1442,
+              "selected": 2881,
+              "barCategoryGap": 827,
+              "barGap": 1094,
+              "barWidth": 1521,
+              "coordinateSystem": 3622,
+              "barBorderRadius": 284,
+              "z": 4014,
+              "polarIndex": 1456,
+              "shadowOffsetX": 3046,
+              "shadowColor": 3771,
+              "shadowOffsetY": 2475,
+              "height": 1988,
+              "barMinHeight": 575,
+              "lang": 131,
+              "symbolRotate": 2752,
+              "symbolOffset": 2549,
+              "showAllSymbol": 942,
+              "transitionDuration": 993,
+              "bottom": 3724,
+              "fillerColor": 229,
+              "nameMap": 1249,
+              "barMaxWidth": 747,
+              "radius": 2103,
+              "center": 2425,
+              "magicType": 3276,
+              "labelPrecision": 248,
+              "option": 654,
+              "seriesIndex": 935,
+              "controlPosition": 121,
+              "itemGap": 3188,
+              "padding": 3481,
+              "shadowStyle": 347,
+              "boxplot": 1394,
+              "labelFormatter": 264,
+              "realtime": 631,
+              "dataBackgroundColor": 239,
+              "showDetail": 247,
+              "showDataShadow": 217,
+              "x": 684,
+              "valueDim": 499,
+              "onZero": 931,
+              "right": 3255,
+              "clockwise": 1035,
+              "itemWidth": 1732,
+              "trigger": 3840,
+              "axis": 379,
+              "selectedOffset": 670,
+              "startAngle": 1293,
+              "minAngle": 590,
+              "top": 4637,
+              "avoidLabelOverlap": 870,
+              "labelLine": 3785,
+              "sankey": 2933,
+              "endAngle": 213,
+              "start": 779,
+              "roam": 1738,
+              "fontWeight": 2828,
+              "fontFamily": 2490,
+              "subtextStyle": 2066,
+              "indicator": 853,
+              "sublink": 708,
+              "zoom": 1038,
+              "subtarget": 659,
+              "length": 1060,
+              "itemSize": 505,
+              "controlStyle": 452,
+              "yAxisIndex": 2529,
+              "edgeLabel": 1188,
+              "radiusAxisIndex": 354,
+              "scaleLimit": 1313,
+              "geoIndex": 535,
+              "regions": 1892,
+              "itemHeight": 1290,
+              "nodes": 644,
+              "candlestick": 3166,
+              "crossStyle": 466,
+              "edges": 369,
+              "links": 3277,
+              "layout": 846,
+              "barBorderColor": 721,
+              "barBorderWidth": 498,
+              "treemap": 3865,
+              "y": 367,
+              "valueIndex": 704,
+              "showLegendSymbol": 482,
+              "mapValueCalculation": 492,
+              "optionToContent": 264,
+              "handleColor": 187,
+              "handleSize": 271,
+              "showContent": 1853,
+              "angleAxisIndex": 406,
+              "endValue": 327,
+              "triggerOn": 1720,
+              "contentToOption": 169,
+              "buttonColor": 71,
+              "rotate": 1144,
+              "hoverLink": 335,
+              "outOfRange": 491,
+              "textareaColor": 58,
+              "textareaBorderColor": 58,
+              "textColor": 60,
+              "buttonTextColor": 66,
+              "category": 336,
+              "hideDelay": 786,
+              "alwaysShowContent": 1267,
+              "extraCssText": 901,
+              "effectType": 277,
+              "force": 1820,
+              "rippleEffect": 723,
+              "edgeSymbolSize": 329,
+              "showEffectOn": 271,
+              "gravity": 199,
+              "edgeLength": 193,
+              "layoutAnimation": 152,
+              "length2": 169,
+              "enterable": 957,
+              "dim": 83,
+              "readOnly": 143,
+              "levels": 444,
+              "textGap": 256,
+              "pixelRatio": 84,
+              "nodeScaleRatio": 232,
+              "draggable": 249,
+              "brushType": 158,
+              "radarIndex": 152,
+              "large": 182,
+              "edgeSymbol": 675,
+              "largeThreshold": 132,
+              "leafDepth": 73,
+              "childrenVisibleMin": 73,
+              "minSize": 35,
+              "maxSize": 35,
+              "sort": 90,
+              "funnelAlign": 61,
+              "source": 336,
+              "nodeClick": 200,
+              "curveness": 350,
+              "areaSelectStyle": 104,
+              "parallelIndex": 52,
+              "initLayout": 359,
+              "trailLength": 116,
+              "boxWidth": 20,
+              "back": 53,
+              "rewind": 110,
+              "zoomToNodeRatio": 80,
+              "squareRatio": 60,
+              "parallelAxisDefault": 358,
+              "checkpointStyle": 440,
+              "nodeWidth": 49,
+              "color0": 62,
+              "layoutIterations": 56,
+              "nodeGap": 54,
+              "color(Array": 76,
+              "<string>)": 76,
+              "repulsion": 276,
+              "tiled": 105,
+              "currentIndex": 145,
+              "axisType": 227,
+              "loop": 97,
+              "playInterval": 112,
+              "borderColor0": 23,
+              "gap": 43,
+              "autoPlay": 123,
+              "showPlayBtn": 25,
+              "breadcrumb": 119,
+              "colorMappingBy": 85,
+              "id": 18,
+              "blurSize": 85,
+              "minOpacity": 50,
+              "maxOpacity": 54,
+              "prevIcon": 12,
+              "children": 21,
+              "shape": 98,
+              "nextIcon": 12,
+              "showNextBtn": 17,
+              "stopIcon": 21,
+              "visibleMin": 83,
+              "visualDimension": 97,
+              "colorSaturation": 56,
+              "colorAlpha": 66,
+              "emptyItemWidth": 10,
+              "inactiveOpacity": 4,
+              "activeOpacity": 4,
+              "showPrevBtn": 19,
+              "playIcon": 26,
+              "ellipsis": 19,
+              "gapWidth": 19,
+              "borderColorSaturation": 10,
+              "handleIcon": 2,
+              "handleStyle": 6,
+              "borderType": 1,
+              "constantSpeed": 1,
+              "polyline": 2,
+              "blendMode": 1,
+              "dataBackground": 1,
+              "textAlign": 1,
+              "textBaseline": 1,
+              "brush": 3
+            };
+var data = [];
+for (var name in keywords) {
+	data.push({
+		name: name,
+		value: Math.sqrt(keywords[name])
+	})
+}
+var maskImage = new Image();
+var option = {
+	series: [ {
+		type: 'wordCloud',
+		sizeRange: [10, 100],
+		rotationRange: [-90, 90],
+		rotationStep: 45,
+		gridSize: 2,
+		shape: 'pentagon',
+		maskImage: maskImage,
+		textStyle: {
+			normal: {
+				color: function () {
+					return 'rgb(' + [
+						Math.round(Math.random() * 160),
+						Math.round(Math.random() * 160),
+						Math.round(Math.random() * 160)
+					].join(',') + ')';
+				}
+			}
+		},
+		data: data.sort(function (a, b) {
+			return b.value  - a.value;
+		})
+	} ]
+};
+maskImage.onload = function () {
+	option.series[0].maskImage
+	chart.setOption(option);
+}
+maskImage.src = '../static/img/logo.png';
+</script>
+</body>
+</html>
