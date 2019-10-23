@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from django.views.decorators.cache import cache_page
 
 try:
-    from database import mongodb_offline, yesterday
+    from database import mongodb_offline, yesterday, today
 except:
     raise Exception('没有数据库配置文件，无法运行哦')
 
@@ -25,20 +25,23 @@ def api_get_map_data(request):
     for collection in collections:
         try:
             if collection.startswith('人民政府'):
-                doc = db_handler[collection].find_one({'timestamp': int(yesterday.timestamp())})
+                doc = db_handler[collection].find_one({'timestamp': int(today.timestamp())})  # todo, today is error
                 province[doc['province']] = doc['count']
+                # print(doc['province'], doc['count'])
                 word_cloud.extend(json.loads(doc['jieba_list']))
         except Exception as e:
             print(e)
             continue
     word_cloud_dict = dict(Counter(word_cloud))
-    for key in word_cloud_dict:
-        if len(str(key).strip()) < 2:
-            word_cloud_dict.pop(key)
+    # print(word_cloud_dict)
+    word_cloud = dict()
+    for key in word_cloud_dict.keys():
+        if len(key.strip()) < 2:
+            word_cloud[key] = word_cloud_dict[key]
     return JsonResponse({
         'map_data': [dict(name=name, value=value) for name, value in province.items()],
         'bar': _get_split_bar(max(province.values())),
-        'cloud_data': [dict(name=name, value=value) for name, value in word_cloud_dict.items()],
+        'cloud_data': [dict(name=name, value=value) for name, value in word_cloud.items()],
     })
 
 
