@@ -27,22 +27,33 @@ def api_get_map_data(request):
             if collection.startswith('人民政府'):
                 doc = db_handler[collection].find_one({'timestamp': int(today.timestamp())})  # todo, today is error
                 province[doc['province']] = doc['count']
-                # print(doc['province'], doc['count'])
                 word_cloud.extend(json.loads(doc['jieba_list']))
         except Exception as e:
             print(e)
             continue
-    word_cloud_dict = dict(Counter(word_cloud))
-    # print(word_cloud_dict)
-    word_cloud = dict()
-    for key in word_cloud_dict.keys():
-        if len(key.strip()) < 2:
-            word_cloud[key] = word_cloud_dict[key]
+
     return JsonResponse({
         'map_data': [dict(name=name, value=value) for name, value in province.items()],
         'bar': _get_split_bar(max(province.values())),
-        'cloud_data': [dict(name=name, value=value) for name, value in word_cloud.items()],
+        'cloud_data': [dict(name=name, value=value)
+                       for name, value in Counter(word_cloud).items()
+                       if len(name) < 2],
     })
+
+    # word_cloud_dict = dict(Counter(word_cloud))
+    # word_cloud = dict()
+    # word_cloud = [dict(name=name, value=value)
+    #               for name, value in Counter(word_cloud).items()
+    #               if len(name) < 2]
+
+    # for key in word_cloud_dict.keys():
+    #     if len(key.strip()) < 2:
+    #         word_cloud[key] = word_cloud_dict[key]
+    # return JsonResponse({
+    #     'map_data': [dict(name=name, value=value) for name, value in province.items()],
+    #     'bar': _get_split_bar(max(province.values())),
+    #     'cloud_data': [dict(name=name, value=value) for name, value in word_cloud.items()],
+    # })
 
 
 def api_get_china_map_data(request):
@@ -130,8 +141,9 @@ if __name__ == '__main__':
 
     # pprint(_get_split_bar(123))
     data = Counter([1, 2, 3, 4, 234, 5, 6, 7, 8, 9, 0, 7, 7, 6, 6, ' '])
-    print(dict(data))
-    for key in dict(data):
-        if len(str(key).strip()) < 2:
-            data.pop(key)
-    print(data)
+    print(data.items())
+    # print(dict(data))
+    # for key in dict(data):
+    #     if len(str(key).strip()) < 2:
+    #         data.pop(key)
+    # print(data)
