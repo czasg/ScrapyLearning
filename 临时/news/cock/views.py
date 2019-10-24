@@ -1,13 +1,15 @@
 import json
+import threading
 
 from collections import Counter
-
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.cache import cache_page
+
+from mini import miniCache
 
 try:
-    from database import mongodb_offline, today
+    from database import get_collection_statistical, mongodb_offline, today
+
 except:
     raise Exception('没有数据库配置文件，无法运行哦')
 
@@ -16,8 +18,9 @@ def index(request):
     return render(request, 'index.html')
 
 
-@cache_page(60 * 60 * 3)
+@miniCache(60 * 60 * 3)
 def api_get_map_data(request):
+    threading.Thread(target=get_collection_statistical, args=('新闻(新闻)', '人民政府', ['标题'])).start()
     province = {}
     word_cloud = []
     normal_spider_list = []
