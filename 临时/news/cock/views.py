@@ -1,6 +1,3 @@
-import json
-import threading
-
 from collections import Counter
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -8,8 +5,7 @@ from django.http import JsonResponse
 from mini import miniCache
 
 try:
-    from database import get_collection_statistical, mongodb_offline, today
-
+    from database import *
 except:
     raise Exception('没有数据库配置文件，无法运行哦')
 
@@ -20,7 +16,13 @@ def index(request):
 
 @miniCache(60 * 60 * 3)
 def api_get_map_data(request):
-    threading.Thread(target=get_collection_statistical, args=('新闻(新闻)', '人民政府', ['标题'])).start()
+    now = get_now_datetime()
+    today = get_today_datetime(now)
+    if now.hour < 12:
+        query_day = get_yesterday_datetime(today)
+    else:
+        query_day = today
+    executor.submit(get_collection_statistical, *('新闻(新闻)', '人民政府', ['标题'], today))
     province = {}
     word_cloud = []
     normal_spider_list = []
@@ -30,17 +32,16 @@ def api_get_map_data(request):
     for collection in collections:
         try:
             if collection.startswith('人民政府'):
-                doc = db_handler[collection].find_one({'timestamp': int(today.timestamp())})  # todo, today is error
+                doc = db_handler[collection].find_one({'timestamp': int(query_day.timestamp())})
                 province[doc['province']] = doc['count']
                 if doc['count']:
                     normal_spider_list.append((collection, doc['count']))
                 else:
-                    abnormal_spider_list.append((collection, doc['count']))
+                    abnormal_spider_list.append((collection, doc['abnormal']))
                 word_cloud.extend(json.loads(doc['jieba_list']))
         except Exception as e:
             print(e)
             continue
-
     return JsonResponse({
         'map_data': [dict(name=name, value=value) for name, value in province.items()],
         'bar': _get_split_bar(max(province.values())),
@@ -49,6 +50,7 @@ def api_get_map_data(request):
                        if len(name.strip()) > 1],
         'normal_spider_list': sorted(normal_spider_list, key=lambda x: x[1], reverse=True),
         'abnormal_spider_list': sorted(abnormal_spider_list, key=lambda x: x[1], reverse=True),
+        'current_day': RE_SEARCH_DAY(str(query_day)).group(1),
     })
 
 

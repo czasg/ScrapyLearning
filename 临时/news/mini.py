@@ -10,11 +10,11 @@ def miniCache(expire=60 * 60 * 12):
 
     def wrapper(func):
         @wraps(func)
-        def wrapper1(*args, **kwargs):
+        def wrapper1(request):
             key = func.__name__
             result = caches.get(key)
             if result is caches.notFound:
-                result = func(*args, **kwargs)
+                result = func(request)
                 caches.set(key, {r'result': result, r'expire': expire + caches.getNowTime()})
                 return result
             else:

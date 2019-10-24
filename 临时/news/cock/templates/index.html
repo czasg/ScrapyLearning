@@ -8,6 +8,14 @@
 	body {
 		padding-top: 70px;
 	}
+	#china-map {
+		height: 800px;
+		width: 100%;
+	}
+	#word-cloud {
+		height: 800px;
+		width: 100%;
+	}
 </style>
 </head>
 <body>
@@ -32,10 +40,10 @@
 	<div class="row">
 		<div class="col-sm-offset-2 col-sm-8">
 			<ul class="list-group">
-				<li class="list-group-item"><div id="china-map" style="height: 800px; width: 100%;"></div></li>
+				<li class="list-group-item"><div id="china-map"></div></li>
 			</ul>
 			<ul class="list-group">
-				<li class="list-group-item"><div id="word-cloud" style="height: 800px; width: 100%;"></div></li>
+				<li class="list-group-item"><div id="word-cloud"></div></li>
 			</ul>
 			<div class="row">
 				<div class="col-xs-6">
@@ -53,7 +61,7 @@
 						<div class="panel-heading">未更新（单位：天数）</div>
 						<ul class="list-group">
 							<li class="list-group-item" v-for="spider in abnormal_spider_list">
-								[[ spider[0] ]]<span class="badge">[[ spider[1] + 1 ]]</span>
+								[[ spider[0] ]]<span class="badge">[[ spider[1] ]]</span>
 							</li>
 						</ul>
 					</div>
@@ -117,7 +125,7 @@ $(function(){
 					},
 					series: [
 						{
-							name: now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate(),
+							name: api_result.current_day,
 							type: 'map',
 							mapType: 'china',
 							selectedMode: 'multiple',
