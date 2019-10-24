@@ -32,6 +32,7 @@ def api_get_map_data(request):
     for collection in collections:
         try:
             if collection.startswith('人民政府'):
+                # if collection.endswith('0000'):
                 doc = db_handler[collection].find_one({'timestamp': int(query_day.timestamp())})
                 province[doc['province']] = province.get(doc['province'], 0) + doc['count']
                 if doc['count']:
