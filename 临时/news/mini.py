@@ -12,6 +12,10 @@ def miniCache(expire=60 * 60 * 12):
         @wraps(func)
         def wrapper1(request):
             key = func.__name__
+
+            day = str(request.GET.get('day', ''))
+            key += day
+
             result = caches.get(key)
             if result is caches.notFound:
                 result = func(request)
