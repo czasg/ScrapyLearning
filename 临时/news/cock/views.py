@@ -33,7 +33,7 @@ def api_get_map_data(request):
         try:
             if collection.startswith('人民政府'):
                 doc = db_handler[collection].find_one({'timestamp': int(query_day.timestamp())})
-                province[doc['province']] = doc['count']
+                province[doc['province']] = province.get(doc['province'], 0) + doc['count']
                 if doc['count']:
                     normal_spider_list.append((collection, doc['count']))
                 else:
