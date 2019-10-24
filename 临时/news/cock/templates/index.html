@@ -155,43 +155,43 @@ $(function(){
 				myChart.setOption(option);
 			},
 			init_word_cloud: function(myChart, api_result){
-					var
-						data = api_result.cloud_data,
-						maskImage = new Image(),
-						option = {
-							title: {
-								text: '热度话题'
-							},
-							series: [{
-								type: 'wordCloud',
-								sizeRange: [10, 100],
-								rotationRange: [-90, 90],
-								rotationStep: 45,
-								gridSize: 2,
-								shape: 'pentagon',
-								maskImage: maskImage,
-								textStyle: {
-									normal: {
-										color: function () {
-											return 'rgb(' + [
-												Math.round(Math.random() * 160),
-												Math.round(Math.random() * 160),
-												Math.round(Math.random() * 160)
-											].join(',') + ')';
-										}
+				var
+					data = api_result.cloud_data,
+					maskImage = new Image(),
+					option = {
+						title: {
+							text: '热度话题'
+						},
+						series: [{
+							type: 'wordCloud',
+							sizeRange: [10, 100],
+							rotationRange: [-90, 90],
+							rotationStep: 45,
+							gridSize: 2,
+							shape: 'pentagon',
+							maskImage: maskImage,
+							textStyle: {
+								normal: {
+									color: function () {
+										return 'rgb(' + [
+											Math.round(Math.random() * 160),
+											Math.round(Math.random() * 160),
+											Math.round(Math.random() * 160)
+										].join(',') + ')';
 									}
-								},
-								data: data.sort(function (a, b) {
-									return b.value  - a.value;
-								})
-							}],
-						};
-					maskImage.onload = function () {
-						myChart.hideLoading();
-						option.series[0].maskImage
-						myChart.setOption(option);
-					}
-					maskImage.src = '../static/img/logo.png';
+								}
+							},
+							data: data.sort(function (a, b) {
+								return b.value  - a.value;
+							})
+						}],
+					};
+				maskImage.onload = function () {
+					myChart.hideLoading();
+					option.series[0].maskImage
+					myChart.setOption(option);
+				}
+				maskImage.src = '../static/img/logo.png';
 			},
 		},
 	})
