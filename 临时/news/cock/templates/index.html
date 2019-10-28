@@ -94,6 +94,9 @@
                             <div class="checkbox" style="margin: 0;"><label><input type="checkbox" value="true" v-model="just_choose_province">仅查看省区</label></div>
                         </a>
                     </div>
+                    <div class="list-group">
+                        <a href="javascript:void(0)" @click.prevent="goto_top" class="list-group-item text-center">返回顶部</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -132,6 +135,23 @@
                     <ul class="list-group">
                         <li class="list-group-item"><div id="operation-bar"></div></li>
                     </ul>
+                </div>
+                <div class="col-sm-2 col-sm-offset-10 fixElement">
+                    <div class="list-group">
+                        <a class=" list-group-item text-center" v-for="(task, index) in spider_tasks">
+                            <label class="radio-inline" v-if="index === 0">
+                                <input class="testtest" type="radio" name="task_radio" :value="task" v-model="radio_data">
+                                [[ task ]]
+                            </label>
+                            <label class="radio-inline" v-else>
+                                <input type="radio" name="task_radio" :value="task" v-model="radio_data">
+                                [[ task ]]
+                            </label>
+                        </a>
+                        <a class="list-group-item text-center" href="javascript:void(0)" @click="choose_task">
+                            查询
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -313,19 +333,22 @@ $(function(){
 				}
 				maskImage.src = '../static/img/logo.png';
 			},
+			goto_top: function(){
+			    $('html,body').animate({scrollTop: 0}, 200);
+			},
 		},
-	})
-})
-</script>
-<script>
-$(function(){
+	});
     new Vue({
         el: '#main-body-2',
         delimiters: ['[[', ']]'],
         data(){
             return {
+                is_loading: false,
                 data_summary: [],
                 data_statistical: [],
+                radio_data: '诚信数据',
+                last_radio_data: '诚信数据',
+                spider_tasks: ['诚信数据', '政府网站', '零碎任务', '法律', '新闻', '钢铁', '航运'],
             }
         },
         mounted(){
@@ -333,12 +356,12 @@ $(function(){
             $('#operation-bar').css('width', parent_width - 32)
             this.myChart1 = echarts.init(document.getElementById('operation-bar'));
             this.myChart1.showLoading();
-            //this.init_data();
+            this.init_data(this.radio_data);
         },
         methods: {
-            init_data: function(){
+            init_data: function(task_name){
                 $.get('/api/get/operation/data', {
-                    task_name: '诚信数据'
+                    task_name: task_name
                 }, (api_data) => {
                     this.draw_table(api_data);
                     this.draw_bar(api_data);
@@ -360,19 +383,9 @@ $(function(){
                         }
                     },
                     toolbox: {
-                        show : true,
-                        feature : {
-                            mark : {show: true},
-                            dataView : {show: true, readOnly: false},
-                            magicType: {show: true, type: ['line', 'bar']},
-                            restore : {show: true},
-                            saveAsImage : {show: true}
-                        }
+                        show : true
                     },
-                    calculable : true,
                     legend: {
-                        data:['Growth', 'Budget 2011', 'Budget 2012'],
-                        itemGap: 5
                     },
                     grid: {
                         top: '12%',
@@ -383,57 +396,71 @@ $(function(){
                     xAxis: [
                         {
                             type : 'category',
-                            data : api_data[0]
+                            data : api_data.data_bar[0]
                         }
                     ],
                     yAxis: {
-                            type : 'value',
+                        type : 'value',
                     },
                     dataZoom: [
                         {
                             show: true,
-                            start: 94,
+                            start: 30,
                             end: 100
                         },
                         {
                             type: 'inside',
                             start: 94,
                             end: 100
-                        },
-                        {
-                            show: true,
-                            yAxisIndex: 0,
-                            filterMode: 'empty',
-                            width: 30,
-                            height: '80%',
-                            showDataShadow: false,
-                            left: '93%'
                         }
                     ],
                     series : [
                         {
-                            name: 'Budget 2011',
+                            name: '运维后废弃',
                             type: 'bar',
-                            data: api_data[1]
+                            data: api_data.data_bar[1],
+                            barWidth: 20,
                         },
                         {
-                            name: 'Budget 2012',
+                            name: '运维异常',
                             type: 'bar',
-                            data: api_data[2]
+                            data: api_data.data_bar[2],
+                            barWidth: 20,
                         },
                         {
-                            name: 'Budget 2012',
+                            name: '运维总数',
                             type: 'bar',
-                            data: api_data[3]
+                            data: api_data.data_bar[3],
+                            barWidth: 20,
                         }
                     ]
                 };
                 this.myChart1.hideLoading();
                 this.myChart1.setOption(option);
+                if (this.is_loading) {
+                    this.is_loading = false;
+                    this.last_radio_data = this.radio_data;
+                    success_prompt('Loading Success!', 500);
+                };
+            },
+            choose_task: function(){
+                if (this.is_loading) {
+                    danger_prompt('正在加载中，请勿重复点击~', 500);
+                } else if (this.radio_data === this.last_radio_data) {
+                    danger_prompt('当前数据已获取！', 500);
+                } else {
+                    this.is_loading = true;
+                    this.init_data(this.radio_data);
+                }
             }
         },
-    })
+    });
 })
 </script>
+<!--<script>-->
+<!--$(function(){-->
+
+<!--})-->
+<!--</script>-->
 </body>
 </html>
