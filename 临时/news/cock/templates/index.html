@@ -5,9 +5,12 @@
 	<title>新闻</title>
 	<link rel="stylesheet" href="../static/css/bootstrap.min.css">
 <style>
-	#china-map, #word-cloud, #operation-bar {
+	#china-map, #word-cloud {
 		height: 800px;
 		width: 100%;
+	}
+	#operation-bar {
+	    height: 800px;
 	}
 	.fixElement {
 		position: fixed;
@@ -99,13 +102,7 @@
         <div class="container-fluid" id="main-body-2">
             <div class="row">
                 <div class="col-sm-offset-2 col-sm-8">
-                    <ul class="list-group">
-                        <li class="list-group-item"><div id="operation-bar"></div></li>
-                    </ul>
-                    <ul class="list-group">
-                        <li class="list-group-item"><div id="operation-bar-test" style="height: 800px; width: 300px;"></div></li>
-                    </ul>
-                     <table class="table table-striped table-bordered table-hover">
+                    <table class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th class="text-center">汇总表单</th>
@@ -132,6 +129,9 @@
                             </tr>
                         </tbody>
                     </table>
+                    <ul class="list-group">
+                        <li class="list-group-item"><div id="operation-bar"></div></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -172,8 +172,8 @@ $(function(){
         },
         danger_prompt = function(message, time){
             prompt(message, 'alert-danger', time);
-        },
-	    page_1 = new Vue({
+        };
+	new Vue({
 		el: '#main-body-1',
 		delimiters: ['[[', ']]'],
 		data(){
@@ -319,7 +319,7 @@ $(function(){
 </script>
 <script>
 $(function(){
-    page_2 = new Vue({
+    new Vue({
         el: '#main-body-2',
         delimiters: ['[[', ']]'],
         data(){
@@ -329,18 +329,21 @@ $(function(){
             }
         },
         mounted(){
+            var parent_width = document.getElementById('china-map').parentNode.offsetWidth;
+            $('#operation-bar').css('width', parent_width - 32)
             this.myChart1 = echarts.init(document.getElementById('operation-bar'));
             this.myChart1.showLoading();
-            this.myChart2 = echarts.init(document.getElementById('operation-bar-test'));
-            this.myChart2.showLoading();
-            $.get('/api/get/operation/data', {
-                task_name: '诚信数据'
-            }, (api_data) => {
-                this.draw_table(api_data);
-                //this.draw_bar(api_data);
-            })
+            //this.init_data();
         },
         methods: {
+            init_data: function(){
+                $.get('/api/get/operation/data', {
+                    task_name: '诚信数据'
+                }, (api_data) => {
+                    this.draw_table(api_data);
+                    this.draw_bar(api_data);
+                })
+            },
             draw_table: function(api_data){
                 this.data_summary = api_data.data_summary;
                 this.data_statistical = api_data.data_statistical;
