@@ -5,7 +5,9 @@ from django.http import JsonResponse, Http404
 from mini import miniCache
 
 try:
+
     from database import *
+    from base_tools import init, multi_table, get_data_first, get_data_second, get_data_third
 except:
     raise Exception('没有数据库配置文件，无法运行哦')
 
@@ -76,7 +78,8 @@ def api_get_map_data_v1(request):
     province = {}
     normal_spider_list = []
     abnormal_spider_list = []
-    result, all_jieba_list = get_collection_statistical('新闻(新闻)', '人民政府', ['标题'], query_day, False, False, filter_province)
+    result, all_jieba_list = get_collection_statistical('新闻(新闻)', '人民政府', ['标题'], query_day, False, False,
+                                                        filter_province)
     for collection, doc in result.items():
         province[doc['province']] = province.get(doc['province'], 0) + doc['count']
         if doc['count']:
@@ -92,4 +95,17 @@ def api_get_map_data_v1(request):
         'normal_spider_list': sorted(normal_spider_list, key=lambda x: x[1], reverse=True),
         'abnormal_spider_list': sorted(abnormal_spider_list, key=lambda x: x[1], reverse=True),
         'current_day': RE_SEARCH_DAY(str(query_day)).group(1),
+    })
+
+
+@miniCache(60 * 60 * 3)
+def api_get_operation_data(request):
+    task_name = request.GET.get('task_name', None)
+    if not task_name or task_name not in multi_table: return Http404()
+    now = get_now_datetime()
+    init(task_name, '{}.01'.format(now.year), version=multi_table[task_name])
+    return JsonResponse({
+        'data_summary': get_data_first(),
+        'data_statistical': get_data_second(),
+        'data_bar': get_data_third(),
     })
