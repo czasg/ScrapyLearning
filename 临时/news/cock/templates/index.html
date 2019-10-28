@@ -16,6 +16,19 @@
 	.fixElement {
 		position: fixed;
 	}
+	.alert_window {
+	    display: none;
+	    position: fixed;
+	    top: 10%;
+	    left: 50%;
+	    transform: translate(-50%,-50%);
+	    min-width: 300px;
+	    max-width: 600px;
+	    z-index: 99999;
+	    text-align: center;
+	    padding: 15px;
+	    border-radius: 0.9em;
+	}
 </style>
 </head>
 <body>
@@ -80,15 +93,33 @@
 		</div>
 	</div>
 </div>
-<div id="test"></div>
 <script src="../static/js/jquery-1.11.1.min.js"></script>
 <script src="../static/js/echarts.min.js"></script>
 <script src="../static/js/china.js"></script>
 <script src="../static/js/bootstrap.min.js"></script>
 <script src="../static/js/echarts-wordclound.min.js"></script>
 <script src="../static/js/vue.min.js"></script>
+<script src="../static/js/clipboard.min.js"></script>
 <script>
 $(function(){
+    var
+        prompt = function (message, style, time){
+            style = (style === undefined) ? 'alert-success' : style;
+            time = (time === undefined) ? 1200 : time;
+            $('<div>')
+                .appendTo('body')
+                .addClass('alert_window ' + style)
+                .html(message)
+                .show(100)
+                .delay(time)
+                .fadeOut();
+        },
+        success_prompt = function(message, time){
+            prompt(message, 'alert-success', time);  // Using Bootstrap Style
+        },
+        danger_prompt = function(message, time){
+            prompt(message, 'alert-danger', time);
+        };
 	new Vue({
 		el: '#main-body',
 		delimiters: ['[[', ']]'],
@@ -122,7 +153,7 @@ $(function(){
 			},
 			choose_day: function(count){
 				if (this.is_loading) {
-					alert('正在加载中，请勿重复点击~');
+					danger_prompt('正在加载中，请勿重复点击~', 500);
 					return;
 				}
 				this.is_loading = true;
@@ -137,6 +168,7 @@ $(function(){
 					this.init_china_map(this.myChart1, api_result);
 					this.init_word_cloud(this.myChart2, api_result);
 					this.is_loading = false;
+					success_prompt('Loading Success!', 500);
 				})
 			},
 			init_table_list: function(api_result){
