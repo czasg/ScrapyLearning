@@ -14,8 +14,9 @@ def miniCache(expire=60 * 60 * 12):
             key = func.__name__
 
             day = str(request.GET.get('day', ''))
+            task_name = str(request.GET.get('task_name', ''))
             filter_province = '0000' if request.GET.get('just_choose_province', None) == 'true' else ''
-            key += (day + filter_province)
+            key += (day + filter_province + task_name)
 
             result = caches.get(key)
             if result is caches.notFound:
