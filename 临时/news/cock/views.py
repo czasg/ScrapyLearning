@@ -76,21 +76,19 @@ def _query_new_data(query_day, coll='map_data', filter_province=''):
     return json_data
 
 
-@miniCache(60 * 60 * 3)
+@miniCache(60 * 5)
 def api_get_map_data_v1(request):
     filter_province = '0000' if request.GET.get('just_choose_province', None) == 'true' else ''
     get_day = int(request.GET.get('day', 0))
     if not get_day:
         return Http404()
     query_day = datetime.fromtimestamp(get_day)
-    today = get_today_datetime(get_now_datetime())
     if filter_province:
         coll = 'map_data_province'
     else:
         coll = 'map_data'
     if mongodb_offline.client['新闻存储-offline'][coll].count({'timestamp': int(query_day.timestamp())}):
-        if query_day == today:
-            threading.Thread(target=_query_new_data, args=(query_day, coll, filter_province)).start()
+        threading.Thread(target=_query_new_data, args=(query_day, coll, filter_province)).start()
         json_data = \
             mongodb_offline.client['新闻存储-offline'][coll].find_one({'timestamp': int(query_day.timestamp())},
                                                                   {'json_data': 1, '_id': 0})['json_data']
