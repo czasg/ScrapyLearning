@@ -23,6 +23,7 @@ __FILE__ = "Unfinished Schedule"
 2019.10.17 - asyncio好文 https://docs.python.org/zh-cn/3/library/asyncio-task.html
 2019.10.21 - aiohttp好文 https://www.bookstack.cn/read/aiohttp-chinese-documentation/aiohttp%E6%96%87%E6%A1%A3-ClientUsage.md
 2019.10.28 - python好文，多看官方文档，看看如何并发执行任务
+2019.10.31 - 用pycharm进行打点来学习异步流程
 """
 
 """DONE!
@@ -215,6 +216,7 @@ You Are An Apple In My Eyes
 Courage is not the absence of fear, but rather the judgment that something else is more important than fear.
 所有渴望别人理解的行为都是弱智的行为，人的强大第一步，要学会孤独，第二步，要学会不理解，第三步，用结果去碾压
 你的压力来源于，无法自律的内心而只是假装努力，现状跟不上内心的欲望，所以你焦虑升值恐慌
+只靠理想的话，世界是无法运转的
 """
 
 """2019 ULTIMATE PLANING
