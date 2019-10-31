@@ -1,4 +1,4 @@
-from pywss import Pyws, route, RadioMiddleware, PublicConfig, logging
+from pywss import Pyws, route, RadioMiddleware, PublicConfig, json, ConnectManager
 
 try:
     from database import get_today_count
@@ -12,12 +12,19 @@ class Radio(RadioMiddleware):
     @classmethod
     def process_data(cls):
         count = get_today_count()
-        return '{}'.format(count)
+        return {'radio': 'radio', 'count': count}
+
 
 
 @route('/ws/api/news/data')
 def api_news_data(request, data):
-    """ There's nothing to do """
+    json_data = json.loads(data)
+    if json_data.get('start') == True:
+        request.conn.send_to_all({'online': ConnectManager.online()})
+        return {'name': request.conn.name}  # 每个人创建自己的用户信息
+    msg = json_data.get('msg')
+    if msg:
+        ConnectManager.send_to_all({'from': json_data.get('name'), 'msg': msg})
 
 
 if __name__ == '__main__':

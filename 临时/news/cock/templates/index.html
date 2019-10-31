@@ -186,6 +186,7 @@ $(function(){
         danger_prompt = function(message, time){
             prompt(message, 'alert-danger', time);
         };
+    window.news_radio = true;
 	new Vue({
 		el: '#main-body-1',
 		delimiters: ['[[', ']]'],
@@ -201,6 +202,11 @@ $(function(){
 				current_day: '',
 			}
 		},
+		watch: {
+		    news_radio: function(val){
+		        window.news_radio = val;
+		    }
+		},
 		mounted(){
 			this.myChart1 = echarts.init(document.getElementById('china-map'));
 			this.myChart2 = echarts.init(document.getElementById('word-cloud'));
@@ -209,12 +215,23 @@ $(function(){
 			this.choose_day(0);
 			this.news_ws = new WebSocket("ws://192.168.0.223:8868/ws/api/news/data");
 			this.news_ws.onmessage = (ev) => {
-			    if (this.news_radio) {
-                    success_prompt('今日更新新闻：' + JSON.parse(ev.data), 2000);
-                }
+			    json_data = JSON.parse(ev.data);
+			    if (json_data.radio && this.news_radio) {
+			        success_prompt('今日更新新闻：' + json_data.count, 2000);
+			    } else if (json_data.name) {
+			        console.log(json_data.name);
+			    } else if (json_data.from) {
+			        console.log(json_data);
+			    } else if (json_data.online) {
+			        console.log(json_data);
+			    };
             };
             this.news_ws.onclose = (ev) => {
                 console.log('Connect Closed')
+            };
+            this.news_ws.onopen = (ev) => {
+                this.news_ws.send(JSON.stringify({'start': true}));
+                //window.news_ws = this.news_ws;
             };
 		},
 		methods: {
