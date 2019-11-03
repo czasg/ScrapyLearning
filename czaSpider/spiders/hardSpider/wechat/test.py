@@ -1,7 +1,7 @@
 import logging, random
 
 from czaSpider.czaBaseSpider import IOCO
-from sougou_code import SogouCode
+# from sougou_code import SogouCode
 from czaSpider.czaTools import *
 def get_url_from_js(spider, response, url):
     if "url=" not in url or "&k=" in url:
