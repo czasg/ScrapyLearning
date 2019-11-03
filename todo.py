@@ -24,6 +24,7 @@ __FILE__ = "Unfinished Schedule"
 2019.10.21 - aiohttp好文 https://www.bookstack.cn/read/aiohttp-chinese-documentation/aiohttp%E6%96%87%E6%A1%A3-ClientUsage.md
 2019.10.28 - python好文，多看官方文档，看看如何并发执行任务
 2019.10.31 - 用pycharm进行打点来学习异步流程
+2019.11.03 - https://setuptools.readthedocs.io/en/latest/setuptools.html
 """
 
 """DONE!
