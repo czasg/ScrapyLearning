@@ -29,33 +29,33 @@
 #     MySpider.cza_run_spider()
 
 
-import requests
-from parsel import Selector
-from minitools.scrapy import from_xpath, xt
-
-url = "http://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&tn=baidu&wd=python%20%20setuptools%20%20install_requires%E5%A6%82%E4%BD%95%E5%86%99&oq=python%2520setuptools%2520extras_require%2520%25E5%25A6%2582%25E4%25BD%2595%25E5%2586%2599&rsv_pq=e52274de0013037d&rsv_t=c82cqGQWBYJZ4EI7tl9xDctZ34KZsdU1T6QxrNIoOvCkkiGdXFOGILpzOGU&rqlang=cn&rsv_enter=0&rsv_dl=tb&inputT=1464&rsv_sug3=32&rsv_n=2&rsv_sug4=1671"
-text = requests.get(url).text
-
-
-class _Selector(Selector):
-    __slots__ = ['text', 'namespaces', 'type', '_expr', 'root',
-                 '_parser', '_csstranslator', '_tostring_method', 'base_url']
-
-    def __init__(self, text=None, type=None, namespaces=None, root=None,
-                 base_url=None, _expr=None):
-        self.base_url = base_url
-        super(_Selector, self).__init__(text, type, namespaces, root, base_url, _expr)
-
-    def urljoin(self, url):
-        from urllib.parse import urljoin
-        return urljoin(self.base_url, url)
-
-
-response = _Selector(text=text, base_url=url)
-# print(from_xpath(response, '//*[@class="result c-container "]'))
-for title, url in from_xpath(response, [
-    '//*[@class="result c-container "]',
-    ['./h3//text()', xt.string_join],
-    ['./h3/a/@href', xt.urljoin]
-]):
-    print(title, url)
+# import requests
+# from parsel import Selector
+# from minitools.scrapy import from_xpath, xt
+#
+# url = "http://www.baidu.com/s?ie=utf-8&f=8&rsv_bp=1&tn=baidu&wd=python%20%20setuptools%20%20install_requires%E5%A6%82%E4%BD%95%E5%86%99&oq=python%2520setuptools%2520extras_require%2520%25E5%25A6%2582%25E4%25BD%2595%25E5%2586%2599&rsv_pq=e52274de0013037d&rsv_t=c82cqGQWBYJZ4EI7tl9xDctZ34KZsdU1T6QxrNIoOvCkkiGdXFOGILpzOGU&rqlang=cn&rsv_enter=0&rsv_dl=tb&inputT=1464&rsv_sug3=32&rsv_n=2&rsv_sug4=1671"
+# text = requests.get(url).text
+#
+#
+# class _Selector(Selector):
+#     __slots__ = ['text', 'namespaces', 'type', '_expr', 'root',
+#                  '_parser', '_csstranslator', '_tostring_method', 'base_url']
+#
+#     def __init__(self, text=None, type=None, namespaces=None, root=None,
+#                  base_url=None, _expr=None):
+#         self.base_url = base_url
+#         super(_Selector, self).__init__(text, type, namespaces, root, base_url, _expr)
+#
+#     def urljoin(self, url):
+#         from urllib.parse import urljoin
+#         return urljoin(self.base_url, url)
+#
+#
+# response = _Selector(text=text, base_url=url)
+# # print(from_xpath(response, '//*[@class="result c-container "]'))
+# for title, url in from_xpath(response, [
+#     '//*[@class="result c-container "]',
+#     ['./h3//text()', xt.string_join],
+#     ['./h3/a/@href', xt.urljoin]
+# ]):
+#     print(title, url)
