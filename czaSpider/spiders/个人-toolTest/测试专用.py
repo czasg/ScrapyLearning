@@ -1,17 +1,23 @@
 from czaSpider.czaBaseSpider import IOCO
 from czaSpider.czaTools import *
 
+from minitools.scrapy import next_page_request
+
 from six.moves.urllib.parse import urljoin
+
+
 class MySpider(IOCO):
     name = "world-test111"
     parse_item = True
     clean_item = True
+
     # custom_settings = {'HTTPERROR_ALLOWED_CODES':[521, 502],
     #                    'DOWNLOADER_MIDDLEWARES':{'czaSpider.middlewares.anti_clearance.AntiJsClearanceMiddleware': 100}}
     # url = "http://huangpu.customs.gov.cn/huangpu_customs/536775/536795/xzcf77/hgzscqxzcfajxxgk98/index.html"
     # url = 'http://ghgtw.beijing.gov.cn/searches/searchForXingZhengChuFa?' \
     #       'nothing=nothing&nothing=nothing&pageBean.currentPage=1&pageBean.itemsPerPage=10'
-    url = "http://ghzrzyw.beijing.gov.cn/col/col2791/index.html"
+    # url = "http://ghzrzyw.beijing.gov.cn/col/col2791/index.html"
+    # url = 'http://fanyi.youdao.com/?page=1'
 
     # def start_requests(self):
     #     cookie = {
@@ -19,9 +25,21 @@ class MySpider(IOCO):
     #     }
     #     yield Request(self.url, headers=cookie)
 
+    def start_requests(self):
+        url = 'http://www.wuxi.gov.cn/intertidwebapp/govChanInfo/getDocuments'
+        data = {'pageIndex': '1',
+                'pageSize': '20',
+                'siteId': '2',
+                'ChannelType': '2',
+                'chanId': '197'}
+        yield FormRequest(url, formdata=data)
+
     def parse(self, response):
-        print(response.text)
+        # print(response.text)
         print(response.url)
+
+        yield next_page_request(response, 'pageIndex=(\d+)')
+
         # with open('haha.html', 'w') as file:
         #     file.write(response.text)
 
