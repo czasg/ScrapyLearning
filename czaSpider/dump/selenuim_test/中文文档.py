@@ -4,8 +4,9 @@ __file__ = 'Word'
 from selenium import webdriver  # 提供WebDriver的实现
 from selenium.webdriver.common.keys import Keys  # 提供键盘按键的支持
 
-webdriver.ChromeOptions()
+options = webdriver.ChromeOptions()
 options.add_argument('--headless')  # 无界面操作。效率应该高一些
+options.add_argument("--proxy-server=http://39.97.240.222:5739")  # 使用代理
 
 driver = webdriver.Chrome()
 driver.add_cookie({})  # 添加cookie
