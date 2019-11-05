@@ -89,6 +89,8 @@ class GongShang(BaseFunc):
         self.search = search
         self.url = "http://www.gsxt.gov.cn/index.html"
         options = webdriver.ChromeOptions()
+        # 设置为开发者模式，避免被识别
+        # options.add_experimental_option('excludeSwitches', ['enable-automation'])
         None if debug else options.add_argument('--headless')
         self.browser = webdriver.Chrome('old-chromedriver.exe', options=options)
         self.wait = WebDriverWait(self.browser, 20)
