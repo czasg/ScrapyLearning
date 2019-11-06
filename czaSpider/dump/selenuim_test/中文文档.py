@@ -90,7 +90,7 @@ from selenium import webdriver
 .create_web_element(element_id)  # 使用指定的element_id创建一个Web元素
 .execute()  # ?
 .execute_async_script(script, * args)  # 在当前窗口/框架中异步执行JavaScript
-.execute_script(script, * args)  # 在当前窗口/框架中同步执行JavaScript
+.execute_script(script, * args)  # 在当前窗口/框架中同步执行JavaScript  # arguments[0] arguments[1] 这些是起传递参数的作用
 .find_element()
 .find_elements()
 .find_element_by_id()
