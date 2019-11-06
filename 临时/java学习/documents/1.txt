@@ -1,0 +1,64 @@
+Java SE：Standard Edition - 包含标准的JVM和标准库
+Java EE：Enterprise Edition - 在Java SE的基础上加上了大量的API和库，以便方便开发Web应用、数据库、消息服务等
+Java ME：Micro Edition
+
+
+推荐的Java学习路线图如下：
+
+* 首先要学习Java SE，掌握Java语言本身、Java核心开发技术以及Java标准库的使用；
+
+* 如果继续学习Java EE，那么Spring框架、数据库开发、分布式架构就是需要学习的；
+
+* 如果要学习大数据开发，那么Hadoop、Spark、Flink这些大数据平台就是需要学习的，他们都基于Java或Scala开发；
+
+* 如果想要学习移动开发，那么就深入Android平台，掌握Android App开发。
+
+
+
+名词解释
+
+JDK：Java Development Kit - 编译Java源码, 即编译成Java字节码 - 故JDK除了包含JRE，还提供了编译器、调试器等开发工具
+JRE：Java Runtime Environment - JRE就是运行Java字节码的虚拟机
+JSR规范：Java Specification Request - JSR是一系列的规范，从JVM的内存模型到Web程序接口，全部都标准化了 - 比如说访问数据库的功能，大家要先创建一个JSR规范，定义好接口
+JCP组织：Java Community Process
+RI：Reference Implementation - 是一个“能跑”的正确的代码，它不追求速度
+TCK：Technology Compatibility Kit
+
+
+      ┌─    ┌──────────────────────────────────┐
+      │     │     Compiler, debugger, etc.     │
+      │     └──────────────────────────────────┘
+     JDK ┌─ ┌──────────────────────────────────┐
+      │  │  │                                  │
+      │ JRE │      JVM + Runtime Library       │
+      │  │  │                                  │
+      └─ └─ └──────────────────────────────────┘
+            ┌───────┐┌───────┐┌───────┐┌───────┐
+            │Windows││ Linux ││ macOS ││others │
+            └───────┘└───────┘└───────┘└───────┘
+
+
+
+
+
+
+
+如何运行java代码
+先用javac把Hello.java编译成字节码文件Hello.class   -   javac Hello.java
+然后，用java命令执行这个字节码文件   -   java Hello
+Java 11新增的一个功能，它可以直接运行一个单文件源码 - java Hello.java
+
+
+    ┌──────────────────┐
+    │    Hello.java    │<─── source code
+    └──────────────────┘
+              │ compile
+              ▼
+    ┌──────────────────┐
+    │   Hello.class    │<─── byte code
+    └──────────────────┘
+              │ execute
+              ▼
+    ┌──────────────────┐
+    │    Run on JVM    │
+    └──────────────────┘

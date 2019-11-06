@@ -1,0 +1,41 @@
+
+占位符	说明
+%d	格式化输出整数
+%x	格式化输出十六进制整数
+%f	格式化输出浮点数
+%e	格式化输出科学计数法表示的浮点数
+%s	格式化字符串
+
+输入输出：
+Scanner scanner = new Scanner(System.in); // 创建Scanner对象
+String name = scanner.nextLine()  // 读取一行输入并获取字符串
+int age = scanner.nextInt(); // 读取一行输入并获取整数
+
+// 不设置结束条件:
+for (int i=0; ; i++) {
+    ...
+}
+// 不设置结束条件和更新语句:
+for (int i=0; ;) {
+    ...
+}
+// 什么都不设置:
+for (;;) {
+    ...
+}
+
+这种方法名相同，但各自的参数不同，称为方法重载（Overload）
+public class Student extends Person {}  // 继承树
+继承有个特点，就是子类无法访问父类的private字段或者private方法。例如，Student类就无法访问Person类的name和age字段：
+我们需要把private改为protected
+用protected修饰的字段可以被子类访问：
+
+我能理解为static 和 global是一个意思嘛
+
+原来打包这么简单。直接把zip改为jar就行了。但是有牵连的怎么打包呢
+
+
+从表面上看，两个字符串用==和equals()比较都为true，但实际上那只是Java编译器在编译期，会自动把所有相同的字符串当作一个对象放入常量池，自然s1和s2的引用就是相同的。
+所以，这种==比较返回true纯属巧合。换一种写法，==比较就会失败：
+结论：两个字符串比较，必须总是使用equals()方法。
+
