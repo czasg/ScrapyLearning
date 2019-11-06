@@ -25,6 +25,8 @@ __FILE__ = "Unfinished Schedule"
 2019.10.28 - python好文，多看官方文档，看看如何并发执行任务
 2019.10.31 - 用pycharm进行打点来学习异步流程
 2019.11.03 - https://setuptools.readthedocs.io/en/latest/setuptools.html
+2019.11.06 - 极验 滑块 算法优化。写不出来就去抄一个
+2019.11.06 - 验证码终究是个大问题，点击和滑块都是。也就是中文识别+数字识别+缺口识别
 """
 
 """DONE!
