@@ -29,12 +29,12 @@ __FILE__ = "Unfinished Schedule"
 2019.11.06 - 验证码终究是个大问题，点击和滑块都是。也就是中文识别+数字识别+缺口识别
 2019.11.06 - 在tool中可以加入list或者字典的一些骚方法。自己写一个也是极好的
 2019.11.07 - 我去，scrapy包中真是有好多好东西呀。可以看着拿呀。比如对url的一些处理，不就又可以增加了嘛
-2019.11.07 - logging好文 - https://cloud.tencent.com/developer/section/1369390
-2019.11.07 - 邮件模块也可以加进来，不错不错
 """
 
 """DONE!
+2019.11.07 - logging好文 - https://cloud.tencent.com/developer/section/1369390
 2019.11.06 - logging - 模块也需要加一个
+2019.11.07 - 邮件模块也可以加进来，不错不错
 2019.10.16 - 回去把简书的文章写好吧，github上面的readme也要好好写下，总感觉不太对，别人看不懂就很尴尬
 2019.08.20 - css动态图https://www.jianshu.com/p/3a0fb1e30ec5     https://www.zhangxinxu.com/wordpress/2010/11/css3-transitions-transforms-animation-introduction/
 2019.10.08 - 今天还算不错。框架子基本上是搭建出来了。明天把相关数据给填进去就差不多了。这里会设计到后端的接口，有点烦人。
