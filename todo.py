@@ -31,6 +31,7 @@ __FILE__ = "Unfinished Schedule"
 2019.11.06 - logging - 模块也需要加一个
 2019.11.07 - 我去，scrapy包中真是有好多好东西呀。可以看着拿呀。比如对url的一些处理，不就又可以增加了嘛
 2019.11.07 - logging好文 - https://cloud.tencent.com/developer/section/1369390
+2019.11.07 - 邮件模块也可以加进来，不错不错
 """
 
 """DONE!
