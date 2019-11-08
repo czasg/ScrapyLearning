@@ -30,6 +30,8 @@ __FILE__ = "Unfinished Schedule"
 2019.11.06 - 在tool中可以加入list或者字典的一些骚方法。自己写一个也是极好的
 2019.11.07 - 我去，scrapy包中真是有好多好东西呀。可以看着拿呀。比如对url的一些处理，不就又可以增加了嘛
 2019.11.08 - 工具中方便解析的还是要好好添加一些呀，比如页面dom解析，table之类的，还有excel或者是word之类的解析。pdf转码的呢，这个是否需要好好写一个
+2019.11.08 - https://zh.d2l.ai/chapter_preface/preface.html  学习好文
+2019.11.08 - https://github.com/apachecn/AiLearning  超级学习好文
 """
 
 """DONE!
