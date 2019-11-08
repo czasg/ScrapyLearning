@@ -5,6 +5,7 @@ from selenium import webdriver  # 提供WebDriver的实现
 from selenium.webdriver.common.keys import Keys  # 提供键盘按键的支持
 
 options = webdriver.ChromeOptions()
+options.add_experimental_option('excludeSwitches', ['enable-automation'])  # 设置为开发者模式，避免被识别
 options.add_argument('--headless')  # 无界面操作。效率应该高一些
 options.add_argument("--proxy-server=http://39.97.240.222:5739")  # 使用代理
 
