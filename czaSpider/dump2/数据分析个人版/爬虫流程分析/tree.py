@@ -79,3 +79,17 @@ def createTree(dataSet, labels):
         myTree[labelBestFeature][value] = createTree(splitDataSet1,
                                                      subLabels)
     return myTree
+
+
+if __name__ == '__main__':
+    test1 = [
+        [1,1,1,'男'],
+        [1,0,1,'男'],
+        [0,1,1,'男'],
+        [0,0,1,'男'],
+        [0,1,1,'女'],
+        [0,1,0,'女'],
+        [0,0,0,'女'],
+    ]
+    test2 = ['高', '壮', '大']
+    print(createTree(test1, test2))
