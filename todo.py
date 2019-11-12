@@ -32,6 +32,7 @@ __FILE__ = "Unfinished Schedule"
 2019.11.08 - 工具中方便解析的还是要好好添加一些呀，比如页面dom解析，table之类的，还有excel或者是word之类的解析。pdf转码的呢，这个是否需要好好写一个
 2019.11.08 - https://zh.d2l.ai/chapter_preface/preface.html  学习好文
 2019.11.08 - https://github.com/apachecn/AiLearning  超级学习好文
+2019.11.12 - 用python手写队列、单向链表，双向链表，二叉树这些。可以作为数据结构那一栏
 """
 
 """DONE!
