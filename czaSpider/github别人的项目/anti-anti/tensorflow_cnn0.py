@@ -165,7 +165,7 @@ def train_crack_captcha_cnn():
 	# loss 损失数值
 	# loss = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(output, Y))
 	loss = tf.reduce_mean(tf.nn.sigmoid_cross_entropy_with_logits(logits=output, labels=Y))
-        # 最后一层用来分类的softmax和sigmoid有什么不同？
+	# 最后一层用来分类的softmax和sigmoid有什么不同？
 	# optimizer 为了加快训练 learning_rate 应该开始大，然后慢慢衰
 	optimizer = tf.train.AdamOptimizer(learning_rate=0.001).minimize(loss)
 
