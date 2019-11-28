@@ -46,31 +46,48 @@ def get_spider_tasks(data_list, dupefilter=()):
         if data['spiderName'] in dupefilter:
             continue
         spider_tasks[data['spiderName']].append(data)
+    for key, value in spider_tasks.items():
+        value.sort(key=lambda x: x['time'])
     return spider_tasks
 
 
 def get_event_info(tasks):
     event_name_value = dict()
+    first_storage_event_name_value = dict()
     operation_tasks = dict()
     abandoned_tasks = dict()
     storage_tasks = dict()
+    first_storage_time_range = dict()
     for spiderName, spider_task in tasks.items():
         _event = [0 for _ in range(len(event_state))]
+        _event2 = [0 for _ in range(len(event_state))]
         if spider_task[-1]['rwzt'] in abandoned_states:  # 最后一个任务状态处于废弃，则认为是废弃爬虫
             abandoned_tasks.setdefault(spiderName, spider_task)
+        first_storage = False
+        first_task_time = first_storage_time = None
         for task in spider_task:
+            if not first_task_time and task['rwzt'] in developer_states:
+                first_task_time = task['time']
             if spiderName not in operation_tasks and task['rwzt'] in operations_states:  # 该爬虫有过运维经历
                 operation_tasks.setdefault(spiderName, spider_task)
             if spiderName not in storage_tasks and task['rwzt'] in complete_states:  # 该爬虫有过入库经历
+                first_storage = True
                 storage_tasks.setdefault(spiderName, spider_task)
+                if not first_storage_time:
+                    first_storage_time = task['time']
             for index, state in enumerate(
                     [demand_states, developer_states, cleaning_states, test_states, storage_states,
                      operations_states]):  # 统计各个经历的次数
+                if not first_storage and task['rwzt'] in state:
+                    _event2[index] = _event2[index] + 1
                 if task['rwzt'] in state:
                     _event[index] = _event[index] + 1
                     break
         event_name_value.setdefault(spiderName, _event)
-    return event_name_value, operation_tasks, abandoned_tasks, storage_tasks
+        first_storage_event_name_value.setdefault(spiderName, _event2)
+        first_storage_time_range.setdefault(spiderName, [first_task_time, first_storage_time])
+    return event_name_value, operation_tasks, abandoned_tasks, storage_tasks, first_storage_event_name_value, \
+           first_storage_time_range
 
 
 # 工具类方法
@@ -306,7 +323,8 @@ def init(name, check_start_date, check_end_date=None, version=1):
         check_start_timestamp, check_end_timestamp, \
         spider_life_time, \
         spider_month_statistics, new_event_name_value_by_date, abnormal_spider_tasks_statistics, abandoned_tasks_3_month_statistics, \
-        num_length, abandoned_num_list, abnormal_num_list, all_num_list, tasks_tables, tasks_tables_labels, labels
+        num_length, abandoned_num_list, abnormal_num_list, all_num_list, tasks_tables, tasks_tables_labels, labels, \
+        first_storage_event_name_value, first_storage_time_range
     task_name = name
     if '.' in check_start_date and check_start_date.count('.') < 2:
         check_start_year, check_start_month = [int(date) for date in check_start_date.split('.')]
@@ -329,7 +347,8 @@ def init(name, check_start_date, check_end_date=None, version=1):
         check_end_date_flag = 0
     task_data = get_data(task_name, version=version)
     spider_tasks = get_spider_tasks(task_data)
-    event_name_value, operation_tasks, abandoned_tasks, storage_tasks = get_event_info(spider_tasks)
+    event_name_value, operation_tasks, abandoned_tasks, storage_tasks, first_storage_event_name_value, \
+    first_storage_time_range = get_event_info(spider_tasks)
     abandoned_tasks_2 = dict()  # 历史入库完成的爬虫中，经历运维的爬虫任务
     abandoned_tasks_3 = dict()  # 历史入库完成的爬虫中，被废弃的爬虫任务
     for spiderName, spider_task in storage_tasks.items():
@@ -380,8 +399,10 @@ def get_data_first():
         ['{}有过运维记录的任务'.format(task_name), len(operation_tasks)],
         ['{}处于废弃状态的任务'.format(task_name), len(abandoned_tasks)],
         ['{}历史入库完成任务'.format(task_name), len(storage_tasks)],
-        ['入库任务中运维发现异常的任务', len(abandoned_tasks_2), '{}%'.format(int(len(abandoned_tasks_2) / len(storage_tasks) * 100))],
-        ['入库任务中运维废弃的任务'.format(task_name), len(abandoned_tasks_3), '{}%'.format(int(len(abandoned_tasks_3) / len(storage_tasks) * 100))],
+        ['入库任务中运维发现异常的任务', len(abandoned_tasks_2),
+         '{}%'.format(int(len(abandoned_tasks_2) / len(storage_tasks) * 100))],
+        ['入库任务中运维废弃的任务'.format(task_name), len(abandoned_tasks_3),
+         '{}%'.format(int(len(abandoned_tasks_3) / len(storage_tasks) * 100))],
     ]
 
 
@@ -412,10 +433,33 @@ def get_data_third():
     return [list(labels), list(abandoned_num_list), list(abnormal_num_list), list(all_num_list)]
 
 
+def get_data_fourth():
+    all_range_day = 0
+    all_people = 0
+    count = 0
+    for key, value in first_storage_event_name_value.items():
+        start, end = first_storage_time_range[key]
+        a, b, c, d, e, f = value
+        people = sum([max(b / 2, 1), c, max(d / 2, 1), e, f])  # 开发和测试次数，除以2
+        try:
+            range_day = int((end - start) / 86400)
+            all_range_day += range_day
+            all_people += people
+            count += 1
+        except:
+            pass
+    return [task_name, count, int(all_range_day / count), int(all_people / count)]
+
+
 if __name__ == '__main__':
     import json
+
     init('诚信数据', '2019.01', version=1)
-    print(json.dumps(get_data_first()))
-    print(get_data_second())
-    json.dumps(get_data_second())
-    print(get_data_third())
+    # print(json.dumps(get_data_first()))
+    # print(get_data_second())
+    # json.dumps(get_data_second())
+    # print(get_data_third())
+    # print(get_data_fourth())
+    # pprint(event_name_value)  # 任务 + 各阶段统计次数
+    # pprint(storage_tasks)  # 任务名字 + 该任务的所有记录
+    # pprint(first_storage_event_name_value)

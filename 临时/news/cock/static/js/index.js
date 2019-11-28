@@ -260,6 +260,7 @@ $(function(){
                 is_loading: false,
                 data_summary: [],
                 data_statistical: [],
+                data_spider_task_statistical: [],
                 radio_data: '诚信数据',
                 last_radio_data: '诚信数据',
                 spider_tasks: ['诚信数据', '政府网站', '零碎任务', '法律', '新闻', '钢铁', '航运'],
@@ -284,6 +285,7 @@ $(function(){
             draw_table: function(api_data){
                 this.data_summary = api_data.data_summary;
                 this.data_statistical = api_data.data_statistical;
+                this.data_spider_task_statistical = api_data.data_spider_task_statistical;
             },
             draw_bar: function(api_data){
                 var option = {

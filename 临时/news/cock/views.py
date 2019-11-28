@@ -7,7 +7,7 @@ from mini import miniCache
 
 try:
     from database import *
-    from base_tools import init, multi_table, get_data_first, get_data_second, get_data_third
+    from base_tools import init, multi_table, get_data_first, get_data_second, get_data_third, get_data_fourth
 except:
     raise Exception('没有数据库配置文件，无法运行哦')
 
@@ -110,6 +110,7 @@ def api_get_operation_data(request):
             'data_summary': get_data_first(),
             'data_statistical': get_data_second(),
             'data_bar': get_data_third(),
+            'data_spider_task_statistical': get_data_fourth(),
         }, ensure_ascii=False)
         mongodb_offline.client['新闻存储-offline'][coll].update_one({'task_name': task_name}, {'$set': {
             'task_name': task_name,
