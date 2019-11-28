@@ -292,22 +292,21 @@ $(function(){
                 this.data_spider_task_statistical = api_data.data_spider_task_statistical;
             },
             draw_bar: function(api_data){
+                this.clear_last_data();
                 this.data_bar_range = api_data.data_bar[0].length;
                 this.data_bar = api_data.data_bar;
                 this.data_bar[0].forEach((data, index) => {
                     rewrite = Math.abs(((this.data_bar[3][index]-this.data_bar[1][index]-this.data_bar[3][index+1])/this.data_bar[3][index]*100));
-                    if (rewrite) {
+                    if (this.data_bar[3][index] && rewrite) {
                         this.rate_of_rewrite += rewrite;
                     }
                 });
-//                this.rate_of_rewrite = this.rate_of_rewrite.toFixed(2) + '%'
                 this.data_bar[0].forEach((data, index) => {
                     repair = (this.data_bar[2][index]-this.data_bar[1][index])/this.data_bar[3][index]*100;
                     if (repair) {
                         this.rate_of_repair += repair;
                     }
                 });
-//                this.rate_of_repair = (this.rate_of_repair/this.data_bar[0].length).toFixed(2) + '%'
                 var option = {
                     tooltip : {
                         trigger: 'axis',
@@ -388,7 +387,11 @@ $(function(){
                     this.is_loading = true;
                     this.init_data(this.radio_data);
                 }
-            }
+            },
+            clear_last_data: function(){
+                this.rate_of_rewrite = 0;
+                this.rate_of_repair = 0;
+            },
         },
     });
 })
