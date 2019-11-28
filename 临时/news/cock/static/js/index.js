@@ -258,9 +258,13 @@ $(function(){
         data(){
             return {
                 is_loading: false,
+                data_bar_range: 0,
                 data_summary: [],
                 data_statistical: [],
                 data_spider_task_statistical: [],
+                data_bar: [],
+                rate_of_rewrite: 0,
+                rate_of_repair: 0,
                 radio_data: '诚信数据',
                 last_radio_data: '诚信数据',
                 spider_tasks: ['诚信数据', '政府网站', '零碎任务', '法律', '新闻', '钢铁', '航运'],
@@ -288,6 +292,22 @@ $(function(){
                 this.data_spider_task_statistical = api_data.data_spider_task_statistical;
             },
             draw_bar: function(api_data){
+                this.data_bar_range = api_data.data_bar[0].length;
+                this.data_bar = api_data.data_bar;
+                this.data_bar[0].forEach((data, index) => {
+                    rewrite = Math.abs(((this.data_bar[3][index]-this.data_bar[1][index]-this.data_bar[3][index+1])/this.data_bar[3][index]*100));
+                    if (rewrite) {
+                        this.rate_of_rewrite += rewrite;
+                    }
+                });
+//                this.rate_of_rewrite = this.rate_of_rewrite.toFixed(2) + '%'
+                this.data_bar[0].forEach((data, index) => {
+                    repair = (this.data_bar[2][index]-this.data_bar[1][index])/this.data_bar[3][index]*100;
+                    if (repair) {
+                        this.rate_of_repair += repair;
+                    }
+                });
+//                this.rate_of_repair = (this.rate_of_repair/this.data_bar[0].length).toFixed(2) + '%'
                 var option = {
                     tooltip : {
                         trigger: 'axis',

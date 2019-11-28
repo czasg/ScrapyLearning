@@ -1,7 +1,7 @@
 import json
 import pandas as pd
 from pandas import *
-
+from pprint import pprint
 from collections import defaultdict, OrderedDict
 from copy import deepcopy
 from pylab import *
@@ -371,6 +371,7 @@ def init(name, check_start_date, check_end_date=None, version=1):
     abandoned_tasks_3_month_statistics = get_abandoned_spider_statistics(abandoned_tasks_3)  # 废弃爬虫统计
     date_template = get_date_template(check_start_year, check_start_month)
     all_into_template = get_statistics_into_template(date_template, all_tasks_3_month_statistics, add=False)
+    # pprint(all_into_template)
     abnormal_into_template = get_statistics_into_template(date_template, abnormal_spider_tasks_statistics)
     abandoned_into_template = get_statistics_into_template(date_template, abandoned_tasks_3_month_statistics)
     labels = all_into_template.keys()
@@ -425,7 +426,6 @@ def get_data_second():
     df3['pre'] = '-'
     df3.loc['mean', 'pre'] = str(int((df3.loc['mean', 'abnormal_times'] / df3.loc['mean', 'total_times']) * 100)) + '%'
     _label = list(df3.index[1:])
-    # return [list(li) for li in df3.values[1:]]
     return [[_label[index]] + list(li) for index, li in enumerate(df3.values[1:])]
 
 
@@ -463,3 +463,10 @@ if __name__ == '__main__':
     # pprint(event_name_value)  # 任务 + 各阶段统计次数
     # pprint(storage_tasks)  # 任务名字 + 该任务的所有记录
     # pprint(first_storage_event_name_value)
+
+
+    # new_task_by_date, all_tasks_3_month_statistics = get_all_operations_times(storage_tasks)
+    # pprint(all_tasks_3_month_statistics)
+    # pprint(all_into_template)
+
+    pprint(get_data_third())

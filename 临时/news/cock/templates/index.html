@@ -146,6 +146,44 @@
                     <table class="table table-striped table-bordered table-hover">
                         <thead>
                             <tr>
+                                <th class="text-center">统计表-重写/修复率</th>
+                                <th class="text-center">运维总量</th>
+                                <th class="text-center">运维异常</th>
+                                <th class="text-center">运维废弃</th>
+                                <th class="text-center">重写率</th>
+                                <th class="text-center">修复率</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(data, index) in data_bar[0]">
+                                <td class="text-center">[[ data ]]</td>
+                                <td class="text-center">[[ data_bar[3][index] ]]</td>
+                                <td class="text-center">[[ data_bar[2][index] ]]</td>
+                                <td class="text-center">[[ data_bar[1][index] ]]</td>
+                                <td class="text-center">[[ Math.abs(((data_bar[3][index]-data_bar[1][index]-data_bar[3][index+1])/data_bar[3][index]*100).toFixed(2)) + '%' ]]</td>
+                                <td class="text-center">[[ ((data_bar[2][index]-data_bar[1][index])/data_bar[3][index]*100).toFixed(2) + '%' ]]</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">sum</td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center">[[ rate_of_rewrite.toFixed(2) + '%' ]]</td>
+                                <td class="text-center">[[ rate_of_repair.toFixed(2) + '%' ]]</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center">mean</td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center"></td>
+                                <td class="text-center">[[ (rate_of_rewrite/data_bar_range).toFixed(2) + '%' ]]</td>
+                                <td class="text-center">[[ (rate_of_repair/data_bar_range).toFixed(2) + '%' ]]</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table table-striped table-bordered table-hover">
+                        <thead>
+                            <tr>
                                 <th class="text-center">统计表-第一次入库</th>
                                 <th class="text-center">Count</th>
                                 <th class="text-center">平均天数</th>
