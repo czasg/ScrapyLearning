@@ -437,10 +437,16 @@ def get_data_fourth():
     all_range_day = 0
     all_people = 0
     count = 0
+    max_people = 0
+    min_people = 100
     for key, value in first_storage_event_name_value.items():
         start, end = first_storage_time_range[key]
         a, b, c, d, e, f = value
         people = sum([max(b / 2, 1), c, max(d / 2, 1), e, f])  # 开发和测试次数，除以2
+        max_people = max(max_people, people)
+        min_people = min(min_people, people)
+        if key == '环保处罚-广西':
+            print(key, value)
         try:
             range_day = int((end - start) / 86400)
             all_range_day += range_day
@@ -448,7 +454,26 @@ def get_data_fourth():
             count += 1
         except:
             pass
+    # print(max_people, min_people)  # 环保处罚-广西 63 2  [0, 34, 21, 46, 1, 1]
     return [task_name, count, int(all_range_day / count), int(all_people / count)]
+
+
+def get_data_fifth():
+    all_count = 0
+    all_store = 0
+    import datetime
+    aim = datetime.datetime(2019, 5, 1).timestamp()
+    for spiderName, tasks in operation_tasks.items():
+        flag = False
+        for task in tasks:
+            if task['time'] > aim:
+                if task['rwzt'] in complete_states:
+                    flag = True
+                    all_store += 1
+        if flag:
+            all_count += 1
+    # print(f"符合条件的爬虫个数: {all_store}")
+    # print(f"入库总次数: {all_count}")
 
 
 if __name__ == '__main__':
@@ -464,9 +489,11 @@ if __name__ == '__main__':
     # pprint(storage_tasks)  # 任务名字 + 该任务的所有记录
     # pprint(first_storage_event_name_value)
 
-
     # new_task_by_date, all_tasks_3_month_statistics = get_all_operations_times(storage_tasks)
     # pprint(all_tasks_3_month_statistics)
     # pprint(all_into_template)
 
-    pprint(get_data_third())
+    # pprint(get_data_third())
+    # pprint(get_data_fourth())
+
+    get_data_fifth()
