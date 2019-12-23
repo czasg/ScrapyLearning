@@ -57,7 +57,7 @@ __0x31a2a = ['dhvCugsb', 'c8OqwoYrQQ==', 'AMO/woHCnUnDhigI', 'w7hubn3DisOcT8OiSs
         _0x4ce2f1['updateCookie'] = _0x3ab53f;
         var _0xbd1168 = '';
         var _0x4a4c56 = _0x4ce2f1['updateCookie']();  //false
-        _0x4a4c56 = true
+        _0x4a4c56 = true  // important
         if (!_0x4a4c56) {
             _0x4ce2f1['setCookie'](['*'], 'counter', 0x1);
         } else if (_0x4a4c56) {
