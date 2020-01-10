@@ -4,7 +4,7 @@ from .czaBaseItem import czaBaseItem, process_base_item
 
 
 class Item(czaBaseItem):
-    # ´Ë´¦¼Ì³Ğ¸¸Àà£¬²¢Ö¸¶¨ĞèÒªÍØÕ¹µÄÀà
+    # æ­¤å¤„ç»§æ‰¿çˆ¶ç±»ï¼Œå¹¶æŒ‡å®šéœ€è¦æ‹“å±•çš„ç±»
     source = scrapy.Field()
 
 
