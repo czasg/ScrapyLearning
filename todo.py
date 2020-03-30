@@ -33,7 +33,6 @@ __FILE__ = "Unfinished Schedule"
 2019.11.08 - https://zh.d2l.ai/chapter_preface/preface.html  学习好文
 2019.11.08 - https://github.com/apachecn/AiLearning  超级学习好文
 2019.11.12 - 用python手写队列、单向链表，双向链表，二叉树这些。可以作为数据结构那一栏
-2020.03.15 - 实现pywss模块重写，引入异步模块
 2020.03.15 - 分布式队列，是不是在自己也能写一个呢，怎么设计是一个问题
 2020.03.15 - 类似scheduler的进程管理器，也是python实现的，如何自己实现一个。是不是也可以试下。
 2020.03.29 - 分布式队列的原理是什么，有什么需要注意的地方
@@ -42,6 +41,7 @@ __FILE__ = "Unfinished Schedule"
 """
 
 """DONE!
+2020.03.15 - 实现pywss模块重写，引入异步模块
 2020.03.29 - server主动监控每一个节点其实是很困难的，因为你需要主动获取信息，这里就有一个排队的过程。我们采取的是前端执行这个过程。
             - 每一台服务器有一个无限重试连接server的程序，然后每一台节点服务器，可以用一个一个pywss服务器快速搭建websocket服务端，传递本机的信息。
 2019.11.07 - logging好文 - https://cloud.tencent.com/developer/section/1369390
