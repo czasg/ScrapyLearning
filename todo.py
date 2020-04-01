@@ -16,8 +16,6 @@ __FILE__ = "Unfinished Schedule"
 2019.09.04 - 目前来说验证码的进度已经开始了，但是是否能够识别成功还是一个问题。是在不成功，可以试下去除正铉后或者直接使用比较干净的图片也可以呀
 2019.09.06 - Scrapy的指定路径查询，也可以写一个开源项目。但是如何编写爬虫指令呢，这倒是一个问题。协程scrapy-redis那种就差不多了，嘿嘿
 2019.09.08 - 好像看到了自由职业的影子了，有很大的难度啊。人脸识别什么的都知识基础了吗 - 这玩意还需要和硬件进行结合，手机app端的相机调用等等，不太好搞啊
-2019.10.08 - blog是逐渐的在完善，但是还是差了太多，让人难受，希望可以坚持下去。慢慢来，别慌
-2019.10.09 - pip install graphviz 画流程图还挺不错的，很nice很棒
 2019.10.15 - 协议好文https://blog.csdn.net/qq_33616529/article/details/78288883
 2019.10.17 - python好文 https://docs.python.org/3/reference/datamodel.html
 2019.10.17 - asyncio好文 https://docs.python.org/zh-cn/3/library/asyncio-task.html
@@ -50,6 +48,8 @@ __FILE__ = "Unfinished Schedule"
 """
 
 """DONE!
+2019.10.08 - blog是逐渐的在完善，但是还是差了太多，让人难受，希望可以坚持下去。慢慢来，别慌
+2019.10.09 - pip install graphviz 画流程图还挺不错的，很nice很棒
 2020.03.30 - pywss需要更新一个版本。默认回复去除掉，before_first_request和before_request这两个模块引入，规则如何，是否全仿flask
 2020.03.15 - 实现pywss模块重写，引入异步模块
 2020.03.29 - server主动监控每一个节点其实是很困难的，因为你需要主动获取信息，这里就有一个排队的过程。我们采取的是前端执行这个过程。
