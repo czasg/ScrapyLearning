@@ -41,6 +41,11 @@ __FILE__ = "Unfinished Schedule"
 2020.04.01 - OpenStack这个是什么原理，居然是用python进行开发的
 2020.04.01 - 个人博客的js有bug，页面回归后page还是1，而不是对应的值 
 2020.04.01 - 定义好要做的视频，每一个类型都可以写一个对应的来源项目，以mini为开头写一个mini系列
+2020.04.01 - mini系列：
+            - minicache - 缓存如何设计，使用asyncio，仿照redis的单线程模型
+            - minicache - 基于上述的缓存队列，实现redis一致性哈希算法，算是一个集群把
+            - minimq - 基于发布订阅模式实现的消息队列
+            - minimonitor - 基于asyncio实现的类似supervisor管理进程功能的
 """
 
 """DONE!
