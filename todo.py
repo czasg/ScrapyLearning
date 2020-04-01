@@ -44,6 +44,7 @@ __FILE__ = "Unfinished Schedule"
             - minicache - 基于上述的缓存队列，实现redis一致性哈希算法，算是一个集群把
             - minimq - 基于发布订阅模式实现的消息队列
             - minimonitor - 基于asyncio实现的类似supervisor管理进程功能的
+            - minidb - 能不能仿照sqllite看看是如何实现的简易数据库
 2020.04.01 - 微信小程序一定要学会，靠！
 """
 
