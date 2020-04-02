@@ -46,6 +46,7 @@ __FILE__ = "Unfinished Schedule"
             - minimonitor - 基于asyncio实现的类似supervisor管理进程功能的
             - minidb - 能不能仿照sqllite看看是如何实现的简易数据库
 2020.04.01 - 微信小程序一定要学会，靠！
+2020.04.02 - 不要学java，学nodejs，如electron桌面应用、webAPP、web页面等，一定要先学会原生js的应用
 """
 
 """DONE!
