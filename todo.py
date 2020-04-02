@@ -50,6 +50,7 @@ __FILE__ = "Unfinished Schedule"
 """
 
 """DONE!
+2020.04.01 - redis6.0引入多线程机制，其多线程只是用来处理网络数据的读写和协议的解析等，执行命令部分还是单线程。https://ruby-china.org/topics/38957
 2019.10.08 - blog是逐渐的在完善，但是还是差了太多，让人难受，希望可以坚持下去。慢慢来，别慌
 2019.10.09 - pip install graphviz 画流程图还挺不错的，很nice很棒
 2020.03.30 - pywss需要更新一个版本。默认回复去除掉，before_first_request和before_request这两个模块引入，规则如何，是否全仿flask
