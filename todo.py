@@ -47,6 +47,10 @@ __FILE__ = "Unfinished Schedule"
             - minidb - 能不能仿照sqllite看看是如何实现的简易数据库
 2020.04.01 - 微信小程序一定要学会，靠！
 2020.04.02 - 不要学java，学nodejs，如electron桌面应用、webAPP、web页面等，一定要先学会原生js的应用
+2020.04.19 - 总体来说现在还差的东西：
+            - 1、爬虫调度，起码要看懂现在的坑，以及调优后的效果。
+            - 2、微信爬虫的整体流程与逻辑，验证码之外的js反爬是怎样的。
+            - 3、dark net 点选验证码有没有戏。
 """
 
 """DONE!
@@ -235,7 +239,6 @@ js转化平台          http://tool.oschina.net/codeformat/js
 JS                  https://github.com/SUNNERCMS/30daysJavascript
 17素材网            https://www.17sucai.com/
 JS前端              https://github.com/phodal/sherlock
-
 """
 
 """不错的个人网站
@@ -247,14 +250,6 @@ Jack Cui                  https://cuijiahua.com/blog/ml/
 """645948
 You Are An Apple In My Eyes
 Courage is not the absence of fear, but rather the judgment that something else is more important than fear.
-所有渴望别人理解的行为都是弱智的行为，人的强大第一步，要学会孤独，第二步，要学会不理解，第三步，用结果去碾压
-你的压力来源于，无法自律的内心而只是假装努力，现状跟不上内心的欲望，所以你焦虑升值恐慌
+你的压力来源于，无法自律的内心而只是假装努力，现状跟不上内心的欲望，所以你焦虑甚至恐慌
 只靠理想的话，世界是无法运转的
-"""
-
-"""2019 ULTIMATE PLANING
-爬虫框架重构
-前段代码整合
-爬虫调度器需要解耦，除了定时任务之外，还需加入调度池引入优先级的说法。定时任务和调度任务是两回事吗。
-
 """
